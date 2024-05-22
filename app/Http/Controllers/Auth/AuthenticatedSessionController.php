@@ -35,7 +35,7 @@
         return to_route('dashboard')->with('meta', [
           'status' => true,
           'title' => 'Berhasil masuk akun',
-          'message' => 'Selamat datang kembali, ' . Auth::user()->full_name . '!'
+          'message' => 'Selamat datang kembali, ' . Auth::user()->name . '!'
         ]);
       } catch (Exception $e) {
         return to_route('login')->with('meta', [

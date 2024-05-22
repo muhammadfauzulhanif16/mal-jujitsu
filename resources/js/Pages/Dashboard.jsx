@@ -8,7 +8,7 @@ const Dashboard = (props) => {
         borderRadius: 16,
       }}>
         <Title order={1} c="gold.9">
-          Selamat datang, {props.auth.user.full_name}!
+          Selamat datang, {props.auth.user.name}!
         </Title>
       </Center>
     </AppLayout>

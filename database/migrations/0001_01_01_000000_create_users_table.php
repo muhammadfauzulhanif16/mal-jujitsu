@@ -12,7 +12,7 @@
     {
       Schema::create('users', function (Blueprint $table) {
         $table->uuid('id')->primary();
-        $table->string('full_name');
+        $table->string('name');
         $table->string('role');
         $table->string('email')->unique();
         $table->timestamp('email_verified_at')->nullable();

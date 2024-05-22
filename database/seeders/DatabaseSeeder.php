@@ -24,7 +24,7 @@
       
       foreach ((['Admin', 'Pelatih', 'Atlet']) as $user) {
         User::create([
-          'full_name' => $user,
+          'name' => $user,
           'role' => $user,
           'email' => strtolower($user) . '@mail.id',
           'password' => Hash::make(strtolower($user)),

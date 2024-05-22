@@ -76,14 +76,14 @@ export const Header = (props) => {
               }}
             >
               <Stack align="end" gap={0}>
-                <Text>{props.authed.full_name}</Text>
+                <Text>{props.authed.name}</Text>
                 <Text size="sm" c="netral.5">
                   {props.authed.email}
                 </Text>
               </Stack>
               
-              <Avatar alt={props.authed.full_name} size={48}
-                      color="gold.1">{props.authed.full_name.split(' ')[0][0]}</Avatar>
+              <Avatar alt={props.authed.name} size={48}
+                      color="gold.1">{props.authed.name.split(' ')[0][0]}</Avatar>
             </Flex>
           </Menu.Target>
           
@@ -118,11 +118,11 @@ export const Header = (props) => {
       <Drawer
         title={
           <Group>
-            <Avatar alt={props.authed.full_name} size={48}
-                    color="gold.1">{props.authed.full_name.split(' ')[0][0]}</Avatar>
+            <Avatar alt={props.authed.name} size={48}
+                    color="gold.1">{props.authed.name.split(' ')[0][0]}</Avatar>
             
             <Stack gap={0}>
-              <Text truncate="end">{props.authed.full_name}</Text>
+              <Text truncate="end">{props.authed.name}</Text>
               <Text size="sm" c="netral.5" truncate="end">
                 {props.authed.email}
               </Text>
