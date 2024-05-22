@@ -18,12 +18,13 @@ export const NavBar = (props) => {
     },
     {
       icon: <IconUser />,
-      label: 'Atlet',
-      route: 'athletes.index',
+      label: 'Pelatih',
+      route: 'coaches.index',
     },
     {
       icon: <IconUser />,
-      label: 'Pelatih',
+      label: 'Atlet',
+      route: 'athletes.index',
     },
     {
       icon: <IconClipboard />,
@@ -58,7 +59,7 @@ export const NavBar = (props) => {
           }}
           gap={{
             base: 8,
-            md: 0,
+            md: 4,
           }}
           align="center"
           key={id}

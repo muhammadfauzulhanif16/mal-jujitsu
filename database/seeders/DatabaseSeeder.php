@@ -2,6 +2,8 @@
   
   namespace Database\Seeders;
   
+  use App\Models\Athlete;
+  use App\Models\Coach;
   use App\Models\User;
   use Illuminate\Database\Seeder;
   use Illuminate\Support\Facades\Hash;
@@ -22,13 +24,25 @@
 //        'email' => 'test@example.com',
 //      ]);
       
-      foreach ((['Admin', 'Pelatih', 'Atlet']) as $user) {
+      foreach ((['Pelatih', 'Atlet']) as $user) {
         User::create([
-          'name' => $user,
+          'full_name' => $user,
           'role' => $user,
           'email' => strtolower($user) . '@mail.id',
           'password' => Hash::make(strtolower($user)),
         ]);
+        
+        if ($user === 'Pelatih') {
+          Coach::create([
+            'user_id' => User::where('role', $user)->first()->id,
+          ]);
+        }
+        
+        if ($user === 'Atlet') {
+          Athlete::create([
+            'user_id' => User::where('role', $user)->first()->id,
+          ]);
+        }
       }
     }
   }

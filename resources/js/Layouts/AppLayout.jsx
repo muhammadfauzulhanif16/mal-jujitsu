@@ -1,8 +1,9 @@
 import { Head } from '@inertiajs/react'
 import React, { useEffect } from 'react'
-import { Flex } from '@mantine/core'
+import { Box, Flex } from '@mantine/core'
 import { Header } from '@/Components/Header.jsx'
 import { notifications } from '@mantine/notifications'
+import { IconCheck, IconX } from '@tabler/icons-react'
 
 export const AppLayout = (props) => {
   useEffect(() => {
@@ -12,7 +13,15 @@ export const AppLayout = (props) => {
         message: props.meta.message,
         color: props.meta.status ? 'green' : 'red',
         autoClose: 2000,
-        withBorder: true,
+        style: {
+          borderRadius: 20,
+        },
+        styles: {
+          root: {
+            padding: 20,
+          },
+        },
+        icon: props.meta.status ? <IconCheck /> : <IconX />,
       })
     }
   }, [props.meta])
@@ -26,7 +35,19 @@ export const AppLayout = (props) => {
       
       {props.authed && <Header authed={props.authed} title={props.title} />}
       
-      {props.children}
+      <Box
+        mih="100vh"
+        bg="gold.10"
+        px={props.authed && {
+          base: 16,
+          sm: 32,
+          md: 48,
+          lg: 64,
+        }}
+        py={props.authed && 32}
+      >
+        {props.children}
+      </Box>
     </Flex>
   )
 }

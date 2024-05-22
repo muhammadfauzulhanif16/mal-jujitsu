@@ -4,12 +4,11 @@ import {
   Button,
   Center,
   Image,
-  PasswordInput,
   SimpleGrid,
   TextInput,
   Title,
 } from '@mantine/core'
-import { IconMail, IconOlympics, IconPassword } from '@tabler/icons-react'
+import { IconMail, IconPassword } from '@tabler/icons-react'
 import { useForm } from '@inertiajs/react'
 
 const Login = (props) => {
@@ -17,8 +16,6 @@ const Login = (props) => {
     email: '',
     password: '',
   })
-  
-  console.log(props)
   
   return (
     <form onSubmit={(e) => {
@@ -42,24 +39,33 @@ const Login = (props) => {
               base: 120,
               xs: '100%',
             }}
-            src="https://images.unsplash.com/photo-1591117207239-788bf8de6c3b?q=80&w=1473&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/GABRIEL_VELLA_vs_ROMINHO_51.jpg/1024px-GABRIEL_VELLA_vs_ROMINHO_51.jpg"
           />
           
-          <Center>
+          <Center bg="netral.9" p={32} style={{
+            borderRadius: 20,
+          }}>
             <Box w={320}>
-              <IconOlympics size={80} />
+              <Image
+                radius={80}
+                h={80}
+                w={80}
+                src="https://pbjisurabaya.or.id/images/logo/pbji.png"
+              />
               
               <Title mb={36}>Masuk Akun</Title>
               
               <TextInput
+                variant="filled"
                 leftSection={<IconMail />}
                 styles={{
                   label: {
                     marginBottom: 12,
                   },
                   input: {
+                    backgroundColor: 'var(--mantine-color-netral-10)',
                     height: 48,
-                    borderRadius: 16,
+                    borderRadius: 32,
                     paddingLeft: 50,
                     paddingRight: 14,
                   },
@@ -87,7 +93,9 @@ const Login = (props) => {
                 error={form.errors.email}
               />
               
-              <PasswordInput
+              <TextInput
+                type="password"
+                variant="filled"
                 leftSection={<IconPassword />}
                 styles={{
                   label: {
@@ -95,9 +103,10 @@ const Login = (props) => {
                   },
                   input: {
                     height: 48,
-                    borderRadius: 16,
+                    borderRadius: 32,
                     paddingLeft: 60,
                     paddingRight: 14,
+                    backgroundColor: 'var(--mantine-color-netral-10)',
                     
                   },
                   section: {
@@ -136,7 +145,7 @@ const Login = (props) => {
                 color="gold.1"
                 h={48}
                 fullWidth
-                radius={16}
+                radius={32}
                 // c="gold.9"
               >
                 Masuk

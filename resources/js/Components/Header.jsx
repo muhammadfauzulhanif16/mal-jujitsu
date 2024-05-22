@@ -2,20 +2,16 @@ import {
   ActionIcon,
   Avatar,
   Box,
+  Button,
   Drawer,
   Flex,
   Group,
+  Image,
   Menu,
   Stack,
   Text,
 } from '@mantine/core'
-import {
-  IconLogout,
-  IconMenu,
-  IconOlympics,
-  IconUser,
-  IconX,
-} from '@tabler/icons-react'
+import { IconLogout, IconMenu, IconUser, IconX } from '@tabler/icons-react'
 import { NavBar } from '@/Components/NavBar.jsx'
 import { useDisclosure } from '@mantine/hooks'
 import { router } from '@inertiajs/core'
@@ -30,15 +26,19 @@ export const Header = (props) => {
         h={80}
         justify="space-between"
         style={{
-          zIndex: 1,
-          borderBottom: '1px solid #dcdcdc',
+          zIndex: 2,
+          // borderBottom: '1px solid #dcdcdc',
         }}
         pos="sticky"
         top={0}
         bg="netral.10"
       >
         <Flex w={160} align="center">
-          <IconOlympics size={48} />
+          <Image
+            radius={16}
+            h={48}
+            src="https://pbjisurabaya.or.id/images/logo/pbji.png"
+          />
         </Flex>
         
         <Box
@@ -50,23 +50,26 @@ export const Header = (props) => {
           <NavBar title={props.title} />
         </Box>
         
-        <Menu shadow="md" width={200}
-              styles={{
-                dropdown: {
-                  padding: 8,
-                  borderRadius: 16,
-                },
-                item: {
-                  height: 48,
-                  borderRadius: 16,
-                },
-              }}>
+        <Menu
+          shadow="md"
+          width={200}
+          styles={{
+            dropdown: {
+              padding: 8,
+              borderRadius: 20,
+            },
+            item: {
+              height: 48,
+              borderRadius: 32,
+            },
+          }}
+        >
           <Menu.Target>
             <Flex
+              variant="subtle"
               style={{
                 cursor: 'pointer',
               }}
-              justify="end"
               gap={16}
               align="center"
               w={160}
@@ -76,19 +79,19 @@ export const Header = (props) => {
               }}
             >
               <Stack align="end" gap={0}>
-                <Text>{props.authed.name}</Text>
+                <Text>{props.authed.full_name}</Text>
                 <Text size="sm" c="netral.5">
                   {props.authed.email}
                 </Text>
               </Stack>
               
-              <Avatar alt={props.authed.name} size={48}
-                      color="gold.1">{props.authed.name.split(' ')[0][0]}</Avatar>
+              <Avatar alt={props.authed.full_name} size={48}
+                      color="gold.1">{props.authed.full_name.split(' ')[0][0]}</Avatar>
             </Flex>
           </Menu.Target>
           
           <Menu.Dropdown>
-            <Menu.Item leftSection={<IconUser />} p={16}>
+            <Menu.Item leftSection={<IconUser />} p={16} color="netral">
               Profil Saya
             </Menu.Item>
             <Menu.Item leftSection={<IconLogout />} color="red" p={16}
@@ -118,11 +121,11 @@ export const Header = (props) => {
       <Drawer
         title={
           <Group>
-            <Avatar alt={props.authed.name} size={48}
-                    color="gold.1">{props.authed.name.split(' ')[0][0]}</Avatar>
+            <Avatar alt={props.authed.full_name} size={48}
+                    color="gold.1">{props.authed.full_name.split(' ')[0][0]}</Avatar>
             
             <Stack gap={0}>
-              <Text truncate="end">{props.authed.name}</Text>
+              <Text truncate="end">{props.authed.full_name}</Text>
               <Text size="sm" c="netral.5" truncate="end">
                 {props.authed.email}
               </Text>
@@ -135,8 +138,20 @@ export const Header = (props) => {
             padding: 16,
             gap: 0,
           },
+          content: {
+            display: 'flex',
+            flexDirection: 'column',
+            // backgroundColor: 'red',
+          },
+          body: {
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            // backgroundColor: 'blue',
+            height: '100%',
+          },
         }}
-        size={240}
+        size={320}
         position="right"
         opened={opened}
         onClose={close}
@@ -149,6 +164,7 @@ export const Header = (props) => {
           },
           icon:
             <ActionIcon
+              component="div"
               aria-label="Menu"
               variant="subtle"
               color="gold.1"
@@ -156,11 +172,15 @@ export const Header = (props) => {
               radius="xl"
             >
               <IconX />
-            </ActionIcon>
-          ,
+            </ActionIcon>,
         }}
       >
         <NavBar title={props.title} />
+        
+        <Button justify="start" h={48} variant="subtle" color="red" radius={32}
+                leftSection={<IconLogout />} p={16}>
+          Keluar Akun
+        </Button>
       </Drawer>
     </>
   )

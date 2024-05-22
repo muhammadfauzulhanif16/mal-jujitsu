@@ -13,8 +13,8 @@
      */
     public function index()
     {
-      return Inertia('Athletes/Index', [
-//        'athletes' => Athletes::all()
+      return Inertia('Athlete/Index', [
+        'athletes' => Athlete::with('user')->get()
       ]);
     }
     
@@ -23,7 +23,7 @@
      */
     public function create()
     {
-      //
+      return Inertia('Athlete/Create');
     }
     
     /**

@@ -3,10 +3,11 @@ import { Box, Table as MantineTable } from '@mantine/core'
 export const Table = (props) => {
   return (
     <Box style={{
-      borderRadius: 16,
+      backgroundColor: 'var(--mantine-color-netral-10)',
+      borderRadius: 20,
       border: '1px solid #E0E0E0',
     }}>
-      <MantineTable.ScrollContainer>
+      <MantineTable.ScrollContainer p={0}>
         <MantineTable
           styles={{
             table: {
@@ -22,32 +23,27 @@ export const Table = (props) => {
           }}>
           <MantineTable.Thead h={48}>
             <MantineTable.Tr>
-              <MantineTable.Th>Element position</MantineTable.Th>
-              <MantineTable.Th>Element name</MantineTable.Th>
-              <MantineTable.Th>Symbol</MantineTable.Th>
-              <MantineTable.Th>Atomic mass</MantineTable.Th>
-              <MantineTable.Th>Atomic mass</MantineTable.Th>
-              <MantineTable.Th>Atomic mass</MantineTable.Th>
-              <MantineTable.Th>Atomic mass</MantineTable.Th>
-              <MantineTable.Th>Atomic mass</MantineTable.Th>
-              <MantineTable.Th>Atomic mass</MantineTable.Th>
+              {props.thList.map((th, id) => (
+                <MantineTable.Th
+                  key={id}
+                  px={16}
+                  py={0}
+                  style={{
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {th}
+                </MantineTable.Th>
+              ))}
             </MantineTable.Tr>
           </MantineTable.Thead>
           
           <MantineTable.Tbody>
-            <MantineTable.Tr h={48}>
-              <MantineTable.Td>asdasd</MantineTable.Td>
-              {/*<MantineTable.Td>{element.name}</MantineTable.Td>*/}
-              {/*<MantineTable.Td>{element.symbol}</MantineTable.Td>*/}
-              {/*<MantineTable.Td>{element.mass}</MantineTable.Td>*/}
-            </MantineTable.Tr>
-            
-            <MantineTable.Tr h={48}>
-              <MantineTable.Td>asdasd</MantineTable.Td>
-              {/*<MantineTable.Td>{element.name}</MantineTable.Td>*/}
-              {/*<MantineTable.Td>{element.symbol}</MantineTable.Td>*/}
-              {/*<MantineTable.Td>{element.mass}</MantineTable.Td>*/}
-            </MantineTable.Tr>
+            {props.tdList}
+            {/*<MantineTable.Tr h={48}>*/}
+            {/*  <MantineTable.Td>asdasd</MantineTable.Td>*/}
+            {/*</MantineTable.Tr>*/}
+          
           </MantineTable.Tbody>
         </MantineTable>
       </MantineTable.ScrollContainer>

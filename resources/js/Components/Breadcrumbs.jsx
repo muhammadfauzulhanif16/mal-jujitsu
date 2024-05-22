@@ -7,6 +7,7 @@ export const Breadcrumbs = (props) => {
     <MantineBreadcrumbs>
       {props.navList.map((nav, id) => (
         <Title
+          key={id}
           order={id === 0 ? 1 : 4}
           onClick={() => router.get(route(nav.route))}
         >
