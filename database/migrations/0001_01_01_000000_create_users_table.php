@@ -11,7 +11,7 @@
     public function up(): void
     {
       Schema::create('users', function (Blueprint $table) {
-        $table->uuid('id')->primary();
+        $table->id();
         $table->string('name');
         $table->string('role');
         $table->string('email')->unique();
