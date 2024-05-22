@@ -1,27 +1,34 @@
 <?php
-
-use App\Http\Controllers\ProfileController;
-use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
-
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
-
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::middleware('auth')->group(function () {
+  
+  use App\Http\Controllers\AthleteController;
+  use App\Http\Controllers\ProfileController;
+  use Illuminate\Support\Facades\Route;
+  use Inertia\Inertia;
+  
+  Route::fallback(fn() => to_route(auth()->check() ? 'dashboard' : 'login'));
+  
+  Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/dashboard', function () {
+      return Inertia::render('Dashboard', [
+        'meta' => session('meta'),
+      ]);
+    })->name('dashboard');
+    
+    Route::group(['prefix' => 'athletes'], function () {
+      Route::get('', [AthleteController::class, 'index'])->name('athletes.index');
+      Route::get('create', [AthleteController::class, 'create'])->name('athletes.create');
+      Route::post('', [AthleteController::class, 'store'])->name('athletes.store');
+      Route::get('{athlete}', [AthleteController::class, 'show'])->name('athletes.show');
+      Route::get('{athlete}/edit', [AthleteController::class, 'edit'])->name('athletes.edit');
+      Route::patch('{athlete}', [AthleteController::class, 'update'])->name('athletes.update');
+      Route::delete('{athlete}', [AthleteController::class, 'destroy'])->name('athletes.destroy');
+    });
+    
+    
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-
-require __DIR__.'/auth.php';
+  });
+  
+  
+  require __DIR__ . '/auth.php';
