@@ -139,7 +139,7 @@ const Login = (props) => {
                 radius={16}
                 // c="gold.9"
               >
-                Button
+                Masuk
               </Button>
             </Box>
           </Center>
