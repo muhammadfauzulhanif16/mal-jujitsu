@@ -37,7 +37,6 @@ export const AppLayout = (props) => {
       
       <Box
         mih="100vh"
-        bg="gold.10"
         px={props.authed && {
           base: 16,
           sm: 32,

@@ -2,13 +2,13 @@
   
   namespace App\Http\Controllers;
   
-  use App\Http\Requests\UpdateCoachRequest;
   use App\Models\Coach;
   use App\Models\User;
   use Exception;
   use Illuminate\Http\Request;
   use Illuminate\Support\Carbon;
   use Illuminate\Support\Facades\Hash;
+  use Illuminate\Support\Facades\Storage;
   
   class CoachController extends Controller
   {
@@ -18,7 +18,10 @@
     public function index()
     {
       return Inertia('Coach/Index', [
-        'coaches' => Coach::with('user')->get(),
+        'coaches' => Coach::with('user')->get()->map(function ($coach) {
+          $coach->user->avatar = $coach->user->avatar ? asset('storage/' . $coach->user->avatar) : null;
+          return $coach;
+        }),
         'meta' => session('meta')
       ]);
     }
@@ -38,10 +41,8 @@
         ]);
         
         if ($request->hasFile('avatar')) {
-          $avatar = $request->file('avatar');
-          $path = $avatar->store('avatars', 'public');
           $user->update([
-            'avatar' => asset('storage/' . $path),
+            'avatar' => $request->file('avatar')->store('avatars', 'public'),
           ]);
         }
         
@@ -68,42 +69,96 @@
      */
     public function create()
     {
-      return Inertia('Coach/Create');
+      return Inertia('Coach/Create', [
+        'users' => User::all(),
+      ]);
     }
     
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCoachRequest $request, Coach $coach)
+    public function update(Request $request, User $user)
     {
-    
+      try {
+        $user->update([
+          'full_name' => $request->full_name,
+          'birth_date' => Carbon::parse($request->birth_date)->format('Y-m-d'),
+          'role' => $request->role,
+          'email' => $request->email,
+          'password' => Hash::make($request->password),
+        ]);
+        
+        if ($request->hasFile('avatar')) {
+          if ($user->avatar) {
+            Storage::disk('public')->delete(str_replace('storage/', '', $user->avatar));
+          }
+          
+          $user->update([
+            'avatar' => $request->file('avatar')->store('avatars', 'public'),
+          ]);
+        }
+        
+        return redirect()->route('coaches.index')->with('meta', [
+          'status' => true,
+          'title' => 'Berhasil memperbarui pelatih',
+          'message' => "Pelatih '{$request->full_name}' berhasil diperbarui!"
+        ]);
+      } catch (Exception $e) {
+        return redirect()->route('coaches.index')->with('meta', [
+          'status' => false,
+          'title' => 'Gagal memperbarui pelatih',
+          'message' => $e->getMessage()
+        ]);
+      }
     }
     
     /**
      * Display the specified resource.
      */
-    public function show(Coach $coach)
+    public function show(User $user)
     {
+      $user->avatar = $user->avatar ? asset('storage/' . $user->avatar) : null;
+      
       return Inertia('Coach/Show', [
-        'coach' => $coach->load('user')
+        'user' => $user,
       ]);
     }
     
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Coach $coach)
+    public function edit(User $user)
     {
+      $user->avatar = $user->avatar ? asset('storage/' . $user->avatar) : null;
       return Inertia('Coach/Edit', [
-        'coach' => $coach->load('user')
+        'coach' => $user,
+        'users' => User::all(),
       ]);
     }
     
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Coach $coach)
+    public function destroy(User $user)
     {
-      return $coach->delete();
+      try {
+        if ($user->avatar) {
+          Storage::disk('public')->delete(str_replace('storage/', '', $user->avatar));
+        }
+        
+        $user->delete();
+        
+        return to_route('coaches.index')->with('meta', [
+          'status' => true,
+          'title' => 'Berhasil menghapus pelatih',
+          'message' => "Pelatih '{$user->full_name}' berhasil dihapus!"
+        ]);
+      } catch (Exception $e) {
+        return to_route('coaches.index')->with('meta', [
+          'status' => false,
+          'title' => 'Gagal menghapus pelatih',
+          'message' => $e->getMessage()
+        ]);
+      }
     }
   }

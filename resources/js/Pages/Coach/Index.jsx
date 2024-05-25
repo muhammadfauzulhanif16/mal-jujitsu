@@ -1,22 +1,53 @@
 import { AppLayout } from '@/Layouts/AppLayout.jsx'
 import {
+  ActionIcon,
   Avatar,
   Button,
   Divider,
-  SimpleGrid,
+  Grid,
   Table as MantineTable,
   TextInput,
+  Tooltip,
 } from '@mantine/core'
-import { IconPlus, IconSearch } from '@tabler/icons-react'
-import { Breadcrumbs } from '@/Components/Breadcrumbs.jsx'
+import {
+  IconEye,
+  IconPencil,
+  IconPlus,
+  IconSearch,
+  IconTrash,
+} from '@tabler/icons-react'
 import { router } from '@inertiajs/core'
 import { Table } from '@/Components/Table.jsx'
 import { useState } from 'react'
+import { Breadcrumbs } from '@/Components/Breadcrumbs.jsx'
 
 const Index = (props) => {
   const [coachSearch, setCoachSearch] = useState('')
   const THList = ['#', 'Foto', 'Nama Lengkap', 'Ditambahkan Pada', 'Diperbarui Pada', 'Aksi']
-  const TDList = props.coaches.map((coach, id) => (
+  const actionList = [
+    {
+      label: 'Rincian Pelatih',
+      icon: <IconEye />,
+      onClick: (user) => router.get(route('coaches.show', user.id)),
+      color: 'blue',
+    },
+    {
+      label: 'Ubah Pelatih',
+      icon: <IconPencil />,
+      onClick: (user) => router.get(route('coaches.edit', user.id)),
+      color: 'yellow',
+    },
+    {
+      label: 'Hapus Pelatih',
+      icon: <IconTrash />,
+      onClick: (user) => router.delete(route('coaches.destroy', user.id)),
+      color: 'red',
+    },
+  ]
+  const coachList = props.coaches.filter((coach) => {
+    return coach.user.full_name.toLowerCase().includes(coachSearch.toLowerCase())
+  })
+  const TDList = coachList.map((coach, id) => (
     <MantineTable.Tr h={48} key={id}>
       <MantineTable.Td
         px={16} py={0}
@@ -35,30 +66,59 @@ const Index = (props) => {
       <MantineTable.Td
         px={16} py={0}
         style={{ whiteSpace: 'nowrap' }}>{coach.user.updated_at}</MantineTable.Td>
+      <MantineTable.Td
+        px={16} py={0}
+        style={{ whiteSpace: 'nowrap' }}>
+        <Button.Group>
+          {actionList.map((action, id) => (
+            <Tooltip label={action.label} key={id} style={{
+              borderRadius: 32,
+              padding: '.5rem 1rem',
+            }}>
+              <ActionIcon size={48} radius={32} variant="subtle"
+                          aria-label={action.label} color={action.color}
+                          onClick={() => action.onClick(coach.user)}
+                          disabled={props.auth.user.id === coach.user.id}
+              >
+                {action.icon}
+              </ActionIcon>
+            </Tooltip>
+          ))}
+        </Button.Group>
+      </MantineTable.Td>
     </MantineTable.Tr>
   ))
   
   return (
     <AppLayout title="Pelatih" authed={props.auth.user} meta={props.meta}>
-      <SimpleGrid
-        cols={{
-          base: 1,
-          sm: 2,
-        }}
-        spacing={{
-          base: 16,
-          sm: 0,
-        }}
+      <Grid
+        grow
+        justify="space-between"
       >
-        <Breadcrumbs navList={[{ label: 'Pelatih' }]} />
+        <Grid.Col span={3}>
+          <Breadcrumbs navList={[{ label: 'Pelatih' }]} />
+        </Grid.Col>
         
-        <SimpleGrid
-          cols={{
-            base: 1,
-            xs: 2,
+        <Grid.Col
+          span={3}
+          style={{
+            display: 'flex',
           }}
-          spacing={16}
         >
+          <Button
+            ml="auto"
+            leftSection={<IconPlus />}
+            variant="filled"
+            color="gold.1"
+            h={48}
+            radius={32}
+            onClick={() => router.get(route('coaches.create'))}
+          >
+            Tambah Pelatih
+          </Button>
+        </Grid.Col>
+        
+        <Grid.Col span={12}>
           <TextInput
             variant="filled"
             leftSection={<IconSearch />}
@@ -75,20 +135,10 @@ const Index = (props) => {
             }}
             color="gold.1"
             placeholder="Cari atlet..."
+            onChange={(e) => setCoachSearch(e.target.value)}
           />
-          
-          <Button
-            leftSection={<IconPlus />}
-            variant="filled"
-            color="gold.1"
-            h={48}
-            radius={32}
-            onClick={() => router.get(route('coaches.create'))}
-          >
-            Tambah Pelatih
-          </Button>
-        </SimpleGrid>
-      </SimpleGrid>
+        </Grid.Col>
+      </Grid>
       
       <Divider my={32} />
       

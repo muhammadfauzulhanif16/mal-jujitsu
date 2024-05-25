@@ -7,7 +7,7 @@ export const Table = (props) => {
       borderRadius: 20,
       border: '1px solid #E0E0E0',
     }}>
-      <MantineTable.ScrollContainer p={0}>
+      <MantineTable.ScrollContainer>
         <MantineTable
           styles={{
             table: {
@@ -20,6 +20,7 @@ export const Table = (props) => {
               borderRadius: 16,
               // backgroundColor: 'red',
             },
+            
           }}>
           <MantineTable.Thead h={48}>
             <MantineTable.Tr>

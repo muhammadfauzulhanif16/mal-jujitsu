@@ -4,6 +4,7 @@ import {
   IconClipboard,
   IconHome,
   IconHomeFilled,
+  IconReport,
   IconUser,
 } from '@tabler/icons-react'
 import { router } from '@inertiajs/core'
@@ -33,6 +34,10 @@ export const NavBar = (props) => {
     {
       icon: <IconCertificate />,
       label: 'Pertandingan',
+    },
+    {
+      icon: <IconReport />,
+      label: 'Laporan',
     },
   ]
   

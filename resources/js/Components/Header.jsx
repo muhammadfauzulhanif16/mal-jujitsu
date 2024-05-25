@@ -85,8 +85,9 @@ export const Header = (props) => {
                 </Text>
               </Stack>
               
-              <Avatar alt={props.authed.full_name} size={48}
-                      color="gold.1">{props.authed.full_name.split(' ')[0][0]}</Avatar>
+              <Avatar src={props.authed.avatar} alt={props.authed.full_name}
+                      size={48}
+                      color="gold.1">{!props.authed.avatar && props.authed.full_name.split(' ')[0][0]}</Avatar>
             </Flex>
           </Menu.Target>
           

@@ -28,7 +28,7 @@
     public function rules(): array
     {
       return [
-        'email' => ['required', 'string', 'email'],
+        'email' => ['required', 'string',],
         'password' => ['required', 'string'],
       ];
     }
@@ -42,12 +42,19 @@
     {
       $this->ensureIsNotRateLimited();
       
+      // Validate email
+      if (!filter_var($this->input('email'), FILTER_VALIDATE_EMAIL)) {
+        throw ValidationException::withMessages([
+          'email' => 'Alamat surel tidak sah.',
+        ]);
+      }
+      
       if (!Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
         RateLimiter::hit($this->throttleKey());
-
-//            throw ValidationException::withMessages([
-//                'email' => trans('auth.failed'),
-//            ]);
+        
+        // throw ValidationException::withMessages([
+        //     'email' => trans('auth.failed'),
+        // ]);
       }
       
       RateLimiter::clear($this->throttleKey());
@@ -82,5 +89,16 @@
     public function throttleKey(): string
     {
       return Str::transliterate(Str::lower($this->string('email')) . '|' . $this->ip());
+    }
+    
+    public function messages()
+    {
+      return [
+        'email.required' => 'Alamat surel diperlukan.',
+        'email.string' => 'Alamat surel harus berupa string.',
+        'email.email' => 'Alamat surel harus sah.',
+        'password.required' => 'Kata sandi diperlukan.',
+        'password.string' => 'Kata sandi harus berupa string.',
+      ];
     }
   }

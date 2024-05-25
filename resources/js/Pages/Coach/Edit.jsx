@@ -24,21 +24,21 @@ import { useForm } from '@inertiajs/react'
 import { DatePickerInput } from '@mantine/dates'
 import 'dayjs/locale/id'
 
-const Create = (props) => {
-  
+const Edit = (props) => {
   const form = useForm({
-    avatar: '',
-    email: '',
+    _method: 'put',
+    avatar: props.coach.avatar,
+    email: props.coach.email,
     password: '',
-    full_name: '',
-    birth_date: '',
-    role: '',
+    full_name: props.coach.full_name,
+    birth_date: props.coach.birth_date,
+    role: props.coach.role,
   })
   
   return (
     <form onSubmit={(e) => {
       e.preventDefault()
-      form.post(route('coaches.store'))
+      form.post(route('coaches.update', props.coach.id))
     }}>
       <AppLayout title="Pelatih" authed={props.auth.user} meta={props.meta}>
         <Grid
@@ -58,7 +58,7 @@ const Create = (props) => {
                   label: 'Pelatih',
                   route: 'coaches.index',
                 }, {
-                  label: 'Tambah',
+                  label: 'Ubah',
                 },
               ]}
             />
@@ -85,7 +85,6 @@ const Create = (props) => {
                 base: 'block',
                 xs: 'none',
               }}
-              disabled={form.hasErrors || !form.data.password || !form.data.email || !form.data.full_name || !form.data.birth_date || !form.data.role}
             >
               <IconCornerDownLeft />
             </ActionIcon>
@@ -102,10 +101,8 @@ const Create = (props) => {
               color="gold.1"
               h={48}
               radius={32}
-              loading={form.processing}
-              disabled={form.hasErrors || !form.data.password || !form.data.email || !form.data.full_name || !form.data.birth_date || !form.data.role}
             >
-              Tambah Pelatih
+              Ubah Pelatih
             </Button>
           </Grid.Col>
         </Grid>
@@ -203,24 +200,21 @@ const Create = (props) => {
                 label="Alamat Surel"
                 placeholder="Masukkan alamat surel..."
                 onChange={(e) => {
-                  const email = e.target.value.toLowerCase()
-                  form.setData('email', email)
+                  form.setData('email', e.target.value.toLowerCase())
                   
-                  if (!email) {
-                    form.setError({ email: 'Alamat surel tidak boleh kosong.' })
-                  } else if (!/\S+@\S+\.\S+/.test(email)) {
-                    form.setError({ email: 'Alamat surel tidak sah.' })
-                  } else if (props.users.some(user => user.email === email)) {
-                    form.setError({ email: 'Alamat surel sudah terdaftar.' })
+                  if (!e.target.value) {
+                    form.setError({
+                      email: 'Alamat surel tidak boleh kosong.',
+                    })
                   } else {
                     form.clearErrors('email')
                   }
                 }}
                 error={form.errors.email}
+                value={form.data.email}
               />
               
               <TextInput
-                withAsterisk
                 variant="filled"
                 type="password"
                 leftSection={<IconPassword />}
@@ -311,6 +305,7 @@ const Create = (props) => {
                   }
                 }}
                 error={form.errors.full_name}
+                value={form.data.full_name}
               />
               
               <DatePickerInput
@@ -365,8 +360,8 @@ const Create = (props) => {
                   }
                 }}
                 error={form.errors.birth_date}
+                value={new Date(form.data.birth_date)}
               />
-              {/*</DatesProvider>*/}
             </Fieldset>
             
             <Fieldset
@@ -407,6 +402,8 @@ const Create = (props) => {
                     form.clearErrors('role')
                   }
                 }}
+                error={form.errors.role}
+                value={form.data.role}
               >
                 <Group mt="xs">
                   <Radio value="Manajer Tim" label="Manajer Tim"
@@ -425,4 +422,4 @@ const Create = (props) => {
   )
 }
 
-export default Create
+export default Edit

@@ -20,7 +20,6 @@ const Login = (props) => {
   return (
     <form onSubmit={(e) => {
       e.preventDefault()
-      
       form.post(route('login'))
     }}>
       <AppLayout title="Log In" authed={props.auth.user} meta={props.meta}>
@@ -42,7 +41,7 @@ const Login = (props) => {
             src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/GABRIEL_VELLA_vs_ROMINHO_51.jpg/1024px-GABRIEL_VELLA_vs_ROMINHO_51.jpg"
           />
           
-          <Center bg="netral.9" p={32} style={{
+          <Center p={32} style={{
             borderRadius: 20,
           }}>
             <Box w={320}>
@@ -63,7 +62,6 @@ const Login = (props) => {
                     marginBottom: 12,
                   },
                   input: {
-                    backgroundColor: 'var(--mantine-color-netral-10)',
                     height: 48,
                     borderRadius: 32,
                     paddingLeft: 50,
@@ -80,12 +78,13 @@ const Login = (props) => {
                 placeholder="Masukkan alamat surel..."
                 mb={24}
                 onChange={(e) => {
-                  form.setData('email', e.target.value.toLowerCase())
+                  const email = e.target.value.toLowerCase()
+                  form.setData('email', email)
                   
-                  if (!e.target.value) {
-                    form.setError({
-                      email: 'Alamat surel tidak boleh kosong.',
-                    })
+                  if (!email) {
+                    form.setError({ email: 'Alamat surel tidak boleh kosong.' })
+                  } else if (!/\S+@\S+\.\S+/.test(email)) {
+                    form.setError({ email: 'Alamat surel tidak sah.' })
                   } else {
                     form.clearErrors('email')
                   }
@@ -106,7 +105,6 @@ const Login = (props) => {
                     borderRadius: 32,
                     paddingLeft: 60,
                     paddingRight: 14,
-                    backgroundColor: 'var(--mantine-color-netral-10)',
                     
                   },
                   section: {
