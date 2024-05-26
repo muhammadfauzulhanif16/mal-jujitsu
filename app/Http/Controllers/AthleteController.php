@@ -2,9 +2,14 @@
   
   namespace App\Http\Controllers;
   
-  use App\Http\Requests\StoreAthleteRequest;
-  use App\Http\Requests\UpdateAthleteRequest;
   use App\Models\Athlete;
+  use App\Models\Coach;
+  use App\Models\User;
+  use Exception;
+  use Illuminate\Http\Request;
+  use Illuminate\Support\Carbon;
+  use Illuminate\Support\Facades\Hash;
+  use Illuminate\Support\Facades\Storage;
   
   class AthleteController extends Controller
   {
@@ -14,8 +19,51 @@
     public function index()
     {
       return Inertia('Athlete/Index', [
-        'athletes' => Athlete::with('user')->get()
+        'athletes' => Athlete::with('user')->get()->map(function ($athlete) {
+          $athlete->user->avatar = $athlete->user->avatar ? asset('storage/' . $athlete->user->avatar) : null;
+          return $athlete;
+        }),
+        'coaches' => Coach::all(),
+        'meta' => session('meta')
       ]);
+    }
+    
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+      try {
+        $user = User::create([
+          'full_name' => $request->full_name,
+          'birth_date' => Carbon::parse($request->birth_date)->format('Y-m-d'),
+          'role' => $request->role,
+          'email' => $request->email,
+          'password' => Hash::make($request->password),
+        ]);
+        
+        if ($request->hasFile('avatar')) {
+          $user->update([
+            'avatar' => $request->file('avatar')->store('avatars', 'public'),
+          ]);
+        }
+        
+        $user->athlete()->create([
+          'user_id' => $user->id,
+        ]);
+        
+        return to_route('athletes.index')->with('meta', [
+          'status' => true,
+          'title' => 'Berhasil menambahkan atlet',
+          'message' => "Atlet '{$request->full_name}' berhasil ditambahkan!"
+        ]);
+      } catch (Exception $e) {
+        return to_route('athletes.index')->with('meta', [
+          'status' => false,
+          'title' => 'Gagal menambahkan atlet',
+          'message' => $e->getMessage()
+        ]);
+      }
     }
     
     /**
@@ -23,46 +71,96 @@
      */
     public function create()
     {
-      return Inertia('Athlete/Create');
-    }
-    
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreAthleteRequest $request)
-    {
-      //
-    }
-    
-    /**
-     * Display the specified resource.
-     */
-    public function show(Athlete $athlete)
-    {
-      //
-    }
-    
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Athlete $athlete)
-    {
-      //
+      return Inertia('Athlete/Create', [
+        'users' => User::all()
+      ]);
     }
     
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateAthleteRequest $request, Athlete $athlete)
+    public function update(Request $request, User $user)
     {
-      //
+      try {
+        $user->update([
+          'full_name' => $request->full_name,
+          'birth_date' => Carbon::parse($request->birth_date)->format('Y-m-d'),
+          'role' => $request->role,
+          'email' => $request->email,
+          'password' => Hash::make($request->password),
+        ]);
+        
+        if ($request->hasFile('avatar')) {
+          if ($user->avatar) {
+            Storage::disk('public')->delete(str_replace('storage/', '', $user->avatar));
+          }
+          
+          $user->update([
+            'avatar' => $request->file('avatar')->store('avatars', 'public'),
+          ]);
+        }
+        
+        return redirect()->route('athletes.index')->with('meta', [
+          'status' => true,
+          'title' => 'Berhasil memperbarui atlet',
+          'message' => "Atlet '{$request->full_name}' berhasil diperbarui!"
+        ]);
+      } catch (Exception $e) {
+        return redirect()->route('athletes.index')->with('meta', [
+          'status' => false,
+          'title' => 'Gagal memperbarui atlet',
+          'message' => $e->getMessage()
+        ]);
+      }
+    }
+    
+    /**
+     * Display the specified resource.
+     */
+    public function show(User $user)
+    {
+      $user->avatar = $user->avatar ? asset('storage/' . $user->avatar) : null;
+      
+      return Inertia('Athlete/Show', [
+        'user' => $user,
+      ]);
+    }
+    
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(User $user)
+    {
+      $user->avatar = $user->avatar ? asset('storage/' . $user->avatar) : null;
+      return Inertia('Athlete/Edit', [
+        'coach' => $user,
+        'users' => User::all(),
+      ]);
     }
     
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Athlete $athlete)
+    public function destroy(User $user)
     {
-      //
+      try {
+        if ($user->avatar) {
+          Storage::disk('public')->delete(str_replace('storage/', '', $user->avatar));
+        }
+        
+        $user->delete();
+        
+        return to_route('athletes.index')->with('meta', [
+          'status' => true,
+          'title' => 'Berhasil menghapus atlet',
+          'message' => "Atlet '{$user->full_name}' berhasil dihapus!"
+        ]);
+      } catch (Exception $e) {
+        return to_route('athletes.index')->with('meta', [
+          'status' => false,
+          'title' => 'Gagal menghapus atlet',
+          'message' => $e->getMessage()
+        ]);
+      }
     }
   }

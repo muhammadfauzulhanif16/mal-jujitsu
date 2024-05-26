@@ -7,6 +7,7 @@
   use Exception;
   use Illuminate\Http\Request;
   use Illuminate\Support\Carbon;
+  use Illuminate\Support\Facades\Auth;
   use Illuminate\Support\Facades\Hash;
   use Illuminate\Support\Facades\Storage;
   
@@ -17,12 +18,16 @@
      */
     public function index()
     {
+      $authedUser = Auth::user();
+      $authedUser->avatar = $authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null;
+      
       return Inertia('Coach/Index', [
         'coaches' => Coach::with('user')->get()->map(function ($coach) {
           $coach->user->avatar = $coach->user->avatar ? asset('storage/' . $coach->user->avatar) : null;
           return $coach;
         }),
-        'meta' => session('meta')
+        'meta' => session('meta'),
+        'auth' => ['user' => $authedUser]
       ]);
     }
     
@@ -69,8 +74,12 @@
      */
     public function create()
     {
+      $authedUser = Auth::user();
+      $authedUser->avatar = $authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null;
+      
       return Inertia('Coach/Create', [
         'users' => User::all(),
+        'auth' => ['user' => $authedUser]
       ]);
     }
     
@@ -85,7 +94,7 @@
           'birth_date' => Carbon::parse($request->birth_date)->format('Y-m-d'),
           'role' => $request->role,
           'email' => $request->email,
-          'password' => Hash::make($request->password),
+          'password' => $request->password ? Hash::make($request->password) : $user->password
         ]);
         
         if ($request->hasFile('avatar')) {
@@ -117,10 +126,13 @@
      */
     public function show(User $user)
     {
+      $authedUser = Auth::user();
+      $authedUser->avatar = $authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null;
       $user->avatar = $user->avatar ? asset('storage/' . $user->avatar) : null;
       
       return Inertia('Coach/Show', [
         'user' => $user,
+        'auth' => ['user' => $authedUser]
       ]);
     }
     
@@ -129,10 +141,14 @@
      */
     public function edit(User $user)
     {
+      $authedUser = Auth::user();
+      $authedUser->avatar = $authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null;
       $user->avatar = $user->avatar ? asset('storage/' . $user->avatar) : null;
+      
       return Inertia('Coach/Edit', [
         'coach' => $user,
         'users' => User::all(),
+        'auth' => ['user' => $authedUser]
       ]);
     }
     
