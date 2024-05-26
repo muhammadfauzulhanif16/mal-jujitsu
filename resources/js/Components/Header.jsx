@@ -14,15 +14,15 @@ export const Header = (props) => {
           <Image radius={16} h={48} src="https://pbjisurabaya.or.id/images/logo/pbji.png" />
         </Group>
         
-        <Box display={{ base: 'none', lg: 'block' }}>
+        <Box display={{ base: 'none', md: 'block' }}>
           <NavBar title={props.title} />
         </Box>
         
         <Menu shadow="md"
               styles={{ dropdown: { padding: 8, borderRadius: 20 }, item: { height: 48, borderRadius: 32 }, itemSection: { marginRight: 16 } }}>
           <Menu.Target>
-            <Group display={{ base: 'none', lg: 'flex' }} variant="subtle" style={{ cursor: 'pointer' }} gap={16} w={240} justify="end">
-              <Box align="end" gap={0} w={160}>
+            <Group display={{ base: 'none', md: 'flex' }} variant="subtle" style={{ cursor: 'pointer' }} gap={16} w={240} justify="end">
+              <Box align="end" gap={0} w={120}>
                 <Text truncate="end">{props.authed.full_name}</Text>
                 <Text truncate="end" size="sm" c="netral.5">{props.authed.email}</Text>
               </Box>
@@ -38,7 +38,7 @@ export const Header = (props) => {
           </Menu.Dropdown>
         </Menu>
         
-        <ActionIcon display={{ base: 'block', lg: 'none' }} aria-label="Menu" variant="subtle" color="gold.1" size={48} radius="xl" onClick={open}>
+        <ActionIcon display={{ base: 'block', md: 'none' }} aria-label="Menu" variant="subtle" color="gold.1" size={48} radius="xl" onClick={open}>
           <IconMenu />
         </ActionIcon>
       </Flex>
