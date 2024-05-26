@@ -1,13 +1,13 @@
 import { ActionIcon, Flex, Text } from '@mantine/core'
-import { IconCertificate, IconClipboard, IconHome, IconHomeFilled, IconReport, IconUser } from '@tabler/icons-react'
+import { IconCertificate, IconClipboardText, IconHome, IconReport, IconUser } from '@tabler/icons-react'
 import { router } from '@inertiajs/core'
 
 export const NavBar = (props) => {
-  const navList = [{ icon: props.title === 'Beranda' ? <IconHomeFilled px={16} /> : <IconHome />, label: 'Beranda', route: 'dashboard' }, {
+  const navList = [{ icon: <IconHome />, label: 'Beranda', route: 'dashboard' }, {
     icon: <IconUser />,
     label: 'Pelatih',
     route: 'coaches.index',
-  }, { icon: <IconUser />, label: 'Atlet', route: 'athletes.index' }, { icon: <IconClipboard />, label: 'Latihan' }, {
+  }, { icon: <IconUser />, label: 'Atlet', route: 'athletes.index' }, { icon: <IconClipboardText />, label: 'Latihan' }, {
     icon: <IconCertificate />,
     label: 'Pertandingan',
   }, { icon: <IconReport />, label: 'Laporan' }]

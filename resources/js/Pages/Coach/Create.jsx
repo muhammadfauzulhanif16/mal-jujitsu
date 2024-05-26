@@ -24,7 +24,7 @@ const Create = (props) => {
             <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Tambah Pelatih">
               <ActionIcon ml="auto" h={48} w={48} color="gold.1" radius={32} display={{ base: 'block', xs: 'none' }}
                           disabled={form.hasErrors || !form.data.password || !form.data.email || !form.data.full_name || !form.data.birth_date || !form.data.role}
-              >
+                          type="submit">
                 <IconCornerDownLeft />
               </ActionIcon>
             </Tooltip>

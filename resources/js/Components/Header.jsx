@@ -9,27 +9,27 @@ export const Header = (props) => {
   console.log(props)
   return (
     <>
-      <Flex px={16} h={80} justify="space-between" style={{ zIndex: 2 }} pos="sticky" top={0} bg="netral.10">
-        <Flex w={160} align="center">
+      <Flex px={16} justify="space-between" h={80} style={{ zIndex: 2, alignItems: 'center' }}>
+        <Group w={240}>
           <Image radius={16} h={48} src="https://pbjisurabaya.or.id/images/logo/pbji.png" />
-        </Flex>
+        </Group>
         
-        <Box display={{ base: 'none', md: 'flex' }}>
+        <Box display={{ base: 'none', lg: 'block' }}>
           <NavBar title={props.title} />
         </Box>
         
-        <Menu shadow="md" width={200}
+        <Menu shadow="md"
               styles={{ dropdown: { padding: 8, borderRadius: 20 }, item: { height: 48, borderRadius: 32 }, itemSection: { marginRight: 16 } }}>
           <Menu.Target>
-            <Flex variant="subtle" style={{ cursor: 'pointer' }} gap={16} align="center" w={160} display={{ base: 'none', md: 'flex' }}>
-              <Stack align="end" gap={0}>
-                <Text>{props.authed.full_name}</Text>
-                <Text size="sm" c="netral.5">{props.authed.email}</Text>
-              </Stack>
+            <Group display={{ base: 'none', lg: 'flex' }} variant="subtle" style={{ cursor: 'pointer' }} gap={16} w={240} justify="end">
+              <Box align="end" gap={0} w={160}>
+                <Text truncate="end">{props.authed.full_name}</Text>
+                <Text truncate="end" size="sm" c="netral.5">{props.authed.email}</Text>
+              </Box>
               
               <Avatar src={props.authed.avatar} alt={props.authed.full_name} size={48}
                       color="gold.1">{!props.authed.avatar && props.authed.full_name.split(' ')[0][0]}</Avatar>
-            </Flex>
+            </Group>
           </Menu.Target>
           
           <Menu.Dropdown>
@@ -38,18 +38,16 @@ export const Header = (props) => {
           </Menu.Dropdown>
         </Menu>
         
-        <Flex w={160} align="center" justify="end" display={{ base: 'flex', md: 'none' }}>
-          <ActionIcon aria-label="Menu" variant="subtle" color="gold.1" size={48} radius="xl" onClick={open}>
-            <IconMenu />
-          </ActionIcon>
-        </Flex>
+        <ActionIcon display={{ base: 'block', lg: 'none' }} aria-label="Menu" variant="subtle" color="gold.1" size={48} radius="xl" onClick={open}>
+          <IconMenu />
+        </ActionIcon>
       </Flex>
       
       <Drawer title={
-        <Group>
+        <Group bg="blue">
           <Avatar src={props.authed.avatar} alt={props.authed.full_name} size={48} color="gold.1">{props.authed.full_name.split(' ')[0][0]}</Avatar>
           
-          <Stack gap={0}>
+          <Stack gap={0} w={160}>
             <Text truncate="end">{props.authed.full_name}</Text>
             <Text size="sm" c="netral.5" truncate="end">{props.authed.email}</Text>
           </Stack>

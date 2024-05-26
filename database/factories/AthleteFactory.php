@@ -1,14 +1,15 @@
 <?php
-
-namespace Database\Factories;
-
-use Illuminate\Database\Eloquent\Factories\Factory;
-
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Athlete>
- */
-class AthleteFactory extends Factory
-{
+  
+  namespace Database\Factories;
+  
+  use App\Models\Athlete;
+  use Illuminate\Database\Eloquent\Factories\Factory;
+  
+  /**
+   * @extends Factory<Athlete>
+   */
+  class AthleteFactory extends Factory
+  {
     /**
      * Define the model's default state.
      *
@@ -16,8 +17,8 @@ class AthleteFactory extends Factory
      */
     public function definition(): array
     {
-        return [
-            //
-        ];
+      return [
+        'weight' => $this->faker->randomFloat(2, 50, 100),
+      ];
     }
-}
+  }

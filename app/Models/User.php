@@ -19,6 +19,7 @@
      */
     protected $fillable = [
       'full_name',
+      'gender',
       'avatar',
       'birth_date',
       'role',

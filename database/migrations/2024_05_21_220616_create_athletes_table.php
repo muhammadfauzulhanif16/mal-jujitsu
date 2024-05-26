@@ -12,6 +12,7 @@
     {
       Schema::create('athletes', function (Blueprint $table) {
         $table->foreignUuid('user_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+        $table->decimal('weight', 5)->nullable();
       });
     }
     

@@ -1,14 +1,16 @@
 <?php
-
-namespace Database\Factories;
-
-use Illuminate\Database\Eloquent\Factories\Factory;
-
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Coach>
- */
-class CoachFactory extends Factory
-{
+  
+  namespace Database\Factories;
+  
+  use App\Models\Coach;
+  use App\Models\User;
+  use Illuminate\Database\Eloquent\Factories\Factory;
+  
+  /**
+   * @extends Factory<Coach>
+   */
+  class CoachFactory extends Factory
+  {
     /**
      * Define the model's default state.
      *
@@ -16,8 +18,8 @@ class CoachFactory extends Factory
      */
     public function definition(): array
     {
-        return [
-            //
-        ];
+      return [
+        'user_id' => User::factory()->create()->id,
+      ];
     }
-}
+  }

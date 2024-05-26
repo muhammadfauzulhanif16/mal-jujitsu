@@ -60,7 +60,8 @@ const Index = (props) => {
         
         <Grid.Col span={{ base: 6, xs: 5, sm: 4, md: 3 }}>
           <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Tambah Pelatih">
-            <ActionIcon ml="auto" h={48} w={48} color="gold.1" radius={32} display={{ base: 'block', xs: 'none' }}>
+            <ActionIcon ml="auto" h={48} w={48} color="gold.1" radius={32} display={{ base: 'block', xs: 'none' }}
+                        onClick={() => router.get(route('coaches.create'))}>
               <IconPlus />
             </ActionIcon>
           </Tooltip>
