@@ -11,6 +11,11 @@
     
     public $timestamps = false;
     
+    protected $fillable = [
+      'user_id',
+      'weight',
+    ];
+    
     protected $hidden = [
       'user_id',
     ];

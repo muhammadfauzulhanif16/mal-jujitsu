@@ -7,7 +7,7 @@ import { DatePickerInput } from '@mantine/dates'
 import 'dayjs/locale/id'
 
 const Create = (props) => {
-  const form = useForm({ avatar: '', email: '', password: '', full_name: '', birth_date: '', weight: '', role: '' })
+  const form = useForm({ avatar: '', email: '', password: '', full_name: '', gender: '', birth_date: '', weight: '', role: '' })
   
   return (
     <form onSubmit={(e) => {
@@ -23,7 +23,7 @@ const Create = (props) => {
           <Grid.Col span={{ base: 6, xs: 5, sm: 4, md: 3 }}>
             <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Tambah Pelatih">
               <ActionIcon type="submit" ml="auto" h={48} w={48} color="gold.1" radius={32} display={{ base: 'block', xs: 'none' }}
-                          disabled={form.hasErrors || !form.data.password || !form.data.email || !form.data.full_name || !form.data.birth_date || !form.data.role}
+                          disabled={form.hasErrors || !form.data.password || !form.data.email || !form.data.full_name || !form.data.birth_date || !form.data.gender || !form.data.weight || !form.data.role}
               >
                 <IconCornerDownLeft />
               </ActionIcon>
@@ -31,7 +31,7 @@ const Create = (props) => {
             
             <Button display={{ base: 'none', xs: 'block' }} type="submit" fullWidth leftSection={<IconCornerDownLeft />} variant="filled" color="gold.1" h={48}
                     px={16} styles={{ section: { marginRight: 12 } }} radius={32} loading={form.processing}
-                    disabled={form.hasErrors || !form.data.password || !form.data.email || !form.data.full_name || !form.data.birth_date || !form.data.role}>
+                    disabled={form.hasErrors || !form.data.password || !form.data.email || !form.data.full_name || !form.data.birth_date || !form.data.gender || !form.data.weight || !form.data.role}>
               Tambah Atlet
             </Button>
           </Grid.Col>
@@ -113,6 +113,24 @@ const Create = (props) => {
                 }
               }} error={form.errors.full_name} />
               
+              <Radio.Group mb={16} label="Jenis Kelamin" withAsterisk styles={{
+                label: { marginBottom: 8 }, error: { marginTop: 8 },
+              }} onChange={(value) => {
+                form.setData('gender', value)
+                
+                if (!value) {
+                  form.setError({ role: 'Jenis kelamin tidak boleh kosong.' })
+                } else {
+                  form.clearErrors('gender')
+                }
+              }}>
+                
+                <Group gap={32}>
+                  <Radio size="md" value="Laki-laki" label="Laki-laki" color="gold.1" />
+                  <Radio size="md" value="Perempuan" label="Perempuan" color="gold.1" />
+                </Group>
+              </Radio.Group>
+              
               <DatePickerInput mb={16} locale="id" monthsListFormat="MMMM" withAsterisk clearable allowDeselect firstDayOfWeek={0} variant="filled"
                                valueFormat="dddd, D MMMM YYYY" leftSection={<IconCalendar />} label="Tanggal Lahir" placeholder="Masukkan tanggal lahir..."
                                styles={{
@@ -139,18 +157,15 @@ const Create = (props) => {
                              input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 16 },
                              section: { marginLeft: 0, width: 48, height: 48 },
                              error: { marginTop: 8 },
-                           }} mb={16} label="Berat Badan" placeholder="Masukkan berat badan..." onChange={(e) => {
-                // const value = e.target.value.replace(/\b\w/g, char => char.toUpperCase()).replace(/\B\w/g, char => char.toLowerCase())
-                
-                console.log(e)
-                // form.setData('full_name', value)
+                           }} mb={16} label="Berat Badan" placeholder="Masukkan berat badan..." onChange={(value) => {
+                form.setData('weight', value)
                 
                 if (!value) {
-                  form.setError({ full_name: 'Nama lengkap tidak boleh kosong.' })
+                  form.setError({ weight: 'Nama lengkap tidak boleh kosong.' })
                 } else {
-                  form.clearErrors('full_name')
+                  form.clearErrors('weight')
                 }
-              }} error={form.errors.full_name} />
+              }} error={form.errors.weight} />
             </Fieldset>
             
             <Fieldset radius={20} legend="Informasi Atlet"
@@ -168,9 +183,8 @@ const Create = (props) => {
                 }
               }}>
                 <Group gap={32}>
-                  <Radio size="md" value="Manajer Tim" label="Manajer Tim" color="gold.1" />
-                  <Radio size="md" value="Pelatih Fisik" label="Pelatih Fisik" color="gold.1" />
-                  <Radio size="md" value="Pelatih Teknik" label="Pelatih Teknik" color="gold.1" />
+                  <Radio size="md" value="Ne-Waza" label="Ne-Waza" color="gold.1" />
+                  <Radio size="md" value="Fighting" label="Fighting" color="gold.1" />
                 </Group>
               </Radio.Group>
             </Fieldset>

@@ -8,7 +8,7 @@ import { router } from '@inertiajs/core'
 
 const Index = (props) => {
   const [athleteSearch, setAthleteSearch] = useState('')
-  const THList = ['#', 'Foto', 'Nama Lengkap', 'Bidang Pertandingan', 'Ditambahkan Pada', 'Diperbarui Pada', 'Aksi']
+  const THList = ['#', 'Foto', 'Nama Lengkap', 'Bidang Pertandingan', 'Aksi']
   const actionList = [
     {
       label: 'Rincian Atlet',
@@ -53,12 +53,6 @@ const Index = (props) => {
         style={{ whiteSpace: 'nowrap' }}>{athlete.user.role}</MantineTable.Td>
       <MantineTable.Td
         px={16} py={0}
-        style={{ whiteSpace: 'nowrap' }}>{athlete.user.created_at}</MantineTable.Td>
-      <MantineTable.Td
-        px={16} py={0}
-        style={{ whiteSpace: 'nowrap' }}>{athlete.user.updated_at}</MantineTable.Td>
-      <MantineTable.Td
-        px={16} py={0}
         style={{ whiteSpace: 'nowrap' }}>
         <Button.Group>
           {actionList.map((action, id) => (
@@ -87,19 +81,22 @@ const Index = (props) => {
           <Breadcrumbs navList={[{ label: 'Atlet' }]} />
         </Grid.Col>
         
-        <Grid.Col span={{ base: 6, xs: 5, sm: 4, md: 3 }}>
-          <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Tambah Atlet">
-            <ActionIcon ml="auto" h={48} w={48} color="gold.1" radius={32} display={{ base: 'block', xs: 'none' }}
-                        onClick={() => router.get(route('athletes.create'))}>
-              <IconPlus />
-            </ActionIcon>
-          </Tooltip>
-          
-          <Button display={{ base: 'none', xs: 'block' }} fullWidth leftSection={<IconPlus />} variant="filled" color="gold.1" h={48} radius={32} px={16}
-                  styles={{ section: { marginRight: 12 } }} onClick={() => router.get(route('athletes.create'))}>
-            Tambah Atlet
-          </Button>
-        </Grid.Col>
+        {['Pelatih Teknik', 'Pelatih Fisik'].includes(props.auth.user.role) && (
+          <Grid.Col span={{ base: 6, xs: 5, sm: 4, md: 3 }}>
+            <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Tambah Atlet">
+              <ActionIcon ml="auto" h={48} w={48} color="gold.1" radius={32} display={{ base: 'block', xs: 'none' }}
+                          onClick={() => router.get(route('athletes.create'))}>
+                <IconPlus />
+              </ActionIcon>
+            </Tooltip>
+            
+            <Button display={{ base: 'none', xs: 'block' }} fullWidth leftSection={<IconPlus />} variant="filled" color="gold.1" h={48} radius={32} px={16}
+                    styles={{ section: { marginRight: 12 } }} onClick={() => router.get(route('athletes.create'))}>
+              Tambah Atlet
+            </Button>
+          </Grid.Col>
+        )}
+        
         
         <Grid.Col span={12}>
           <TextInput variant="filled" leftSection={<IconSearch />}

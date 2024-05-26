@@ -1,38 +1,47 @@
 import { AppLayout } from '@/Layouts/AppLayout.jsx'
-import { ActionIcon, Avatar, Button, Divider, Fieldset, FileButton, Grid, Group, Radio, TextInput, Tooltip } from '@mantine/core'
-import { IconCalendar, IconCornerDownLeft, IconId, IconMail, IconPassword, IconPhotoUp } from '@tabler/icons-react'
+import { ActionIcon, Avatar, Button, Divider, Fieldset, FileButton, Grid, Group, NumberInput, Radio, TextInput, Tooltip } from '@mantine/core'
+import { IconCalendar, IconCornerDownLeft, IconId, IconMail, IconPassword, IconPhotoUp, IconWeight } from '@tabler/icons-react'
 import { Breadcrumbs } from '@/Components/Breadcrumbs.jsx'
 import { useForm } from '@inertiajs/react'
 import { DatePickerInput } from '@mantine/dates'
 import 'dayjs/locale/id'
 
-const Create = (props) => {
-  const form = useForm({ avatar: '', email: '', password: '', full_name: '', gender: '', birth_date: '', role: '' })
+const Edit = (props) => {
+  const form = useForm({
+    _method: 'put',
+    avatar: props.user.avatar,
+    email: props.user.email,
+    password: '',
+    full_name: props.user.full_name,
+    gender: props.user.gender,
+    birth_date: props.user.birth_date,
+    weight: props.user.athlete.weight,
+    role: props.user.role,
+  })
   
   return (
     <form onSubmit={(e) => {
       e.preventDefault()
-      form.post(route('coaches.store'))
+      form.post(route('athletes.update', props.user.id))
     }}>
-      <AppLayout title="Pelatih" authed={props.auth.user} meta={props.meta}>
+      <AppLayout title="Atlet" authed={props.auth.user} meta={props.meta}>
         <Grid justify="space-between">
           <Grid.Col span={{ base: 6, xs: 5, sm: 4, md: 3 }}>
-            <Breadcrumbs navList={[{ label: 'Pelatih', route: 'coaches.index' }, { label: 'Tambah' }]} />
+            <Breadcrumbs navList={[{ label: 'Atlet', route: 'athletes.index' }, { label: 'Ubah' }]} />
           </Grid.Col>
           
           <Grid.Col span={{ base: 6, xs: 5, sm: 4, md: 3 }}>
-            <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Tambah Pelatih">
+            <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Ubah Atlet">
               <ActionIcon ml="auto" h={48} w={48} color="gold.1" radius={32} display={{ base: 'block', xs: 'none' }}
-                          disabled={form.hasErrors || !form.data.password || !form.data.email || !form.data.full_name || !form.data.gender || !form.data.birth_date || !form.data.role}
-                          type="submit">
+                          disabled={form.hasErrors || !form.data.email || !form.data.full_name || !form.data.birth_date || !form.data.gender || !form.data.weight || !form.data.role}>
                 <IconCornerDownLeft />
               </ActionIcon>
             </Tooltip>
             
             <Button display={{ base: 'none', xs: 'block' }} type="submit" fullWidth leftSection={<IconCornerDownLeft />} variant="filled" color="gold.1" h={48}
-                    px={16} styles={{ section: { marginRight: 12 } }} radius={32} loading={form.processing}
-                    disabled={form.hasErrors || !form.data.password || !form.data.email || !form.data.full_name || !form.data.gender || !form.data.birth_date || !form.data.role}>
-              Tambah Pelatih
+                    radius={32} px={16} styles={{ section: { marginRight: 12 } }} loading={form.processing}
+                    disabled={form.hasErrors || !form.data.email || !form.data.full_name || !form.data.birth_date || !form.data.gender || !form.data.weight || !form.data.role}>
+              Ubah Pelatih
             </Button>
           </Grid.Col>
         </Grid>
@@ -42,8 +51,7 @@ const Create = (props) => {
         <Grid justify="space-between">
           <Grid.Col span={{ base: 12, md: 4 }}>
             <Avatar mx="auto" mb={16} src={form.data.avatar instanceof File ? URL.createObjectURL(form.data.avatar) : form.data.avatar}
-                    alt={form.data.full_name}
-                    size={160} />
+                    alt={form.data.full_name} size={160} />
             
             <FileButton onChange={(file) => form.setData('avatar', file)} accept="image/png,image/jpeg,image/jpg">
               {(props) => (
@@ -64,21 +72,17 @@ const Create = (props) => {
                 section: { marginLeft: 0, width: 48, height: 48 },
                 error: { marginTop: 8 },
               }} mb={16} label="Alamat Surel" placeholder="Masukkan alamat surel..." onChange={(e) => {
-                const email = e.target.value.toLowerCase()
-                form.setData('email', email)
+                form.setData('email', e.target.value.toLowerCase())
                 
-                if (!email) {
+                if (!e.target.value) {
                   form.setError({ email: 'Alamat surel tidak boleh kosong.' })
-                } else if (!/\S+@\S+\.\S+/.test(email)) {
-                  form.setError({ email: 'Alamat surel tidak sah.' })
-                } else if (props.users.some(user => user.email === email)) {
-                  form.setError({ email: 'Alamat surel sudah terdaftar.' })
                 } else {
                   form.clearErrors('email')
                 }
-              }} error={form.errors.email} />
+              }} error={form.errors.email} value={form.data.email}
+              />
               
-              <TextInput withAsterisk variant="filled" type="password" leftSection={<IconPassword />} styles={{
+              <TextInput variant="filled" type="password" leftSection={<IconPassword />} styles={{
                 label: { marginBottom: 8 },
                 input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 16 },
                 section: { marginLeft: 0, width: 48, height: 48 },
@@ -91,11 +95,10 @@ const Create = (props) => {
                 } else {
                   form.clearErrors('password')
                 }
-              }} error={form.errors.password}
-              />
+              }} error={form.errors.password} />
             </Fieldset>
             
-            <Fieldset mb={16} radius={20} legend="Informasi Pribadi"
+            <Fieldset radius={20} mb={20} legend="Informasi Pribadi"
                       styles={{ root: { margin: 0, padding: 16 }, legend: { borderRadius: 20, fontSize: 16, padding: 16, fontWeight: 'bold' } }}>
               <TextInput withAsterisk variant="filled" leftSection={<IconId />} styles={{
                 label: { marginBottom: 8 },
@@ -111,9 +114,11 @@ const Create = (props) => {
                 } else {
                   form.clearErrors('full_name')
                 }
-              }} error={form.errors.full_name} />
+              }} error={form.errors.full_name} value={form.data.full_name}
+              />
               
-              <Radio.Group mb={16} label="Jenis Kelamin" withAsterisk styles={{
+              
+              <Radio.Group value={form.data.gender} mb={16} label="Jenis Kelamin" withAsterisk styles={{
                 label: { marginBottom: 8 }, error: { marginTop: 8 },
               }} onChange={(value) => {
                 form.setData('gender', value)
@@ -124,7 +129,6 @@ const Create = (props) => {
                   form.clearErrors('gender')
                 }
               }}>
-                
                 <Group gap={32}>
                   <Radio size="md" value="Laki-laki" label="Laki-laki" color="gold.1" />
                   <Radio size="md" value="Perempuan" label="Perempuan" color="gold.1" />
@@ -144,19 +148,38 @@ const Create = (props) => {
                 form.setData('birth_date', value)
                 
                 if (!value) {
-                  form.setError({ birth_date: 'Tanggal lahir tidak boleh kosong.' })
+                  form.setError({
+                    birth_date:
+                      'Tanggal lahir tidak boleh kosong.',
+                  })
                 } else {
                   form.clearErrors('birth_date')
                 }
-              }} error={form.errors.birth_date} />
+              }} error={form.errors.birth_date} value={new Date(form.data.birth_date)} />
+              
+              <NumberInput value={form.data.weight} decimalScale={2} decimalSeparator="," suffix=" kg" allowNegative={false} hideControls min={0} withAsterisk
+                           variant="filled"
+                           leftSection={<IconWeight />}
+                           styles={{
+                             label: { marginBottom: 8 },
+                             input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 16 },
+                             section: { marginLeft: 0, width: 48, height: 48 },
+                             error: { marginTop: 8 },
+                           }} mb={16} label="Berat Badan" placeholder="Masukkan berat badan..." onChange={(value) => {
+                form.setData('weight', value)
+                
+                if (!value) {
+                  form.setError({ weight: 'Nama lengkap tidak boleh kosong.' })
+                } else {
+                  form.clearErrors('weight')
+                }
+              }} error={form.errors.weight} />
             </Fieldset>
             
-            <Fieldset radius={20} legend="Informasi Pelatih"
+            <Fieldset radius={20} legend="Informasi Atlet"
                       styles={{ root: { margin: 0, padding: 16 }, legend: { borderRadius: 20, fontSize: 16, padding: 16, fontWeight: 'bold' } }}
             >
-              <Radio.Group label="Peran" withAsterisk styles={{
-                label: { marginBottom: 8 }, error: { marginTop: 8 },
-              }} onChange={(value) => {
+              <Radio.Group label="Peran" withAsterisk styles={{ label: { marginBottom: 8 }, error: { marginTop: 8 } }} onChange={(value) => {
                 form.setData('role', value)
                 
                 if (!value) {
@@ -164,11 +187,10 @@ const Create = (props) => {
                 } else {
                   form.clearErrors('role')
                 }
-              }}>
+              }} error={form.errors.role} value={form.data.role}>
                 <Group gap={32}>
-                  <Radio size="md" value="Pengelola Tim" label="Pengelola Tim" color="gold.1" />
-                  <Radio size="md" value="Pelatih Fisik" label="Pelatih Fisik" color="gold.1" />
-                  <Radio size="md" value="Pelatih Teknik" label="Pelatih Teknik" color="gold.1" />
+                  <Radio size="md" value="Ne-Waza" label="Ne-Waza" color="gold.1" />
+                  <Radio size="md" value="Fighting" label="Fighting" color="gold.1" />
                 </Group>
               </Radio.Group>
             </Fieldset>
@@ -179,4 +201,4 @@ const Create = (props) => {
   )
 }
 
-export default Create
+export default Edit

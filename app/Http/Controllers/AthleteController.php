@@ -8,6 +8,7 @@
   use Exception;
   use Illuminate\Http\Request;
   use Illuminate\Support\Carbon;
+  use Illuminate\Support\Facades\Auth;
   use Illuminate\Support\Facades\Hash;
   use Illuminate\Support\Facades\Storage;
   
@@ -18,13 +19,17 @@
      */
     public function index()
     {
+      $authedUser = Auth::user();
+      $authedUser->avatar = str_contains($authedUser->avatar, 'https') ? $authedUser->avatar : ($authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null);
+      
       return Inertia('Athlete/Index', [
         'athletes' => Athlete::with('user')->get()->map(function ($athlete) {
-          $athlete->user->avatar = $athlete->user->avatar ? asset('storage/' . $athlete->user->avatar) : null;
+          $athlete->user->avatar = str_contains($athlete->user->avatar, 'https') ? $athlete->user->avatar : ($athlete->user->avatar ? asset('storage/' . $athlete->user->avatar) : null);
           return $athlete;
         }),
         'coaches' => Coach::all(),
-        'meta' => session('meta')
+        'meta' => session('meta'),
+        'auth' => ['user' => $authedUser]
       ]);
     }
     
@@ -36,6 +41,7 @@
       try {
         $user = User::create([
           'full_name' => $request->full_name,
+          'gender' => $request->gender,
           'birth_date' => Carbon::parse($request->birth_date)->format('Y-m-d'),
           'role' => $request->role,
           'email' => $request->email,
@@ -50,6 +56,7 @@
         
         $user->athlete()->create([
           'user_id' => $user->id,
+          'weight' => $request->weight,
         ]);
         
         return to_route('athletes.index')->with('meta', [
@@ -71,8 +78,12 @@
      */
     public function create()
     {
+      $authedUser = Auth::user();
+      $authedUser->avatar = str_contains($authedUser->avatar, 'https') ? $authedUser->avatar : ($authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null);
+      
       return Inertia('Athlete/Create', [
-        'users' => User::all()
+        'users' => User::all(),
+        'auth' => ['user' => $authedUser]
       ]);
     }
     
@@ -84,6 +95,7 @@
       try {
         $user->update([
           'full_name' => $request->full_name,
+          'gender' => $request->gender,
           'birth_date' => Carbon::parse($request->birth_date)->format('Y-m-d'),
           'role' => $request->role,
           'email' => $request->email,
@@ -99,6 +111,10 @@
             'avatar' => $request->file('avatar')->store('avatars', 'public'),
           ]);
         }
+        
+        $user->athlete()->update([
+          'weight' => $request->weight,
+        ]);
         
         return redirect()->route('athletes.index')->with('meta', [
           'status' => true,
@@ -119,10 +135,13 @@
      */
     public function show(User $user)
     {
-      $user->avatar = $user->avatar ? asset('storage/' . $user->avatar) : null;
+      $authedUser = Auth::user();
+      $authedUser->avatar = str_contains($authedUser->avatar, 'https') ? $authedUser->avatar : ($authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null);
+      $user->avatar = str_contains($user->avatar, 'https') ? $user->avatar : ($user->avatar ? asset('storage/' . $user->avatar) : null);
       
       return Inertia('Athlete/Show', [
-        'user' => $user,
+        'user' => $user->load('athlete'),
+        'auth' => ['user' => $authedUser]
       ]);
     }
     
@@ -131,10 +150,14 @@
      */
     public function edit(User $user)
     {
-      $user->avatar = $user->avatar ? asset('storage/' . $user->avatar) : null;
+      $authedUser = Auth::user();
+      $authedUser->avatar = str_contains($authedUser->avatar, 'https') ? $authedUser->avatar : ($authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null);
+      $user->avatar = str_contains($user->avatar, 'https') ? $user->avatar : ($user->avatar ? asset('storage/' . $user->avatar) : null);
+      
       return Inertia('Athlete/Edit', [
-        'coach' => $user,
+        'user' => $user->load('athlete'),
         'users' => User::all(),
+        'auth' => ['user' => $authedUser]
       ]);
     }
     

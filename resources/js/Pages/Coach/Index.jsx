@@ -8,7 +8,7 @@ import { Breadcrumbs } from '@/Components/Breadcrumbs.jsx'
 
 const Index = (props) => {
   const [coachSearch, setCoachSearch] = useState('')
-  const THList = ['#', 'Foto', 'Nama Lengkap', 'Peran', 'Ditambahkan Pada', 'Diperbarui Pada', 'Aksi']
+  const THList = ['#', 'Foto', 'Nama Lengkap', 'Peran', 'Aksi']
   const actionList = [{
     label: 'Rincian Pelatih',
     icon: <IconEye />,
@@ -34,8 +34,6 @@ const Index = (props) => {
       <MantineTable.Td px={16} py={0} style={{ whiteSpace: 'nowrap' }}><Avatar src={coach.user.avatar} alt={coach.user.full_name} /></MantineTable.Td>
       <MantineTable.Td px={16} py={0} style={{ whiteSpace: 'nowrap' }}>{coach.user.full_name}</MantineTable.Td>
       <MantineTable.Td px={16} py={0} style={{ whiteSpace: 'nowrap' }}>{coach.user.role}</MantineTable.Td>
-      <MantineTable.Td px={16} py={0} style={{ whiteSpace: 'nowrap' }}>{coach.user.created_at}</MantineTable.Td>
-      <MantineTable.Td px={16} py={0} style={{ whiteSpace: 'nowrap' }}>{coach.user.updated_at}</MantineTable.Td>
       <MantineTable.Td px={16} py={0} style={{ whiteSpace: 'nowrap' }}>
         <Button.Group>
           {actionList.map((action, id) => (
@@ -50,7 +48,7 @@ const Index = (props) => {
       </MantineTable.Td>
     </MantineTable.Tr>
   ))
-  
+  console.log(props)
   return (
     <AppLayout title="Pelatih" authed={props.auth.user} meta={props.meta}>
       <Grid justify="space-between">
@@ -58,19 +56,21 @@ const Index = (props) => {
           <Breadcrumbs navList={[{ label: 'Pelatih' }]} />
         </Grid.Col>
         
-        <Grid.Col span={{ base: 6, xs: 5, sm: 4, md: 3 }}>
-          <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Tambah Pelatih">
-            <ActionIcon ml="auto" h={48} w={48} color="gold.1" radius={32} display={{ base: 'block', xs: 'none' }}
-                        onClick={() => router.get(route('coaches.create'))}>
-              <IconPlus />
-            </ActionIcon>
-          </Tooltip>
-          
-          <Button display={{ base: 'none', xs: 'block' }} fullWidth leftSection={<IconPlus />} variant="filled" color="gold.1" h={48} radius={32} px={16}
-                  styles={{ section: { marginRight: 12 } }} onClick={() => router.get(route('coaches.create'))}>
-            Tambah Pelatih
-          </Button>
-        </Grid.Col>
+        {['Pelatih Teknik', 'Pelatih Fisik'].includes(props.auth.user.role) && (
+          <Grid.Col span={{ base: 6, xs: 5, sm: 4, md: 3 }}>
+            <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Tambah Pelatih">
+              <ActionIcon ml="auto" h={48} w={48} color="gold.1" radius={32} display={{ base: 'block', xs: 'none' }}
+                          onClick={() => router.get(route('coaches.create'))}>
+                <IconPlus />
+              </ActionIcon>
+            </Tooltip>
+            
+            <Button display={{ base: 'none', xs: 'block' }} fullWidth leftSection={<IconPlus />} variant="filled" color="gold.1" h={48} radius={32} px={16}
+                    styles={{ section: { marginRight: 12 } }} onClick={() => router.get(route('coaches.create'))}>
+              Tambah Pelatih
+            </Button>
+          </Grid.Col>)}
+        
         
         <Grid.Col span={12}>
           <TextInput variant="filled" leftSection={<IconSearch />}

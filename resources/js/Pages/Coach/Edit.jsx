@@ -9,18 +9,19 @@ import 'dayjs/locale/id'
 const Edit = (props) => {
   const form = useForm({
     _method: 'put',
-    avatar: props.coach.avatar,
-    email: props.coach.email,
+    avatar: props.user.avatar,
+    email: props.user.email,
     password: '',
-    full_name: props.coach.full_name,
-    birth_date: props.coach.birth_date,
-    role: props.coach.role,
+    full_name: props.user.full_name,
+    gender: props.user.gender,
+    birth_date: props.user.birth_date,
+    role: props.user.role,
   })
   
   return (
     <form onSubmit={(e) => {
       e.preventDefault()
-      form.post(route('coaches.update', props.coach.id))
+      form.post(route('coaches.update', props.user.id))
     }}>
       <AppLayout title="Pelatih" authed={props.auth.user} meta={props.meta}>
         <Grid justify="space-between">
@@ -31,14 +32,14 @@ const Edit = (props) => {
           <Grid.Col span={{ base: 6, xs: 5, sm: 4, md: 3 }}>
             <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Ubah Pelatih">
               <ActionIcon ml="auto" h={48} w={48} color="gold.1" radius={32} display={{ base: 'block', xs: 'none' }}
-                          disabled={form.hasErrors || !form.data.email || !form.data.full_name || !form.data.birth_date || !form.data.role}>
+                          disabled={form.hasErrors || !form.data.email || !form.data.full_name || !form.data.gender || !form.data.birth_date || !form.data.role}>
                 <IconCornerDownLeft />
               </ActionIcon>
             </Tooltip>
             
             <Button display={{ base: 'none', xs: 'block' }} type="submit" fullWidth leftSection={<IconCornerDownLeft />} variant="filled" color="gold.1" h={48}
                     radius={32} px={16} styles={{ section: { marginRight: 12 } }} loading={form.processing}
-                    disabled={form.hasErrors || !form.data.email || !form.data.full_name || !form.data.birth_date || !form.data.role}>
+                    disabled={form.hasErrors || !form.data.email || !form.data.full_name || !form.data.gender || !form.data.birth_date || !form.data.role}>
               Ubah Pelatih
             </Button>
           </Grid.Col>
@@ -115,6 +116,24 @@ const Edit = (props) => {
               }} error={form.errors.full_name} value={form.data.full_name}
               />
               
+              
+              <Radio.Group value={form.data.gender} mb={16} label="Jenis Kelamin" withAsterisk styles={{
+                label: { marginBottom: 8 }, error: { marginTop: 8 },
+              }} onChange={(value) => {
+                form.setData('gender', value)
+                
+                if (!value) {
+                  form.setError({ role: 'Jenis kelamin tidak boleh kosong.' })
+                } else {
+                  form.clearErrors('gender')
+                }
+              }}>
+                <Group gap={32}>
+                  <Radio size="md" value="Laki-laki" label="Laki-laki" color="gold.1" />
+                  <Radio size="md" value="Perempuan" label="Perempuan" color="gold.1" />
+                </Group>
+              </Radio.Group>
+              
               <DatePickerInput locale="id" monthsListFormat="MMMM" withAsterisk clearable allowDeselect firstDayOfWeek={0} variant="filled"
                                valueFormat="dddd, D MMMM YYYY" leftSection={<IconCalendar />} label="Tanggal Lahir" placeholder="Masukkan tanggal lahir..."
                                styles={{
@@ -152,7 +171,7 @@ const Edit = (props) => {
                 }
               }} error={form.errors.role} value={form.data.role}>
                 <Group gap={32}>
-                  <Radio size="md" value="Manajer Tim" label="Manajer Tim" color="gold.1" />
+                  <Radio size="md" value="Pengelola Tim" label="Pengelola Tim" color="gold.1" />
                   <Radio size="md" value="Pelatih Fisik" label="Pelatih Fisik" color="gold.1" />
                   <Radio size="md" value="Pelatih Teknik" label="Pelatih Teknik" color="gold.1" />
                 </Group>

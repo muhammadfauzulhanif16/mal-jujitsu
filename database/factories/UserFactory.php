@@ -30,7 +30,7 @@
      */
     public function definition()
     {
-      $role = $this->faker->randomElement(['Pengelola Tim', 'Pelatih Fisik', 'Pelatih Teknik', 'Ne-Waza', 'Fighting System']);
+      $role = $this->faker->randomElement(['Pengelola Tim', 'Pelatih Fisik', 'Pelatih Teknik', 'Ne-Waza', 'Fighting']);
       $gender = $this->faker->randomElement(['male', 'female']);
       $full_name = $this->faker->firstName($gender);
       

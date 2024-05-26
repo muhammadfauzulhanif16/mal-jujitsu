@@ -19,11 +19,11 @@
     public function index()
     {
       $authedUser = Auth::user();
-      $authedUser->avatar = $authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null;
+      $authedUser->avatar = str_contains($authedUser->avatar, 'https') ? $authedUser->avatar : ($authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null);
       
       return Inertia('Coach/Index', [
         'coaches' => Coach::with('user')->get()->map(function ($coach) {
-          $coach->user->avatar = $coach->user->avatar ? asset('storage/' . $coach->user->avatar) : null;
+          $coach->user->avatar = str_contains($coach->user->avatar, 'https') ? $coach->user->avatar : ($coach->user->avatar ? asset('storage/' . $coach->user->avatar) : null);
           return $coach;
         }),
         'meta' => session('meta'),
@@ -39,6 +39,7 @@
       try {
         $user = User::create([
           'full_name' => $request->full_name,
+          'gender' => $request->gender,
           'birth_date' => Carbon::parse($request->birth_date)->format('Y-m-d'),
           'role' => $request->role,
           'email' => $request->email,
@@ -75,7 +76,7 @@
     public function create()
     {
       $authedUser = Auth::user();
-      $authedUser->avatar = $authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null;
+      $authedUser->avatar = str_contains($authedUser->avatar, 'https') ? $authedUser->avatar : ($authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null);
       
       return Inertia('Coach/Create', [
         'users' => User::all(),
@@ -91,6 +92,7 @@
       try {
         $user->update([
           'full_name' => $request->full_name,
+          'gender' => $request->gender,
           'birth_date' => Carbon::parse($request->birth_date)->format('Y-m-d'),
           'role' => $request->role,
           'email' => $request->email,
@@ -127,8 +129,8 @@
     public function show(User $user)
     {
       $authedUser = Auth::user();
-      $authedUser->avatar = $authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null;
-      $user->avatar = $user->avatar ? asset('storage/' . $user->avatar) : null;
+      $authedUser->avatar = str_contains($authedUser->avatar, 'https') ? $authedUser->avatar : ($authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null);
+      $user->avatar = str_contains($user->avatar, 'https') ? $user->avatar : ($user->avatar ? asset('storage/' . $user->avatar) : null);
       
       return Inertia('Coach/Show', [
         'user' => $user,
@@ -142,11 +144,11 @@
     public function edit(User $user)
     {
       $authedUser = Auth::user();
-      $authedUser->avatar = $authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null;
-      $user->avatar = $user->avatar ? asset('storage/' . $user->avatar) : null;
+      $authedUser->avatar = str_contains($authedUser->avatar, 'https') ? $authedUser->avatar : ($authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null);
+      $user->avatar = str_contains($user->avatar, 'https') ? $user->avatar : ($user->avatar ? asset('storage/' . $user->avatar) : null);
       
       return Inertia('Coach/Edit', [
-        'coach' => $user,
+        'user' => $user->load('coach'),
         'users' => User::all(),
         'auth' => ['user' => $authedUser]
       ]);

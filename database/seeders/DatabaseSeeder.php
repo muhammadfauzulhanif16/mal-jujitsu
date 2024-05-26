@@ -14,10 +14,10 @@
      */
     public function run(): void
     {
-      User::factory(16)->create()->each(function ($user) {
+      User::factory(8)->create()->each(function ($user) {
         if (in_array($user->role, ['Pengelola Tim', 'Pelatih Fisik', 'Pelatih Teknik'])) {
           Coach::factory()->create(['user_id' => $user->id]);
-        } elseif (in_array($user->role, ['Ne-Waza', 'Fighting System'])) {
+        } elseif (in_array($user->role, ['Ne-Waza', 'Fighting'])) {
           Athlete::factory()->create(['user_id' => $user->id]);
         }
       });

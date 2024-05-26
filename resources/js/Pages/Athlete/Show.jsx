@@ -1,6 +1,6 @@
 import { AppLayout } from '@/Layouts/AppLayout.jsx'
-import { Avatar, Divider, Fieldset, Grid, Group, Radio, TextInput } from '@mantine/core'
-import { IconCalendar, IconId, IconMail } from '@tabler/icons-react'
+import { Avatar, Divider, Fieldset, Grid, Group, NumberInput, Radio, TextInput } from '@mantine/core'
+import { IconCalendar, IconId, IconMail, IconWeight } from '@tabler/icons-react'
 import { useForm } from '@inertiajs/react'
 import { DatePickerInput } from '@mantine/dates'
 import 'dayjs/locale/id'
@@ -13,12 +13,13 @@ const Show = (props) => {
     full_name: props.user.full_name,
     gender: props.user.gender,
     birth_date: props.user.birth_date,
+    weight: props.user.athlete.weight,
     role: props.user.role,
   })
   console.log(props)
   return (
-    <AppLayout title="Pelatih" authed={props.auth.user} meta={props.meta}>
-      <Breadcrumbs navList={[{ label: 'Pelatih', route: 'coaches.index' }, { label: 'Rincian' }]} />
+    <AppLayout title="Atlet" authed={props.auth.user} meta={props.meta}>
+      <Breadcrumbs navList={[{ label: 'Atlet', route: 'athletes.index' }, { label: 'Rincian' }]} />
       
       <Divider my={32} />
       
@@ -67,8 +68,17 @@ const Show = (props) => {
               error: { marginTop: 8 },
               calendarHeader: { height: 48 },
               calendarHeaderControl: { height: 48, width: 48, borderRadius: 32 },
-            }} value={new Date(form.data.birth_date)}
-            />
+            }} value={new Date(form.data.birth_date)} />
+            
+            <NumberInput disabled value={form.data.weight} decimalSeparator="," suffix=" kg" hideControls
+                         variant="filled"
+                         leftSection={<IconWeight />}
+                         styles={{
+                           label: { marginBottom: 8 },
+                           input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 16 },
+                           section: { marginLeft: 0, width: 48, height: 48 },
+                           error: { marginTop: 8 },
+                         }} label="Berat Badan" />
           </Fieldset>
           
           <Fieldset
@@ -77,9 +87,8 @@ const Show = (props) => {
             styles={{ root: { margin: 0, padding: 16 }, legend: { borderRadius: 20, fontSize: 16, padding: 16, fontWeight: 'bold' } }}>
             <Radio.Group label="Peran" styles={{ label: { marginBottom: 8 }, error: { marginTop: 8 } }} value={form.data.role}>
               <Group gap={32}>
-                <Radio value="Pengelola Tim" label="Pengelola Tim" color="gold.1" size="md" disabled />
-                <Radio value="Pelatih Fisik" label="Pelatih Fisik" color="gold.1" size="md" disabled />
-                <Radio value="Pelatih Teknik" label="Pelatih Teknik" color="gold.1" size="md" disabled />
+                <Radio size="md" value="Ne-Waza" label="Ne-Waza" color="gold.1" disabled />
+                <Radio size="md" value="Fighting" label="Fighting" color="gold.1" disabled />
               </Group>
             </Radio.Group>
           </Fieldset>
