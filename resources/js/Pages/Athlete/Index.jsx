@@ -97,7 +97,6 @@ const Index = (props) => {
           </Grid.Col>
         )}
         
-        
         <Grid.Col span={12}>
           <TextInput variant="filled" leftSection={<IconSearch />}
                      styles={{ input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 14 }, section: { marginLeft: 0, width: 48, height: 48 } }}
