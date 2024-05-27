@@ -135,7 +135,7 @@ const Edit = (props) => {
                 </Group>
               </Radio.Group>
               
-              <DatePickerInput locale="id" monthsListFormat="MMMM" withAsterisk clearable allowDeselect firstDayOfWeek={0} variant="filled"
+              <DatePickerInput mb={16} locale="id" monthsListFormat="MMMM" withAsterisk clearable allowDeselect firstDayOfWeek={0} variant="filled"
                                valueFormat="dddd, D MMMM YYYY" leftSection={<IconCalendar />} label="Tanggal Lahir" placeholder="Masukkan tanggal lahir..."
                                styles={{
                                  label: { marginBottom: 8 },
@@ -165,7 +165,7 @@ const Edit = (props) => {
                              input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 16 },
                              section: { marginLeft: 0, width: 48, height: 48 },
                              error: { marginTop: 8 },
-                           }} mb={16} label="Berat Badan" placeholder="Masukkan berat badan..." onChange={(value) => {
+                           }} label="Berat Badan" placeholder="Masukkan berat badan..." onChange={(value) => {
                 form.setData('weight', value)
                 
                 if (!value) {

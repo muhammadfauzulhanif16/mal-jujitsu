@@ -1,5 +1,5 @@
 import { ActionIcon, Flex, Text } from '@mantine/core'
-import { IconCertificate, IconClipboardText, IconHome, IconReport, IconUser } from '@tabler/icons-react'
+import { IconClipboardText, IconHome, IconMedal, IconReport, IconUser } from '@tabler/icons-react'
 import { router } from '@inertiajs/core'
 
 export const NavBar = (props) => {
@@ -8,8 +8,8 @@ export const NavBar = (props) => {
     label: 'Pelatih',
     route: 'coaches.index',
   }, { icon: <IconUser />, label: 'Atlet', route: 'athletes.index' }, { icon: <IconClipboardText />, label: 'Latihan' }, {
-    icon: <IconCertificate />,
-    label: 'Pertandingan',
+    icon: <IconMedal />,
+    label: 'Turnamen',
   }, { icon: <IconReport />, label: 'Laporan' }]
   
   return (

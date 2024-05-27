@@ -3,7 +3,6 @@
   namespace Database\Factories;
   
   use App\Models\Coach;
-  use App\Models\User;
   use Illuminate\Database\Eloquent\Factories\Factory;
   
   /**
@@ -19,7 +18,6 @@
     public function definition(): array
     {
       return [
-        'user_id' => User::factory()->create()->id,
       ];
     }
   }

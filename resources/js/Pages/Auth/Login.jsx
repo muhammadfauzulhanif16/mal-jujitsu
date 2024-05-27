@@ -1,5 +1,5 @@
 import { AppLayout } from '@/Layouts/AppLayout.jsx'
-import { Box, Button, Center, Image, SimpleGrid, TextInput, Title } from '@mantine/core'
+import { Box, Button, Center, Flex, Image, SimpleGrid, TextInput, Title } from '@mantine/core'
 import { IconLock, IconLockOpen, IconMail, IconPassword } from '@tabler/icons-react'
 import { useForm } from '@inertiajs/react'
 
@@ -13,11 +13,15 @@ const Login = (props) => {
     }}>
       <AppLayout title="Log In" authed={props.auth.user} meta={props.meta}>
         <SimpleGrid cols={{ base: 1, xs: 2 }} w="100%" h="100vh" p={16}>
-          <Image radius={16} h={{ base: 120, xs: '100%' }}
-                 src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/GABRIEL_VELLA_vs_ROMINHO_51.jpg/1024px-GABRIEL_VELLA_vs_ROMINHO_51.jpg" />
+          
+          <Flex h={{ base: 120, xs: '100%' }} justify="center">
+            <Image fit="contain" src="https://pbjisurabaya.or.id/images/logo/pbji.png" />
+          </Flex>
+          {/*<Image radius={16} h={{ base: 120, xs: '100%' }}*/}
+          {/*       src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/GABRIEL_VELLA_vs_ROMINHO_51.jpg/1024px-GABRIEL_VELLA_vs_ROMINHO_51.jpg" />*/}
           <Center>
             <Box w={320}>
-              <Image radius={80} h={80} w={80} src="https://pbjisurabaya.or.id/images/logo/pbji.png" />
+              
               
               <Title mb={32}>Masuk Akun</Title>
               

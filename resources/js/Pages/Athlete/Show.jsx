@@ -60,7 +60,7 @@ const Show = (props) => {
               </Group>
             </Radio.Group>
             
-            <DatePickerInput locale="id" disabled variant="filled" valueFormat="dddd, D MMMM YYYY" leftSection={<IconCalendar />} label="Tanggal Lahir"
+            <DatePickerInput mb={16} locale="id" disabled variant="filled" valueFormat="dddd, D MMMM YYYY" leftSection={<IconCalendar />} label="Tanggal Lahir"
                              placeholder="Masukkan tanggal lahir..." styles={{
               label: { marginBottom: 8 },
               input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 16 },

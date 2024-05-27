@@ -157,7 +157,7 @@ const Create = (props) => {
                              input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 16 },
                              section: { marginLeft: 0, width: 48, height: 48 },
                              error: { marginTop: 8 },
-                           }} mb={16} label="Berat Badan" placeholder="Masukkan berat badan..." onChange={(value) => {
+                           }} label="Berat Badan" placeholder="Masukkan berat badan..." onChange={(value) => {
                 form.setData('weight', value)
                 
                 if (!value) {

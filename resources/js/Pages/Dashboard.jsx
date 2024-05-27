@@ -2,6 +2,7 @@ import { AppLayout } from '@/Layouts/AppLayout.jsx'
 import { Center, Title } from '@mantine/core'
 
 const Dashboard = (props) => {
+  console.log(props)
   return (
     <AppLayout title="Beranda" authed={props.auth.user} meta={props.meta}>
       <Center bg="gold.1" h="25vh" style={{

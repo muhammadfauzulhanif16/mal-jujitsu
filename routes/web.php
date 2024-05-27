@@ -12,7 +12,7 @@
   Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', function () {
       $authedUser = Auth::user();
-      $authedUser->avatar = $authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null;
+      $authedUser->avatar = str_contains($authedUser->avatar, 'https') ? $authedUser->avatar : ($authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null);
       
       return Inertia::render('Dashboard', [
         'meta' => session('meta'),
