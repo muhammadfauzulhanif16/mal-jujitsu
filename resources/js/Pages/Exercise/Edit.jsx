@@ -6,12 +6,13 @@ import { useForm } from '@inertiajs/react'
 import 'dayjs/locale/id'
 import { DatePickerInput, TimeInput } from '@mantine/dates'
 
-const Create = (props) => {
+const Edit = (props) => {
   const form = useForm({ name: '', place: '', athlete_id: '', coach_id: '', date: '', start_time: '', end_time: '' })
   
   return (
     <form onSubmit={(e) => {
       e.preventDefault()
+      
       form.post(route('exercises.store'))
     }}>
       <AppLayout title="Latihan" authed={props.auth.user} meta={props.meta}>
@@ -243,4 +244,4 @@ const Create = (props) => {
   )
 }
 
-export default Create
+export default Edit

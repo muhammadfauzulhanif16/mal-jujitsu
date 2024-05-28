@@ -1,5 +1,5 @@
 import { AppLayout } from '@/Layouts/AppLayout.jsx'
-import { ActionIcon, Button, Divider, Grid, Table as MantineTable, TextInput, Tooltip } from '@mantine/core'
+import { ActionIcon, Avatar, Button, Divider, Flex, Grid, Table as MantineTable, TextInput, Tooltip } from '@mantine/core'
 import { IconEye, IconPencil, IconPlus, IconSearch, IconTrash } from '@tabler/icons-react'
 import { Breadcrumbs } from '@/Components/Breadcrumbs.jsx'
 import { router } from '@inertiajs/core'
@@ -14,21 +14,21 @@ const Index = (props) => {
     {
       label: 'Rincian Atlet',
       icon: <IconEye />,
-      onClick: (user) => router.get(route('athletes.show', user.id)),
+      onClick: (exercise) => router.get(route('exercises.show', exercise.id)),
       color: 'blue',
       // disabled: !['Pelatih Teknik', 'Pelatih Fisik'].includes(props.auth.user.role),
     },
     {
       label: 'Ubah Atlet',
       icon: <IconPencil />,
-      onClick: (user) => router.get(route('athletes.edit', user.id)),
+      onClick: (exercise) => router.get(route('exercises.edit', exercise.id)),
       color: 'yellow',
       disabled: !['Pelatih Teknik', 'Pelatih Fisik'].includes(props.auth.user.role),
     },
     {
       label: 'Hapus Atlet',
       icon: <IconTrash />,
-      onClick: (user) => router.delete(route('athletes.destroy', user.id)),
+      onClick: (exercise) => router.delete(route('exercises.destroy', exercise.id)),
       color: 'red',
       disabled: !['Pelatih Teknik', 'Pelatih Fisik'].includes(props.auth.user.role),
     },
@@ -37,7 +37,7 @@ const Index = (props) => {
     return exercise.name.toLowerCase().includes(exerciseSearch.toLowerCase())
   })
   const TDList = exerciseList.map((exercise, id) => (
-    <MantineTable.Tr h={48} key={id}>
+    <MantineTable.Tr h={64} key={id}>
       <MantineTable.Td
         px={16} py={0}
         style={{ whiteSpace: 'nowrap' }}>{id + 1}</MantineTable.Td>
@@ -51,10 +51,22 @@ const Index = (props) => {
         style={{ whiteSpace: 'nowrap' }}>{exercise.place}</MantineTable.Td>
       <MantineTable.Td
         px={16} py={0}
-        style={{ whiteSpace: 'nowrap' }}>{exercise.athlete.full_name}</MantineTable.Td>
+        style={{ whiteSpace: 'nowrap' }}>
+        <Flex gap={16} align="center">
+          <Avatar size={48} src={exercise.athlete.avatar} />
+          
+          {exercise.athlete.full_name}
+        </Flex>
+      </MantineTable.Td>
       <MantineTable.Td
         px={16} py={0}
-        style={{ whiteSpace: 'nowrap' }}>{exercise.coach.full_name}</MantineTable.Td>
+        style={{ whiteSpace: 'nowrap' }}>
+        <Flex gap={16} align="center">
+          <Avatar size={48} src={exercise.coach.avatar} />
+          
+          {exercise.coach.full_name}
+        </Flex>
+      </MantineTable.Td>
       <MantineTable.Td
         px={16} py={0}
         style={{ whiteSpace: 'nowrap' }}>{exercise.date}</MantineTable.Td>
@@ -75,7 +87,7 @@ const Index = (props) => {
             }}>
               <ActionIcon size={48} radius={32} variant="subtle"
                           aria-label={action.label} color={action.color}
-                          onClick={() => action.onClick(athlete.user)}
+                          onClick={() => action.onClick(exercise)}
                 // disabled={props.auth.user.id === athlete.user.id || action.disabled}
               >
                 {action.icon}

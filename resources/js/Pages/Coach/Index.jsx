@@ -31,7 +31,7 @@ const Index = (props) => {
     .filter((coach) => coach.user.full_name.toLowerCase().includes(coachSearch.toLowerCase()))
     .sort((a, b) => a.user.full_name.localeCompare(b.user.full_name))
   const TDList = coachList.map((coach, id) => (
-    <MantineTable.Tr h={48} key={id}>
+    <MantineTable.Tr h={64} key={id}>
       <MantineTable.Td px={16} py={0} style={{ whiteSpace: 'nowrap' }}>{id + 1}</MantineTable.Td>
       <MantineTable.Td px={16} py={0} style={{ whiteSpace: 'nowrap' }}><Avatar src={coach.user.avatar} alt={coach.user.full_name} /></MantineTable.Td>
       <MantineTable.Td px={16} py={0} style={{ whiteSpace: 'nowrap' }}>{coach.user.full_name}</MantineTable.Td>

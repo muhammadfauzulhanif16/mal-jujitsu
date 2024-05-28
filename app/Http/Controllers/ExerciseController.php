@@ -8,6 +8,7 @@
   use App\Models\Exercise;
   use Exception;
   use Illuminate\Http\Request;
+  use Illuminate\Support\Carbon;
   use Illuminate\Support\Facades\Auth;
   
   class ExerciseController extends Controller
@@ -34,15 +35,16 @@
      */
     public function store(Request $request)
     {
+//      dd($request->all());
       try {
         Exercise::create([
           'name' => $request->name,
           'place' => $request->place,
           'athlete_id' => $request->athlete_id,
           'coach_id' => $request->coach_id,
-          'date' => $request->date,
-          'start_time' => $request->start_time,
-          'end_time' => $request->end_time,
+          'date' => Carbon::parse($request->date)->format('Y-m-d'),
+          'start_time' => Carbon::parse($request->start_time)->format('H:i:s'),
+          'end_time' => Carbon::parse($request->end_time)->format('H:i:s'),
         ]);
         
         return to_route('exercises.index')->with('meta', [
@@ -123,6 +125,20 @@
      */
     public function destroy(Exercise $exercise)
     {
-      //
+      try {
+        $exercise->delete();
+        
+        return to_route('exercises.index')->with('meta', [
+          'status' => true,
+          'title' => 'Berhasil menghapus latihan',
+          'message' => "Latihan '{$exercise->name}' berhasil dihapus!"
+        ]);
+      } catch (Exception $e) {
+        return to_route('exercises.index')->with('meta', [
+          'status' => false,
+          'title' => 'Gagal menghapus latihan',
+          'message' => $e->getMessage()
+        ]);
+      }
     }
   }

@@ -9,8 +9,7 @@ export const Table = (props) => {
         backgroundColor: 'var(--mantine-color-netral-10)',
         borderRadius: 20,
         border: props.tdList.length && '1px solid #E0E0E0',
-      }}
-    >
+      }}>
       {
         props.tdList.length ?
           <MantineTable.ScrollContainer>
@@ -28,7 +27,7 @@ export const Table = (props) => {
                 },
                 
               }}>
-              <MantineTable.Thead h={48}>
+              <MantineTable.Thead h={64}>
                 <MantineTable.Tr>
                   {props.thList.map((th, id) => (
                     <MantineTable.Th

@@ -9,7 +9,7 @@ export const Header = (props) => {
   
   return (
     <>
-      <Flex px={16} pos="sticky" top={0} bg="netral.10" justify="space-between" h={80} style={{ zIndex: 2, alignItems: 'center' }}>
+      <Flex px={16} pos="sticky" top={0} bg="white" justify="space-between" h={80} style={{ zIndex: 2, alignItems: 'center' }}>
         <Group w={240}>
           <Image radius={16} h={48} src="https://pbjisurabaya.or.id/images/logo/pbji.png" />
         </Group>
