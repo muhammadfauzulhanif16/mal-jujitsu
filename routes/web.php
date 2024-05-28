@@ -2,7 +2,9 @@
   
   use App\Http\Controllers\AthleteController;
   use App\Http\Controllers\CoachController;
+  use App\Http\Controllers\ExerciseController;
   use App\Http\Controllers\ProfileController;
+  use App\Http\Controllers\TournamentController;
   use Illuminate\Support\Facades\Auth;
   use Illuminate\Support\Facades\Route;
   use Inertia\Inertia;
@@ -38,6 +40,36 @@
       Route::get('{user}/edit', [CoachController::class, 'edit'])->name('coaches.edit');
       Route::put('{user}', [CoachController::class, 'update'])->name('coaches.update');
       Route::delete('{user}', [CoachController::class, 'destroy'])->name('coaches.destroy');
+    });
+    
+    Route::group(['prefix' => 'exercises'], function () {
+      Route::get('', [ExerciseController::class, 'index'])->name('exercises.index');
+      Route::get('create', [ExerciseController::class, 'create'])->name('exercises.create');
+      Route::post('', [ExerciseController::class, 'store'])->name('exercises.store');
+      Route::get('{exercise}', [ExerciseController::class, 'show'])->name('exercises.show');
+      Route::get('{exercise}/edit', [ExerciseController::class, 'edit'])->name('exercises.edit');
+      Route::put('{exercise}', [ExerciseController::class, 'update'])->name('exercises.update');
+      Route::delete('{exercise}', [ExerciseController::class, 'destroy'])->name('exercises.destroy');
+    });
+    
+    Route::group(['prefix' => 'exercises'], function () {
+      Route::get('', [ExerciseController::class, 'index'])->name('exercises.index');
+      Route::get('create', [ExerciseController::class, 'create'])->name('exercises.create');
+      Route::post('', [ExerciseController::class, 'store'])->name('exercises.store');
+      Route::get('{exercise}', [ExerciseController::class, 'show'])->name('exercises.show');
+      Route::get('{exercise}/edit', [ExerciseController::class, 'edit'])->name('exercises.edit');
+      Route::put('{exercise}', [ExerciseController::class, 'update'])->name('exercises.update');
+      Route::delete('{exercise}', [ExerciseController::class, 'destroy'])->name('exercises.destroy');
+    });
+    
+    Route::group(['prefix' => 'tournaments'], function () {
+      Route::get('', [TournamentController::class, 'index'])->name('tournaments.index');
+      Route::get('create', [TournamentController::class, 'create'])->name('tournaments.create');
+      Route::post('', [TournamentController::class, 'store'])->name('tournaments.store');
+      Route::get('{tournament}', [TournamentController::class, 'show'])->name('tournaments.show');
+      Route::get('{tournament}/edit', [TournamentController::class, 'edit'])->name('tournaments.edit');
+      Route::put('{tournament}', [TournamentController::class, 'update'])->name('tournaments.update');
+      Route::delete('{tournament}', [TournamentController::class, 'destroy'])->name('tournaments.destroy');
     });
     
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

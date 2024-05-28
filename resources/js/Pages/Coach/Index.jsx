@@ -27,7 +27,9 @@ const Index = (props) => {
     color: 'red',
     disabled: !['Pelatih Teknik', 'Pelatih Fisik'].includes(props.auth.user.role),
   }]
-  const coachList = props.coaches.filter((coach) => coach.user.full_name.toLowerCase().includes(coachSearch.toLowerCase()))
+  const coachList = props.coaches
+    .filter((coach) => coach.user.full_name.toLowerCase().includes(coachSearch.toLowerCase()))
+    .sort((a, b) => a.user.full_name.localeCompare(b.user.full_name))
   const TDList = coachList.map((coach, id) => (
     <MantineTable.Tr h={48} key={id}>
       <MantineTable.Td px={16} py={0} style={{ whiteSpace: 'nowrap' }}>{id + 1}</MantineTable.Td>

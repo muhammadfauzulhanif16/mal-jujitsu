@@ -3,7 +3,6 @@ import { Center, Divider, Title } from '@mantine/core'
 import { Breadcrumbs } from '@/Components/Breadcrumbs.jsx'
 
 const Dashboard = (props) => {
-  console.log(props)
   return (
     <AppLayout title="Beranda" authed={props.auth.user} meta={props.meta}>
       <Breadcrumbs navList={[{ label: 'Beranda' }]} />

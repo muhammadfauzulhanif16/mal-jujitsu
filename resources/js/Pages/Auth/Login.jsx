@@ -21,8 +21,6 @@ const Login = (props) => {
           {/*       src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/GABRIEL_VELLA_vs_ROMINHO_51.jpg/1024px-GABRIEL_VELLA_vs_ROMINHO_51.jpg" />*/}
           <Center>
             <Box w={320}>
-              
-              
               <Title mb={32}>Masuk Akun</Title>
               
               <TextInput variant="filled" leftSection={<IconMail />} styles={{

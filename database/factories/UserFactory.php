@@ -15,13 +15,13 @@
      * The current password being used by the factory.
      */
     protected static ?string $password;
-
-//    public function athleteRole($roles)
-//    {
-//      return $this->state([
-//        'role' => $this->faker->randomElement($roles),
-//      ]);
-//    }
+    
+    public function roles($roles)
+    {
+      return $this->state([
+        'role' => $this->faker->randomElement($roles),
+      ]);
+    }
     
     /**
      * Define the model's default state.
@@ -30,21 +30,18 @@
      */
     public function definition()
     {
-      $role = $this->faker->randomElement(['Pengelola Tim', 'Pelatih Fisik', 'Pelatih Teknik', 'Ne-Waza', 'Fighting']);
       $gender = $this->faker->randomElement(['male', 'female']);
-      $full_name = $this->faker->firstName($gender);
-      
+      $full_name = $this->faker->name($gender);
       $gender = $gender === 'male' ? 'Laki-laki' : 'Perempuan';
       
       return [
         'id' => $this->faker->uuid,
         'full_name' => $full_name,
         'gender' => $gender,
-        'avatar' => $this->faker->imageUrl(),
+        'avatar' => $this->faker->imageUrl(640, 480, $full_name, false,),
         'birth_date' => $this->faker->dateTimeThisCentury->format('Y-m-d'),
-        'role' => $role,
-        'email' => $this->faker->unique()->safeEmail,
-        'password' => Hash::make('password'),
+        'email' => strtolower(str_replace(' ', '.', $full_name)) . '@jujistu.id',
+        'password' => Hash::make(strtolower(str_replace(' ', '.', $full_name)) . '@jujistu.id'),
       ];
     }
     

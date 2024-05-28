@@ -124,7 +124,6 @@ const Create = (props) => {
                   form.clearErrors('gender')
                 }
               }}>
-                
                 <Group gap={32}>
                   <Radio size="md" value="Laki-laki" label="Laki-laki" color="gold.1" />
                   <Radio size="md" value="Perempuan" label="Perempuan" color="gold.1" />

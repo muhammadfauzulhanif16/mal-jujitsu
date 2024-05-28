@@ -1,17 +1,24 @@
 <?php
-
-namespace Database\Seeders;
-
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
-
-class CoachSeeder extends Seeder
-{
+  
+  namespace Database\Seeders;
+  
+  use App\Models\Coach;
+  use App\Models\User;
+  use Illuminate\Database\Seeder;
+  
+  class CoachSeeder extends Seeder
+  {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        //
+      $roles = ['Pengelola Tim', 'Pelatih Fisik', 'Pelatih Teknik'];
+      
+      User::factory(16)->create()->each(function ($user) use ($roles) {
+        $user->role = fake()->randomElement($roles);
+        $user->save();
+        Coach::factory()->create(['user_id' => $user->id]);
+      });
     }
-}
+  }

@@ -13,9 +13,9 @@
       Schema::create('users', function (Blueprint $table) {
         $table->uuid('id')->primary();
         $table->string('full_name');
-        $table->string('gender');
+        $table->string('gender')->nullable();
         $table->string('avatar')->nullable();
-        $table->dateTime('birth_date');
+        $table->date('birth_date')->nullable();
         $table->string('role')->nullable();
         $table->string('email')->unique();
         $table->string('password');
