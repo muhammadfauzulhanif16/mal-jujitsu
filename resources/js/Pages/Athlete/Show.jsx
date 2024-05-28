@@ -16,7 +16,7 @@ const Show = (props) => {
     weight: props.user.athlete.weight,
     role: props.user.role,
   })
-  console.log(props)
+  
   return (
     <AppLayout title="Atlet" authed={props.auth.user} meta={props.meta}>
       <Breadcrumbs navList={[{ label: 'Atlet', route: 'athletes.index' }, { label: 'Rincian' }]} />

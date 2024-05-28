@@ -25,11 +25,6 @@
       'coach_id',
     ];
     
-    protected $casts = [
-      'date' => 'datetime:d-m-Y',
-      'start_time' => 'datetime:H:i:s',
-      'end_time' => 'datetime:H:i:s',
-    ];
     
     public function athlete()
     {

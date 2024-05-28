@@ -17,8 +17,8 @@
         $table->foreignUuid('athlete_id')->constrained('users')->cascadeOnUpdate()->cascadeOnDelete();
         $table->foreignUuid('coach_id')->constrained('users')->cascadeOnUpdate()->cascadeOnDelete();
         $table->date('date');
-        $table->timestamp('start_time');
-        $table->timestamp('end_time');
+        $table->time('start_time');
+        $table->time('end_time');
         $table->timestamps();
       });
     }

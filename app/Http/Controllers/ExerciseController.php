@@ -2,7 +2,6 @@
   
   namespace App\Http\Controllers;
   
-  use App\Http\Requests\UpdateExerciseRequest;
   use App\Models\Athlete;
   use App\Models\Coach;
   use App\Models\Exercise;
@@ -21,10 +20,8 @@
       $authedUser = Auth::user();
       $authedUser->avatar = str_contains($authedUser->avatar, 'https') ? $authedUser->avatar : ($authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null);
       
-      $exercises = Exercise::with(['athlete', 'coach'])->get();
-      
       return Inertia('Exercise/Index', [
-        'exercises' => $exercises,
+        'exercises' => Exercise::with(['athlete', 'coach'])->get(),
         'meta' => session('meta'),
         'auth' => ['user' => $authedUser]
       ]);
@@ -35,7 +32,6 @@
      */
     public function store(Request $request)
     {
-//      dd($request->all());
       try {
         Exercise::create([
           'name' => $request->name,
@@ -91,9 +87,15 @@
       $authedUser->avatar = str_contains($authedUser->avatar, 'https') ? $authedUser->avatar : ($authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null);
       
       return Inertia('Exercise/Show', [
-        'exercise' => $exercise,
+        'exercise' => $exercise->load(['athlete', 'coach']),
         'meta' => session('meta'),
-        'auth' => ['user' => $authedUser]
+        'auth' => ['user' => $authedUser],
+        'athletes' => Athlete::with('user')->get()->sortBy(function ($athlete) {
+          return $athlete->user->full_name;
+        })->values(),
+        'coaches' => Coach::with('user')->get()->sortBy(function ($coach) {
+          return $coach->user->full_name;
+        })->values(),
       ]);
     }
     
@@ -106,18 +108,46 @@
       $authedUser->avatar = str_contains($authedUser->avatar, 'https') ? $authedUser->avatar : ($authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null);
       
       return Inertia('Exercise/Edit', [
-        'exercise' => $exercise,
+        'exercise' => $exercise->load(['athlete', 'coach']),
         'meta' => session('meta'),
-        'auth' => ['user' => $authedUser]
+        'auth' => ['user' => $authedUser],
+        'athletes' => Athlete::with('user')->get()->sortBy(function ($athlete) {
+          return $athlete->user->full_name;
+        })->values(),
+        'coaches' => Coach::with('user')->get()->sortBy(function ($coach) {
+          return $coach->user->full_name;
+        })->values(),
       ]);
     }
     
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateExerciseRequest $request, Exercise $exercise)
+    public function update(Request $request, Exercise $exercise)
     {
-      //
+      try {
+        $exercise->update([
+          'name' => $request->name,
+          'place' => $request->place,
+          'athlete_id' => $request->athlete_id,
+          'coach_id' => $request->coach_id,
+          'date' => Carbon::parse($request->date)->format('Y-m-d'),
+          'start_time' => Carbon::parse($request->start_time)->format('H:i:s'),
+          'end_time' => Carbon::parse($request->end_time)->format('H:i:s'),
+        ]);
+        
+        return to_route('exercises.index')->with('meta', [
+          'status' => true,
+          'title' => 'Berhasil mengubah latihan',
+          'message' => "Latihan '{$request->name}' berhasil diubah!"
+        ]);
+      } catch (Exception $e) {
+        return to_route('exercises.index')->with('meta', [
+          'status' => false,
+          'title' => 'Gagal mengubah latihan',
+          'message' => $e->getMessage()
+        ]);
+      }
     }
     
     /**
