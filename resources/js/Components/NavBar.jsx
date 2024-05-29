@@ -1,5 +1,5 @@
 import { ActionIcon, Flex, Text } from '@mantine/core'
-import { IconClipboardText, IconHome, IconMedal, IconReport, IconUser } from '@tabler/icons-react'
+import { IconClipboardText, IconHome, IconMedal, IconReport, IconReportAnalytics, IconUser } from '@tabler/icons-react'
 import { router } from '@inertiajs/core'
 
 export const NavBar = (props) => {
@@ -10,7 +10,7 @@ export const NavBar = (props) => {
   }, { icon: <IconUser />, label: 'Atlet', route: 'athletes.index' }, { icon: <IconClipboardText />, label: 'Latihan', route: 'exercises.index' }, {
     icon: <IconMedal />,
     label: 'Turnamen', route: 'tournaments.index',
-  }, { icon: <IconReport />, label: 'Laporan', route: 'reports.index' }, { icon: <IconReport />, label: 'Laporan', route: 'reports.index' }]
+  }, { icon: <IconReportAnalytics />, label: 'Evaluasi', route: 'evaluations.index' }, { icon: <IconReport />, label: 'Laporan', route: 'reports.index' }]
   
   return (
     <Flex direction={{ base: 'column', md: 'row' }} justify="space-between" align="center" bg="white" gap={{ base: 0, md: 32 }}>

@@ -25,26 +25,23 @@ const Edit = (props) => {
       form.post(route('athletes.update', props.user.id))
     }}>
       <AppLayout title="Atlet" authed={props.auth.user} meta={props.meta}>
-        <Grid justify="space-between">
-          <Grid.Col span={{ base: 6, xs: 5, sm: 4, md: 3 }}>
-            <Breadcrumbs navList={[{ label: 'Atlet', route: 'athletes.index' }, { label: 'Ubah' }]} />
-          </Grid.Col>
+        <Group justify="space-between">
+          <Breadcrumbs navList={[{ label: 'Atlet', route: 'athletes.index' }, { label: 'Ubah' }]} />
           
-          <Grid.Col span={{ base: 6, xs: 5, sm: 4, md: 3 }}>
-            <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Ubah Atlet">
-              <ActionIcon ml="auto" h={48} w={48} color="gold.1" radius={32} display={{ base: 'block', xs: 'none' }}
-                          disabled={form.hasErrors || !form.data.email || !form.data.full_name || !form.data.birth_date || !form.data.gender || !form.data.weight || !form.data.role}>
-                <IconCornerDownLeft />
-              </ActionIcon>
-            </Tooltip>
-            
-            <Button display={{ base: 'none', xs: 'block' }} type="submit" fullWidth leftSection={<IconCornerDownLeft />} variant="filled" color="gold.1" h={48}
-                    radius={32} px={16} styles={{ section: { marginRight: 12 } }} loading={form.processing}
-                    disabled={form.hasErrors || !form.data.email || !form.data.full_name || !form.data.birth_date || !form.data.gender || !form.data.weight || !form.data.role}>
-              Ubah Pelatih
-            </Button>
-          </Grid.Col>
-        </Grid>
+          <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Tambah Pelatih">
+            <ActionIcon type="submit" ml="auto" h={48} w={48} color="gold.1" radius={32} display={{ base: 'block', xs: 'none' }}
+                        disabled={form.hasErrors || !form.data.email || !form.data.full_name || !form.data.birth_date || !form.data.gender || !form.data.weight || !form.data.role}
+            >
+              <IconCornerDownLeft />
+            </ActionIcon>
+          </Tooltip>
+          
+          <Button display={{ base: 'none', xs: 'block' }} type="submit" w={240} leftSection={<IconCornerDownLeft />} variant="filled" color="gold.1" h={48}
+                  px={16} styles={{ section: { marginRight: 12 } }} radius={32} loading={form.processing}
+                  disabled={form.hasErrors || !form.data.email || !form.data.full_name || !form.data.birth_date || !form.data.gender || !form.data.weight || !form.data.role}>
+            Ubah Atlet
+          </Button>
+        </Group>
         
         <Divider my={32} />
         

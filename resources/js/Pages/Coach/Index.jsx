@@ -1,5 +1,5 @@
 import { AppLayout } from '@/Layouts/AppLayout.jsx'
-import { ActionIcon, Avatar, Button, Divider, Grid, Table as MantineTable, TextInput, Tooltip } from '@mantine/core'
+import { ActionIcon, Avatar, Button, Divider, Group, Stack, Table as MantineTable, TextInput, Tooltip } from '@mantine/core'
 import { IconEye, IconPencil, IconPlus, IconSearch, IconTrash } from '@tabler/icons-react'
 import { router } from '@inertiajs/core'
 import { Table } from '@/Components/Table.jsx'
@@ -53,34 +53,42 @@ const Index = (props) => {
   
   return (
     <AppLayout title="Pelatih" authed={props.auth.user} meta={props.meta}>
-      <Grid justify="space-between">
-        <Grid.Col span={{ base: 6, xs: 5, sm: 4, md: 3 }}>
+      <Stack>
+        <Group w="100%" justify="space-between">
           <Breadcrumbs navList={[{ label: 'Pelatih' }]} />
-        </Grid.Col>
-        
-        {['Pelatih Teknik', 'Pelatih Fisik'].includes(props.auth.user.role) && (
-          <Grid.Col span={{ base: 6, xs: 5, sm: 4, md: 3 }}>
-            <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Tambah Pelatih">
-              <ActionIcon ml="auto" h={48} w={48} color="gold.1" radius={32} display={{ base: 'block', xs: 'none' }}
-                          onClick={() => router.get(route('coaches.create'))}>
-                <IconPlus />
-              </ActionIcon>
-            </Tooltip>
+          
+          <Group>
+            <TextInput display={{ base: 'none', xs: 'block' }} w={240} variant="filled" leftSection={<IconSearch />}
+                       styles={{
+                         input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 14 },
+                         section: { marginLeft: 0, width: 48, height: 48 },
+                       }}
+                       color="gold.1"
+                       placeholder="Cari pelatih..." onChange={(e) => setCoachSearch(e.target.value)} />
             
-            <Button display={{ base: 'none', xs: 'block' }} fullWidth leftSection={<IconPlus />} variant="filled" color="gold.1" h={48} radius={32} px={16}
-                    styles={{ section: { marginRight: 12 } }} onClick={() => router.get(route('coaches.create'))}>
-              Tambah Pelatih
-            </Button>
-          </Grid.Col>)}
+            {['Pelatih Teknik', 'Pelatih Fisik'].includes(props.auth.user.role) && (
+              <>
+                <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Tambah Pelatih">
+                  <ActionIcon ml="auto" h={48} w={48} color="gold.1" radius={32} display={{ base: 'block', sm: 'none' }}
+                              onClick={() => router.get(route('coaches.create'))}>
+                    <IconPlus />
+                  </ActionIcon>
+                </Tooltip>
+                
+                <Button display={{ base: 'none', sm: 'block' }} w={240} leftSection={<IconPlus />} variant="filled" color="gold.1" h={48} radius={32} px={16}
+                        styles={{ section: { marginRight: 12 } }} onClick={() => router.get(route('coaches.create'))}>
+                  Tambah Pelatih
+                </Button>
+              </>
+            )}
+          </Group>
+        </Group>
         
-        
-        <Grid.Col span={12}>
-          <TextInput variant="filled" leftSection={<IconSearch />}
-                     styles={{ input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 14 }, section: { marginLeft: 0, width: 48, height: 48 } }}
-                     color="gold.1"
-                     placeholder="Cari atlet..." onChange={(e) => setCoachSearch(e.target.value)} />
-        </Grid.Col>
-      </Grid>
+        <TextInput w="100%" display={{ base: 'block', xs: 'none' }} variant="filled" leftSection={<IconSearch />}
+                   styles={{ input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 14 }, section: { marginLeft: 0, width: 48, height: 48 } }}
+                   color="gold.1"
+                   placeholder="Cari atlet..." onChange={(e) => setCoachSearch(e.target.value)} />
+      </Stack>
       
       <Divider my={32} />
       
