@@ -6,7 +6,7 @@ export const Breadcrumbs = (props) => {
   return (
     <Group>
       {props.navList[0].route && (
-        <ActionIcon h={48} w={48} color="gold.1" radius={32} variant="subtle"
+        <ActionIcon h={48} w={48} color="gold.1" radius={32} variant="light"
                     onClick={() => router.get(route(props.navList[0].route))}>
           <IconArrowNarrowLeft />
         </ActionIcon>

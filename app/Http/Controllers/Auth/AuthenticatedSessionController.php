@@ -28,6 +28,8 @@
      */
     public function store(LoginRequest $request): RedirectResponse
     {
+//      dd($request->all());
+//      Log::info('Remember Me status: ' . ($request->has('remember') ? 'Yes' : 'No'));
       try {
         $request->authenticate();
         

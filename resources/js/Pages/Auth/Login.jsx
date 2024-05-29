@@ -1,10 +1,10 @@
 import { AppLayout } from '@/Layouts/AppLayout.jsx'
-import { Box, Button, Center, Flex, Image, SimpleGrid, TextInput, Title } from '@mantine/core'
+import { Box, Button, Center, Checkbox, Flex, Image, SimpleGrid, TextInput, Title } from '@mantine/core'
 import { IconLock, IconLockOpen, IconMail, IconPassword } from '@tabler/icons-react'
 import { useForm } from '@inertiajs/react'
 
 const Login = (props) => {
-  const form = useForm({ email: '', password: '' })
+  const form = useForm({ email: '', password: '', remember: false })
   
   return (
     <form onSubmit={(e) => {
@@ -46,7 +46,7 @@ const Login = (props) => {
                 input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 16 },
                 section: { marginLeft: 0, width: 48, height: 48 },
                 error: { marginTop: 8 },
-              }} label="Kata Sandi" placeholder="Masukkan kata sandi..." mb={24} onChange={(e) => {
+              }} label="Kata Sandi" placeholder="Masukkan kata sandi..." mb={16} onChange={(e) => {
                 form.setData('password', e.target.value)
                 
                 if (!e.target.value) {
@@ -55,6 +55,20 @@ const Login = (props) => {
                   form.clearErrors('password')
                 }
               }} error={form.errors.password} />
+              
+              <Checkbox
+                variant="filled"
+                mb={24}
+                styles={{
+                  label: { marginLeft: 8, fontSize: 14 },
+                  input: { border: 0, backgroundColor: form.data.remember ? 'var(--mantine-color-gold-1)' : '#f1f3f5' },
+                }}
+                radius={32}
+                label="Ingat Saya"
+                size="md"
+                color="gold.1"
+                onChange={(e) => form.setData('remember', e.target.checked)}
+              />
               
               <Button px={16} styles={{ section: { marginRight: 16 } }}
                       leftSection={(!form.data.email || !form.data.password || form.hasErrors) ? <IconLock /> : <IconLockOpen />}

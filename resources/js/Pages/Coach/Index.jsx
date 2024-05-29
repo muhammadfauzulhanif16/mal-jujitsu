@@ -50,7 +50,7 @@ const Index = (props) => {
       </MantineTable.Td>
     </MantineTable.Tr>
   ))
-  console.log(props)
+  
   return (
     <AppLayout title="Pelatih" authed={props.auth.user} meta={props.meta}>
       <Grid justify="space-between">

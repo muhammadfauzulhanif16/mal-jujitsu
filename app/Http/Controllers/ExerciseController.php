@@ -55,7 +55,6 @@
           'message' => $e->getMessage()
         ]);
       }
-      
     }
     
     /**

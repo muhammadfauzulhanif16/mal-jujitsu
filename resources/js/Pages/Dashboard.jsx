@@ -12,8 +12,6 @@ const Dashboard = (props) => {
       <Center bg="gold.1" h="25vh" style={{
         borderRadius: 16,
       }}>
-        
-        
         <Title order={1} c="gold.9">
           Selamat datang, {props.auth.user.full_name}!
         </Title>

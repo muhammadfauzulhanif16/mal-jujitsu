@@ -45,7 +45,7 @@ const Create = (props) => {
               xs: 2,
               md: 1,
             }}>
-              <Indicator styles={{ indicator: { padding: 16 } }} inline color="gold.1"
+              <Indicator styles={{ indicator: { padding: 16, border: '4px solid white' } }} inline color="gold.1"
                          label={form.data.athlete_id ? props.athletes.find((athlete) => athlete.user.id === form.data.athlete_id)?.user.role : 'Atlet'}
                          position="bottom-center" size={32} withBorder>
                 <Avatar
@@ -56,7 +56,7 @@ const Create = (props) => {
                 />
               </Indicator>
               
-              <Indicator inline color="gold.1" styles={{ indicator: { padding: 16 } }}
+              <Indicator inline color="gold.1" styles={{ indicator: { padding: 16, border: '4px solid white' } }}
                          label={form.data.coach_id ? props.coaches.find((coach) => coach.user.id === form.data.coach_id)?.user.role : 'Pelatih'}
                          position="bottom-center" size={32} withBorder>
                 <Avatar
@@ -93,7 +93,7 @@ const Create = (props) => {
                 input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 16 },
                 section: { marginLeft: 0, width: 48, height: 48 },
                 error: { marginTop: 8 },
-              }} mb={16} label="Nama Tempat" placeholder="Masukkan nama tempat..." onChange={(e) => {
+              }} mb={16} label="Tempat Latihan" placeholder="Masukkan tempat latihan..." onChange={(e) => {
                 form.setData('place', e.target.value)
                 
                 if (!e.target.value) {

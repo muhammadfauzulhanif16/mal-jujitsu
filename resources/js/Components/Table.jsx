@@ -6,7 +6,6 @@ export const Table = (props) => {
     <Box
       p={props.tdList.length ? 0 : 32}
       style={{
-        backgroundColor: 'var(--mantine-color-netral-10)',
         borderRadius: 20,
         border: props.tdList.length && '1px solid #E0E0E0',
       }}>
@@ -14,6 +13,7 @@ export const Table = (props) => {
         props.tdList.length ?
           <MantineTable.ScrollContainer>
             <MantineTable
+              highlightOnHover withColumnBorders
               styles={{
                 table: {
                   // borderCollapse: 'collapse',
@@ -25,7 +25,6 @@ export const Table = (props) => {
                   borderRadius: 16,
                   // backgroundColor: 'red',
                 },
-                
               }}>
               <MantineTable.Thead h={64}>
                 <MantineTable.Tr>

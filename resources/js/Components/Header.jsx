@@ -54,6 +54,7 @@ export const Header = (props) => {
           </Stack>
         </Group>
       } styles={{
+        root: { zIndex: 202 },
         header: { height: 80, padding: 16, gap: 0 }, content: { display: 'flex', flexDirection: 'column' }, body: {
           display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%',
         },
