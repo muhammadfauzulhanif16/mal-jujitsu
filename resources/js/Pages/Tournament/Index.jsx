@@ -8,7 +8,7 @@ import { Table } from '@/Components/Table.jsx'
 
 const Index = (props) => {
   const [tournamentSearch, setTournamentSearch] = useState('')
-  const THList = ['#', 'Nama Turnamen', 'Tempat Turnamen', 'Atlet', 'Medali', 'Aksi']
+  const THList = ['#', 'Nama Pertandingan', 'Tempat Pertandingan', 'Atlet', 'Medali', 'Aksi']
   const actionList = [
     {
       label: 'Rincian Atlet',
@@ -84,10 +84,10 @@ const Index = (props) => {
   ))
   
   return (
-    <AppLayout title="Turnamen" authed={props.auth.user} meta={props.meta}>
+    <AppLayout title="Pertandingan" authed={props.auth.user} meta={props.meta}>
       <Stack>
         <Group w="100%" justify="space-between">
-          <Breadcrumbs navList={[{ label: 'Turnamen' }]} />
+          <Breadcrumbs navList={[{ label: 'Pertandingan' }]} />
           
           <Group>
             <TextInput display={{ base: 'none', xs: 'block' }} w={240} variant="filled" leftSection={<IconSearch />}
@@ -96,11 +96,11 @@ const Index = (props) => {
                          section: { marginLeft: 0, width: 48, height: 48 },
                        }}
                        color="gold.1"
-                       placeholder="Cari turnamen..." onChange={(e) => setTournamentSearch(e.target.value)} />
+                       placeholder="Cari pertandingan..." onChange={(e) => setTournamentSearch(e.target.value)} />
             
             {['Pelatih Teknik', 'Pelatih Fisik'].includes(props.auth.user.role) && (
               <>
-                <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Tambah Turnamen">
+                <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Tambah Pertandingan">
                   <ActionIcon ml="auto" h={48} w={48} color="gold.1" radius={32} display={{ base: 'block', sm: 'none' }}
                               onClick={() => router.get(route('tournaments.create'))}>
                     <IconPlus />
@@ -109,7 +109,7 @@ const Index = (props) => {
                 
                 <Button display={{ base: 'none', sm: 'block' }} w={240} leftSection={<IconPlus />} variant="filled" color="gold.1" h={48} radius={32} px={16}
                         styles={{ section: { marginRight: 12 } }} onClick={() => router.get(route('tournaments.create'))}>
-                  Tambah Turnamen
+                  Tambah Pertandingan
                 </Button>
               </>
             )}

@@ -1,5 +1,5 @@
 import { AppLayout } from '@/Layouts/AppLayout.jsx'
-import { ActionIcon, Avatar, Button, Divider, Fieldset, Grid, Indicator, Select, SimpleGrid, TextInput, Tooltip } from '@mantine/core'
+import { ActionIcon, Avatar, Button, Divider, Fieldset, Grid, Group, Indicator, Select, SimpleGrid, TextInput, Tooltip } from '@mantine/core'
 import { IconBuilding, IconCalendar, IconClipboardText, IconClockPause, IconClockPlay, IconCornerDownLeft, IconUser } from '@tabler/icons-react'
 import { Breadcrumbs } from '@/Components/Breadcrumbs.jsx'
 import { useForm } from '@inertiajs/react'
@@ -15,26 +15,22 @@ const Create = (props) => {
       form.post(route('exercises.store'))
     }}>
       <AppLayout title="Latihan" authed={props.auth.user} meta={props.meta}>
-        <Grid justify="space-between">
-          <Grid.Col span={{ base: 6, xs: 5, sm: 4, md: 3 }}>
-            <Breadcrumbs navList={[{ label: 'Latihan', route: 'exercises.index' }, { label: 'Tambah' }]} />
-          </Grid.Col>
+        <Group w="100%" justify="space-between">
+          <Breadcrumbs navList={[{ label: 'Latihan', route: 'exercises.index' }, { label: 'Tambah' }]} />
           
-          <Grid.Col span={{ base: 6, xs: 5, sm: 4, md: 3 }}>
-            <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Tambah Latihan">
-              <ActionIcon type="submit" ml="auto" h={48} w={48} color="gold.1" radius={32} display={{ base: 'block', xs: 'none' }}
-                          disabled={form.hasErrors || !form.data.name || !form.data.place || !form.data.athlete_id || !form.data.coach_id || !form.data.date || !form.data.start_time || !form.data.end_time}>
-                <IconCornerDownLeft />
-              </ActionIcon>
-            </Tooltip>
-            
-            <Button display={{ base: 'none', xs: 'block' }} type="submit" fullWidth leftSection={<IconCornerDownLeft />} variant="filled" color="gold.1" h={48}
-                    px={16} styles={{ section: { marginRight: 12 } }} radius={32} loading={form.processing}
-                    disabled={form.hasErrors || !form.data.name || !form.data.place || !form.data.athlete_id || !form.data.coach_id || !form.data.date || !form.data.start_time || !form.data.end_time}>
-              Tambah Latihan
-            </Button>
-          </Grid.Col>
-        </Grid>
+          <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Tambah Latihan">
+            <ActionIcon type="submit" ml="auto" h={48} w={48} color="gold.1" radius={32} display={{ base: 'block', xs: 'none' }}
+                        disabled={form.hasErrors || !form.data.name || !form.data.place || !form.data.athlete_id || !form.data.coach_id || !form.data.date || !form.data.start_time || !form.data.end_time}>
+              <IconCornerDownLeft />
+            </ActionIcon>
+          </Tooltip>
+          
+          <Button display={{ base: 'none', xs: 'block' }} type="submit" w={240} leftSection={<IconCornerDownLeft />} variant="filled" color="gold.1" h={48}
+                  px={16} styles={{ section: { marginRight: 12 } }} radius={32} loading={form.processing}
+                  disabled={form.hasErrors || !form.data.name || !form.data.place || !form.data.athlete_id || !form.data.coach_id || !form.data.date || !form.data.start_time || !form.data.end_time}>
+            Tambah Latihan
+          </Button>
+        </Group>
         
         <Divider my={32} />
         

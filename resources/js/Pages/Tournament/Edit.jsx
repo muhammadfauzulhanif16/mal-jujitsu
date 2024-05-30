@@ -13,27 +13,24 @@ const Edit = (props) => {
       e.preventDefault()
       form.put(route('tournaments.update', props.tournament.id))
     }}>
-      <AppLayout title="Turnamen" authed={props.auth.user} meta={props.meta}>
-        <Grid justify="space-between">
-          <Grid.Col span={{ base: 6, xs: 5, sm: 4, md: 3 }}>
-            <Breadcrumbs navList={[{ label: 'Turnamen', route: 'tournaments.index' }, { label: 'Ubah' }]} />
-          </Grid.Col>
+      <AppLayout title="Pertandingan" authed={props.auth.user} meta={props.meta}>
+        <Group w="100%" justify="space-between">
+          <Breadcrumbs navList={[{ label: 'Pertandingan', route: 'tournaments.index' }, { label: 'Ubah' }]} />
           
-          <Grid.Col span={{ base: 6, xs: 5, sm: 4, md: 3 }}>
-            <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Ubah Turnamen">
-              <ActionIcon type="submit" ml="auto" h={48} w={48} color="gold.1" radius={32} display={{ base: 'block', xs: 'none' }}
-                          disabled={form.hasErrors || !form.data.name || !form.data.place || !form.data.athlete_id || !form.data.medal}>
-                <IconCornerDownLeft />
-              </ActionIcon>
-            </Tooltip>
-            
-            <Button display={{ base: 'none', xs: 'block' }} type="submit" fullWidth leftSection={<IconCornerDownLeft />} variant="filled" color="gold.1" h={48}
-                    px={16} styles={{ section: { marginRight: 12 } }} radius={32} loading={form.processing}
-                    disabled={form.hasErrors || !form.data.name || !form.data.place || !form.data.athlete_id || !form.data.medal}>
-              Ubah Latihan
-            </Button>
-          </Grid.Col>
-        </Grid>
+          <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Ubah Pertandingan">
+            <ActionIcon type="submit" ml="auto" h={48} w={48} color="gold.1" radius={32} display={{ base: 'block', xs: 'none' }}
+                        disabled={form.hasErrors || !form.data.name || !form.data.place || !form.data.athlete_id || !form.data.medal}>
+              <IconCornerDownLeft />
+            </ActionIcon>
+          </Tooltip>
+          
+          <Button w={240} display={{ base: 'none', xs: 'block' }} type="submit" fullWidth leftSection={<IconCornerDownLeft />} variant="filled" color="gold.1"
+                  h={48}
+                  px={16} styles={{ section: { marginRight: 12 } }} radius={32} loading={form.processing}
+                  disabled={form.hasErrors || !form.data.name || !form.data.place || !form.data.athlete_id || !form.data.medal}>
+            Ubah Latihan
+          </Button>
+        </Group>
         
         <Divider my={32} />
         
@@ -54,7 +51,7 @@ const Edit = (props) => {
           </Grid.Col>
           
           <Grid.Col span={{ base: 12, md: 8 }}>
-            <Fieldset mb={16} radius={20} legend="Informasi Turnamen"
+            <Fieldset mb={16} radius={20} legend="Informasi Pertandingan"
                       styles={{ root: { margin: 0, padding: 16 }, legend: { borderRadius: 20, fontSize: 16, padding: 16, fontWeight: 'bold' } }}>
               
               <TextInput withAsterisk variant="filled" leftSection={<IconClipboardText />} styles={{
@@ -62,7 +59,7 @@ const Edit = (props) => {
                 input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 16 },
                 section: { marginLeft: 0, width: 48, height: 48 },
                 error: { marginTop: 8 },
-              }} mb={16} label="Nama Turnamen" placeholder="Masukkan nama turnamen..." onChange={(e) => {
+              }} mb={16} label="Nama Pertandingan" placeholder="Masukkan nama pertandingan..." onChange={(e) => {
                 form.setData('name', e.target.value)
                 
                 if (!e.target.value) {
@@ -77,7 +74,7 @@ const Edit = (props) => {
                 input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 16 },
                 section: { marginLeft: 0, width: 48, height: 48 },
                 error: { marginTop: 8 },
-              }} mb={16} label="Tempat Turnamen" placeholder="Masukkan tempat turnamen..." onChange={(e) => {
+              }} mb={16} label="Tempat Pertandingan" placeholder="Masukkan tempat pertandingan..." onChange={(e) => {
                 form.setData('place', e.target.value)
                 
                 if (!e.target.value) {

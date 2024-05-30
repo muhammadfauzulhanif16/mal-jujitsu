@@ -33,7 +33,7 @@ export const Header = (props) => {
           </Menu.Target>
           
           <Menu.Dropdown>
-            <Menu.Item leftSection={<IconUser />} px={16} py={0} color="netral">Profil Saya</Menu.Item>
+            <Menu.Item leftSection={<IconUser />} px={16} py={0} color="netral" onClick={() => router.get(route('profile.edit'))}>Profil Saya</Menu.Item>
             <Menu.Item leftSection={<IconLogout />} color="red" px={16} py={0} onClick={() => router.post(route('logout'))}>Keluar Akun</Menu.Item>
           </Menu.Dropdown>
         </Menu>

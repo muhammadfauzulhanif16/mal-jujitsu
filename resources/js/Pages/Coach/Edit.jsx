@@ -24,26 +24,23 @@ const Edit = (props) => {
       form.post(route('coaches.update', props.user.id))
     }}>
       <AppLayout title="Pelatih" authed={props.auth.user} meta={props.meta}>
-        <Grid justify="space-between">
-          <Grid.Col span={{ base: 6, xs: 5, sm: 4, md: 3 }}>
-            <Breadcrumbs navList={[{ label: 'Pelatih', route: 'coaches.index' }, { label: 'Ubah' }]} />
-          </Grid.Col>
+        <Group w="100%" justify="space-between">
+          <Breadcrumbs navList={[{ label: 'Pelatih', route: 'coaches.index' }, { label: 'Ubah' }]} />
           
-          <Grid.Col span={{ base: 6, xs: 5, sm: 4, md: 3 }}>
-            <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Ubah Pelatih">
-              <ActionIcon ml="auto" h={48} w={48} color="gold.1" radius={32} display={{ base: 'block', xs: 'none' }}
-                          disabled={form.hasErrors || !form.data.email || !form.data.full_name || !form.data.gender || !form.data.birth_date || !form.data.role}>
-                <IconCornerDownLeft />
-              </ActionIcon>
-            </Tooltip>
-            
-            <Button display={{ base: 'none', xs: 'block' }} type="submit" fullWidth leftSection={<IconCornerDownLeft />} variant="filled" color="gold.1" h={48}
-                    radius={32} px={16} styles={{ section: { marginRight: 12 } }} loading={form.processing}
-                    disabled={form.hasErrors || !form.data.email || !form.data.full_name || !form.data.gender || !form.data.birth_date || !form.data.role}>
-              Ubah Pelatih
-            </Button>
-          </Grid.Col>
-        </Grid>
+          <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Ubah Pelatih">
+            <ActionIcon ml="auto" h={48} w={48} color="gold.1" radius={32} display={{ base: 'block', xs: 'none' }}
+                        disabled={form.hasErrors || !form.data.email || !form.data.full_name || !form.data.gender || !form.data.birth_date || !form.data.role}>
+              <IconCornerDownLeft />
+            </ActionIcon>
+          </Tooltip>
+          
+          <Button w={240} display={{ base: 'none', xs: 'block' }} type="submit" fullWidth leftSection={<IconCornerDownLeft />} variant="filled" color="gold.1"
+                  h={48}
+                  radius={32} px={16} styles={{ section: { marginRight: 12 } }} loading={form.processing}
+                  disabled={form.hasErrors || !form.data.email || !form.data.full_name || !form.data.gender || !form.data.birth_date || !form.data.role}>
+            Ubah Pelatih
+          </Button>
+        </Group>
         
         <Divider my={32} />
         

@@ -9,8 +9,8 @@ export const NavBar = (props) => {
     route: 'coaches.index',
   }, { icon: <IconUser />, label: 'Atlet', route: 'athletes.index' }, { icon: <IconClipboardText />, label: 'Latihan', route: 'exercises.index' }, {
     icon: <IconMedal />,
-    label: 'Turnamen', route: 'tournaments.index',
-  }, { icon: <IconReportAnalytics />, label: 'Evaluasi', route: 'evaluations.index' }, { icon: <IconReport />, label: 'Laporan', route: 'reports.index' }]
+    label: 'Pertandingan', route: 'tournaments.index',
+  }, { icon: <IconReportAnalytics />, label: 'Penilaian', route: 'evaluations.index' }, { icon: <IconReport />, label: 'Laporan', route: 'reports.index' }]
   
   return (
     <Flex direction={{ base: 'column', md: 'row' }} justify="space-between" align="center" bg="white" gap={{ base: 0, md: 32 }}>
