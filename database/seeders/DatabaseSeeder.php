@@ -22,6 +22,7 @@
       $this->call([
         CoachSeeder::class,
         AthleteSeeder::class,
+        CriteriaSeeder::class,
       ]);
     }
   }

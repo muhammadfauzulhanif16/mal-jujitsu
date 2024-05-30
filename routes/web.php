@@ -2,6 +2,7 @@
   
   use App\Http\Controllers\AthleteController;
   use App\Http\Controllers\CoachController;
+  use App\Http\Controllers\EvaluationController;
   use App\Http\Controllers\ExerciseController;
   use App\Http\Controllers\ProfileController;
   use App\Http\Controllers\TournamentController;
@@ -70,6 +71,16 @@
       Route::get('{tournament}/edit', [TournamentController::class, 'edit'])->name('tournaments.edit');
       Route::put('{tournament}', [TournamentController::class, 'update'])->name('tournaments.update');
       Route::delete('{tournament}', [TournamentController::class, 'destroy'])->name('tournaments.destroy');
+    });
+    
+    Route::group(['prefix' => 'evaluations'], function () {
+      Route::get('', [EvaluationController::class, 'index'])->name('evaluations.index');
+      Route::get('create', [EvaluationController::class, 'create'])->name('evaluations.create');
+      Route::post('', [EvaluationController::class, 'store'])->name('evaluations.store');
+      Route::get('{evaluation}', [EvaluationController::class, 'show'])->name('evaluations.show');
+      Route::get('{evaluation}/edit', [EvaluationController::class, 'edit'])->name('evaluations.edit');
+      Route::put('{evaluation}', [EvaluationController::class, 'update'])->name('evaluations.update');
+      Route::delete('{evaluation}', [EvaluationController::class, 'destroy'])->name('evaluations.destroy');
     });
     
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

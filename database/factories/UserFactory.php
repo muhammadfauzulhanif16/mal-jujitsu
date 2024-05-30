@@ -16,13 +16,6 @@
      */
     protected static ?string $password;
     
-    public function roles($roles)
-    {
-      return $this->state([
-        'role' => $this->faker->randomElement($roles),
-      ]);
-    }
-    
     /**
      * Define the model's default state.
      *
