@@ -1,64 +1,42 @@
 import { AppLayout } from '@/Layouts/AppLayout.jsx'
-import {
-  ActionIcon,
-  Avatar,
-  Box,
-  Button,
-  Center,
-  Divider,
-  Fieldset,
-  Grid,
-  Group,
-  Indicator,
-  NumberInput,
-  Radio,
-  Select,
-  Stack,
-  TextInput,
-  Tooltip,
-} from '@mantine/core'
-import { IconCornerDownLeft, IconUser } from '@tabler/icons-react'
+import { Avatar, Box, Center, Divider, Fieldset, Grid, Group, Indicator, NumberInput, Radio, Select, Stack, TextInput } from '@mantine/core'
+import { IconUser } from '@tabler/icons-react'
 import { Breadcrumbs } from '@/Components/Breadcrumbs.jsx'
 import { useForm } from '@inertiajs/react'
 import 'dayjs/locale/id'
+import { useEffect } from 'react'
 
 const Show = (props) => {
   const form = useForm({
-    exercise_id: '',
-    evaluations: props.criterias.flatMap(criteria =>
-      criteria.sub_criterias.flatMap(sub_criteria =>
-        sub_criteria.sub_sub_criterias.map(sub_sub_criteria => ({
-          sub_sub_criteria_id: sub_sub_criteria.id,
-          value: '',
-        })),
-      ),
-    ),
+    exercise_id: props.exercise.id,
+    evaluations: (props.evaluations || []).map((evaluation) => ({
+      sub_sub_criteria_id: evaluation.sub_sub_criteria_id,
+      value: evaluation.value,
+    })),
   })
+  
+  useEffect(() => {
+    const evaluations = props.evaluations.map((evaluation) => (
+      {
+        sub_sub_criteria_id: evaluation.sub_sub_criteria_id,
+        value: evaluation.value,
+      }
+    ))
+    
+    form.setData('evaluations', evaluations)
+  }, [])
+  
   console.log(props)
   return (
     <form onSubmit={(e) => {
       e.preventDefault()
-      form.post(route('evaluations.store'))
+      form.put(route('evaluations.update', {
+        user: props.athlete,
+        exercise: props.exercise,
+      }))
     }}>
       <AppLayout title="Penilaian" authed={props.auth.user} meta={props.meta}>
-        <Group w="100%" justify="space-between">
-          <Breadcrumbs navList={[{ label: 'Penilaian', route: 'evaluations.index' }, { label: 'Tambah' }]} />
-          
-          <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Tambah Penilaian">
-            <ActionIcon type="submit" ml="auto" h={48} w={48} color="gold.1" radius={32} display={{ base: 'block', xs: 'none' }}
-              // disabled={form.hasErrors || !form.data.name || !form.data.place || !form.data.athlete_id || !form.data.medal}
-            >
-              <IconCornerDownLeft />
-            </ActionIcon>
-          </Tooltip>
-          
-          <Button display={{ base: 'none', xs: 'block' }} type="submit" w={240} leftSection={<IconCornerDownLeft />} variant="filled" color="gold.1" h={48}
-                  px={16} styles={{ section: { marginRight: 12 } }} radius={32} loading={form.processing}
-            // disabled={form.hasErrors || !form.data.name || !form.data.place || !form.data.athlete_id || !form.data.medal}
-          >
-            Tambah Penilaian
-          </Button>
-        </Group>
+        <Breadcrumbs navList={[{ label: 'Penilaian', route: 'evaluations.index' }, { label: 'Rincian' }]} />
         
         <Divider my={32} />
         
@@ -82,6 +60,8 @@ const Show = (props) => {
             <Fieldset radius={20} legend="Informasi Latihan"
                       styles={{ root: { margin: 0, padding: 16 }, legend: { borderRadius: 20, fontSize: 16, padding: 16, fontWeight: 'bold' } }}>
               <Select
+                disabled
+                value={form.data.exercise_id}
                 withAsterisk
                 variant="filled"
                 styles={{
@@ -124,9 +104,12 @@ const Show = (props) => {
                               styles={{ root: { margin: 0, padding: 16 }, legend: { borderRadius: 20, fontSize: 16, padding: 16, fontWeight: 'bold' } }}>
                       <Stack>
                         {sub_criteria.sub_sub_criterias.map((sub_sub_criteria, sub_sub_criteria_id) => sub_sub_criteria.type === 'radio' ? (
-                            <Radio.Group key={sub_sub_criteria.id} description={sub_sub_criteria.description} label={sub_sub_criteria.name} withAsterisk styles={{
-                              label: { marginBottom: 8 }, description: { marginBottom: 8 }, error: { marginTop: 8 },
-                            }} onChange={(value) => {
+                            <Radio.Group value={
+                              form.data.evaluations.find((evaluation) => evaluation.sub_sub_criteria_id === sub_sub_criteria.id)?.value
+                            } key={sub_sub_criteria.id} description={sub_sub_criteria.description} label={sub_sub_criteria.name} withAsterisk
+                                         styles={{
+                                           label: { marginBottom: 8 }, description: { marginBottom: 8 }, error: { marginTop: 8 },
+                                         }} onChange={(value) => {
                               form.data.evaluations.forEach((evaluation) => {
                                 if (evaluation.sub_sub_criteria_id === sub_sub_criteria.id) {
                                   evaluation.value = value
@@ -142,15 +125,18 @@ const Show = (props) => {
                               // }
                             }}>
                               <Group gap={32}>
-                                <Radio size="md" value="1" label="1" color="gold.1" />
-                                <Radio size="md" value="2" label="2" color="gold.1" />
-                                <Radio size="md" value="3" label="3" color="gold.1" />
-                                <Radio size="md" value="4" label="4" color="gold.1" />
-                                <Radio size="md" value="5" label="5" color="gold.1" />
+                                <Radio size="md" value="1" label="1" color="gold.1" disabled />
+                                <Radio size="md" value="2" label="2" color="gold.1" disabled />
+                                <Radio size="md" value="3" label="3" color="gold.1" disabled />
+                                <Radio size="md" value="4" label="4" color="gold.1" disabled />
+                                <Radio size="md" value="5" label="5" color="gold.1" disabled />
                               </Group>
                             </Radio.Group>
                           ) : sub_sub_criteria.type === 'number' ? (
-                            <NumberInput hideControls description={sub_sub_criteria.description} key={sub_sub_criteria.id} label={sub_sub_criteria.name}
+                            <NumberInput disabled hideControls description={sub_sub_criteria.description} key={sub_sub_criteria.id} label={sub_sub_criteria.name}
+                                         value={
+                                           form.data.evaluations.find((evaluation) => evaluation.sub_sub_criteria_id === sub_sub_criteria.id)?.value
+                                         }
                                          withAsterisk variant="filled"
                                          styles={{
                                            label: { marginBottom: 8 },
@@ -176,8 +162,12 @@ const Show = (props) => {
                               // }
                             }} error={form.errors.email} />
                           ) : (
-                            <TextInput key={sub_sub_criteria.id} description={sub_sub_criteria.description} label={sub_sub_criteria.name} withAsterisk
-                                       variant="filled" styles={{
+                            <TextInput
+                              disabled
+                              value={
+                                form.data.evaluations.find((evaluation) => evaluation.sub_sub_criteria_id === sub_sub_criteria.id)?.value
+                              } key={sub_sub_criteria.id} description={sub_sub_criteria.description} label={sub_sub_criteria.name} withAsterisk
+                              variant="filled" styles={{
                               description: { marginBottom: 8 },
                               label: { marginBottom: 8 },
                               input: { height: 48, borderRadius: 32, paddingLeft: 16, paddingRight: 16 },

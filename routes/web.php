@@ -69,7 +69,7 @@
       Route::get('create', [EvaluationController::class, 'create'])->name('evaluations.create');
       Route::post('', [EvaluationController::class, 'store'])->name('evaluations.store');
       Route::get('users/{user}/exercises/{exercise}', [EvaluationController::class, 'show'])->name('evaluations.show');
-      Route::get('users/{user}/exercises/{exercise}', [EvaluationController::class, 'edit'])->name('evaluations.edit');
+      Route::get('users/{user}/exercises/{exercise}/edit', [EvaluationController::class, 'edit'])->name('evaluations.edit');
       Route::put('users/{user}/exercises/{exercise}', [EvaluationController::class, 'update'])->name('evaluations.update');
       Route::delete('users/{user}/exercises/{exercise}', [EvaluationController::class, 'destroy'])->name('evaluations.destroy');
     });

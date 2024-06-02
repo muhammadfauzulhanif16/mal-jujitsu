@@ -119,10 +119,14 @@
       $authedUser->avatar = str_contains($authedUser->avatar, 'https') ? $authedUser->avatar : ($authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null);
       
       return Inertia('Evaluation/Show', [
+        'athlete' => $user,
         'exercise' => $exercise,
+        'exercises' => Exercise::with('athlete')->doesntHave('evaluations')->get()->push($exercise->load('athlete')),
+        'criterias' => Criteria::with(['subCriterias.subSubCriterias'])->get(),
         'evaluations' => $exercise->evaluations,
         'meta' => session('meta'),
         'auth' => ['user' => Auth::user()]
+      
       ]);
     }
     
