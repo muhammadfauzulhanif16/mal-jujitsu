@@ -187,13 +187,24 @@
       try {
         $exercise->evaluations()->delete();
         
-        return to_route('evaluations.index')->with('meta', [
-          'status' => true,
-          'title' => 'Berhasil menghapus penilaian',
-          'message' => "Penilaian latihan '{$exercise->name}' berhasil dihapus!"
-        ]);
+        // Check if there are still exercises with evaluations for the specific athlete
+        $hasEvaluations = Exercise::where('athlete_id', $user->id)->whereHas('evaluations')->exists();
+        
+        if ($hasEvaluations) {
+          return to_route('evaluations.users.index', ['user' => $user->id])->with('meta', [
+            'status' => true,
+            'title' => 'Berhasil menghapus penilaian',
+            'message' => "Penilaian latihan '{$exercise->name}' berhasil dihapus!"
+          ]);
+        } else {
+          return to_route('evaluations.index')->with('meta', [
+            'status' => true,
+            'title' => 'Berhasil menghapus penilaian',
+            'message' => "Penilaian latihan '{$exercise->name}' berhasil dihapus!"
+          ]);
+        }
       } catch (Exception $e) {
-        return to_route('evaluations.index')->with('meta', [
+        return to_route('evaluations.users.index', ['user' => $user->id])->with('meta', [
           'status' => false,
           'title' => 'Gagal menghapus penilaian',
           'message' => $e->getMessage()
