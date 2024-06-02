@@ -21,30 +21,42 @@ import { IconCornerDownLeft, IconUser } from '@tabler/icons-react'
 import { Breadcrumbs } from '@/Components/Breadcrumbs.jsx'
 import { useForm } from '@inertiajs/react'
 import 'dayjs/locale/id'
+import { useEffect } from 'react'
 
-const Create = (props) => {
+const Edit = (props) => {
   const form = useForm({
-    exercise_id: '',
-    evaluations: props.criterias.flatMap(criteria =>
-      criteria.sub_criterias.flatMap(sub_criteria =>
-        sub_criteria.sub_sub_criterias.map(sub_sub_criteria => ({
-          sub_sub_criteria_id: sub_sub_criteria.id,
-          value: '',
-        })),
-      ),
-    ),
+    exercise_id: props.exercise.id,
+    evaluations: (props.evaluations || []).map((evaluation) => ({
+      sub_sub_criteria_id: evaluation.sub_sub_criteria_id,
+      value: evaluation.value,
+    })),
   })
+  
+  useEffect(() => {
+    const evaluations = props.evaluations.map((evaluation) => (
+      {
+        sub_sub_criteria_id: evaluation.sub_sub_criteria_id,
+        value: evaluation.value,
+      }
+    ))
+    
+    form.setData('evaluations', evaluations)
+  }, [])
+  
   console.log(props)
   return (
     <form onSubmit={(e) => {
       e.preventDefault()
-      form.post(route('evaluations.store'))
+      form.put(route('evaluations.update', {
+        user: props.athlete,
+        exercise: props.exercise,
+      }))
     }}>
       <AppLayout title="Penilaian" authed={props.auth.user} meta={props.meta}>
         <Group w="100%" justify="space-between">
-          <Breadcrumbs navList={[{ label: 'Penilaian', route: 'evaluations.index' }, { label: 'Tambah' }]} />
+          <Breadcrumbs navList={[{ label: 'Penilaian', route: 'evaluations.index' }, { label: 'Ubah' }]} />
           
-          <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Tambah Penilaian">
+          <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Ubah Penilaian">
             <ActionIcon type="submit" ml="auto" h={48} w={48} color="gold.1" radius={32} display={{ base: 'block', xs: 'none' }}
               // disabled={form.hasErrors || !form.data.name || !form.data.place || !form.data.athlete_id || !form.data.medal}
             >
@@ -56,7 +68,7 @@ const Create = (props) => {
                   px={16} styles={{ section: { marginRight: 12 } }} radius={32} loading={form.processing}
             // disabled={form.hasErrors || !form.data.name || !form.data.place || !form.data.athlete_id || !form.data.medal}
           >
-            Tambah Penilaian
+            Ubah Penilaian
           </Button>
         </Group>
         
@@ -82,6 +94,7 @@ const Create = (props) => {
             <Fieldset radius={20} legend="Informasi Latihan"
                       styles={{ root: { margin: 0, padding: 16 }, legend: { borderRadius: 20, fontSize: 16, padding: 16, fontWeight: 'bold' } }}>
               <Select
+                value={form.data.exercise_id}
                 withAsterisk
                 variant="filled"
                 styles={{
@@ -124,9 +137,12 @@ const Create = (props) => {
                               styles={{ root: { margin: 0, padding: 16 }, legend: { borderRadius: 20, fontSize: 16, padding: 16, fontWeight: 'bold' } }}>
                       <Stack>
                         {sub_criteria.sub_sub_criterias.map((sub_sub_criteria, sub_sub_criteria_id) => sub_sub_criteria.type === 'radio' ? (
-                            <Radio.Group key={sub_sub_criteria.id} description={sub_sub_criteria.description} label={sub_sub_criteria.name} withAsterisk styles={{
-                              label: { marginBottom: 8 }, description: { marginBottom: 8 }, error: { marginTop: 8 },
-                            }} onChange={(value) => {
+                            <Radio.Group value={
+                              form.data.evaluations.find((evaluation) => evaluation.sub_sub_criteria_id === sub_sub_criteria.id)?.value
+                            } key={sub_sub_criteria.id} description={sub_sub_criteria.description} label={sub_sub_criteria.name} withAsterisk
+                                         styles={{
+                                           label: { marginBottom: 8 }, description: { marginBottom: 8 }, error: { marginTop: 8 },
+                                         }} onChange={(value) => {
                               form.data.evaluations.forEach((evaluation) => {
                                 if (evaluation.sub_sub_criteria_id === sub_sub_criteria.id) {
                                   evaluation.value = value
@@ -151,6 +167,9 @@ const Create = (props) => {
                             </Radio.Group>
                           ) : sub_sub_criteria.type === 'number' ? (
                             <NumberInput hideControls description={sub_sub_criteria.description} key={sub_sub_criteria.id} label={sub_sub_criteria.name}
+                                         value={
+                                           form.data.evaluations.find((evaluation) => evaluation.sub_sub_criteria_id === sub_sub_criteria.id)?.value
+                                         }
                                          withAsterisk variant="filled"
                                          styles={{
                                            label: { marginBottom: 8 },
@@ -176,8 +195,11 @@ const Create = (props) => {
                               // }
                             }} error={form.errors.email} />
                           ) : (
-                            <TextInput key={sub_sub_criteria.id} description={sub_sub_criteria.description} label={sub_sub_criteria.name} withAsterisk
-                                       variant="filled" styles={{
+                            <TextInput
+                              value={
+                                form.data.evaluations.find((evaluation) => evaluation.sub_sub_criteria_id === sub_sub_criteria.id)?.value
+                              } key={sub_sub_criteria.id} description={sub_sub_criteria.description} label={sub_sub_criteria.name} withAsterisk
+                              variant="filled" styles={{
                               description: { marginBottom: 8 },
                               label: { marginBottom: 8 },
                               input: { height: 48, borderRadius: 32, paddingLeft: 16, paddingRight: 16 },
@@ -213,4 +235,4 @@ const Create = (props) => {
   )
 }
 
-export default Create
+export default Edit

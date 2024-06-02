@@ -14,6 +14,7 @@
         $table->uuid('id')->primary();
         $table->string('name');
         $table->string('place');
+        $table->date('date');
         $table->foreignUuid('athlete_id')->constrained('users');
         $table->string('medal');
         $table->timestamps();

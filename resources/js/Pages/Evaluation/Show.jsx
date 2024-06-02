@@ -22,7 +22,7 @@ import { Breadcrumbs } from '@/Components/Breadcrumbs.jsx'
 import { useForm } from '@inertiajs/react'
 import 'dayjs/locale/id'
 
-const Create = (props) => {
+const Show = (props) => {
   const form = useForm({
     exercise_id: '',
     evaluations: props.criterias.flatMap(criteria =>
@@ -213,4 +213,4 @@ const Create = (props) => {
   )
 }
 
-export default Create
+export default Show

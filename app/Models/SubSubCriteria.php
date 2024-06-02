@@ -10,7 +10,7 @@
   {
     use HasFactory, HasUuids;
     
-    protected $fillable = ['sub_criteria_id', 'name'];
+    protected $fillable = ['sub_criteria_id', 'name', 'description', 'type'];
     
     public function subCriteria()
     {

@@ -51,7 +51,7 @@ const Show = (props) => {
             }} mb={16} disabled label="Nama Lengkap" placeholder="Masukkan nama lengkap..." value={form.data.full_name}
             />
             
-            <Radio.Group value={form.data.gender} mb={16} label="Jenis Kelamin" withAsterisk styles={{
+            <Radio.Group value={form.data.gender} mb={16} label="Jenis Kelamin" styles={{
               label: { marginBottom: 8 }, error: { marginTop: 8 },
             }}>
               <Group gap={32}>

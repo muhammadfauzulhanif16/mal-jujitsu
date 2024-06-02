@@ -10,8 +10,19 @@
   {
     use HasFactory, HasUuids;
     
-    public function evaluation()
+    protected $fillable = [
+      'exercise_id',
+      'sub_sub_criteria_id',
+      'value',
+    ];
+    
+    public function exercise()
     {
-      return $this->belongsTo(Evaluation::class);
+      return $this->belongsTo(Exercise::class);
+    }
+    
+    public function subSubCriteria()
+    {
+      return $this->belongsTo(SubSubCriteria::class);
     }
   }

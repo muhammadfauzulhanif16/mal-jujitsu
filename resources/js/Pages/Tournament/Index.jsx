@@ -8,7 +8,7 @@ import { Table } from '@/Components/Table.jsx'
 
 const Index = (props) => {
   const [tournamentSearch, setTournamentSearch] = useState('')
-  const THList = ['#', 'Nama Pertandingan', 'Tempat Pertandingan', 'Atlet', 'Medali', 'Aksi']
+  const THList = ['#', 'Nama Pertandingan', 'Tempat Pertandingan', 'Atlet', 'Medali', 'Tanggal Pertandingan', 'Aksi']
   const actionList = [
     {
       label: 'Rincian Atlet',
@@ -60,6 +60,9 @@ const Index = (props) => {
       <MantineTable.Td
         px={16} py={0}
         style={{ whiteSpace: 'nowrap' }}>{tournament.medal}</MantineTable.Td>
+      <MantineTable.Td
+        px={16} py={0}
+        style={{ whiteSpace: 'nowrap' }}>{tournament.date}</MantineTable.Td>
       <MantineTable.Td
         px={16} py={0}
         style={{ whiteSpace: 'nowrap' }}>

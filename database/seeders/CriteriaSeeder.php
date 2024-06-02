@@ -16,101 +16,225 @@
     {
       $criterias = [
         [
-          'criteria' => 'Etika',
+          'name' => 'Etika',
           'sub-criterias' => [
             [
-              'sub-criteria' => 'Kedisiplinan',
+              'name' => 'Kedisiplinan',
               'sub-sub-criterias' => [
-                'Kehadiran selama pelatihan',
-                'Waktu kedatangan saat latihan',
+                [
+                  'name' => 'Kehadiran selama pelatihan',
+                  'description' => 'Pilih nilai 1-5',
+                  'type' => 'radio',
+                ],
+                [
+                  'name' => 'Waktu kedatangan saat latihan',
+                  'description' => 'Pilih nilai 1-5',
+                  'type' => 'radio',
+                ],
               ],
             ],
             [
-              'sub-criteria' => 'Perilaku',
+              'name' => 'Perilaku',
               'sub-sub-criterias' => [
-                'Sikap ketika pelatih memberikan materi',
-                'Sikap ketika melakukan teknik/materi yang diperintahkan',
+                [
+                  'name' => 'Sikap ketika pelatih memberikan materi',
+                  'description' => 'Pilih nilai 1-5',
+                  'type' => 'radio',
+                ],
+                [
+                  'name' => 'Sikap ketika melakukan teknik/materi yang diperintahkan',
+                  'description' => 'Pilih nilai 1-5',
+                  'type' => 'radio',
+                ],
               ],
             ],
           ],
         ],
         [
-          'criteria' => 'Teknik Bertanding',
+          'name' => 'Teknik Bertanding',
           'sub-criterias' => [
             [
-              'sub-criteria' => 'Ne-Waza',
+              'name' => 'Ne-Waza',
               'sub-sub-criterias' => [
-                'Takedown',
-                'Passing guard',
-                'Position control',
-                'Sweep',
-                'Submission',
-                'Escape position/submission',
+                [
+                  'name' => 'Takedown',
+                  'type' => 'text',
+                ],
+                [
+                  'name' => 'Passing guard',
+                  'type' => 'text',
+                ],
+                [
+                  'name' => 'Position control',
+                  'type' => 'text',
+                ],
+                [
+                  'name' => 'Sweep',
+                  'type' => 'text',
+                ],
+                [
+                  'name' => 'Submission',
+                  'type' => 'text',
+                ],
+                [
+                  'name' => 'Escape position/submission',
+                  'type' => 'text',
+                ],
               ],
             ],
             [
-              'sub-criteria' => 'Fighting',
+              'name' => 'Fighting',
               'sub-sub-criterias' => [
-                'Pukulan',
-                'Tendangan',
-                'Tangkasan',
-                'Footwork',
-                'Takedown',
-                'Passing guard',
-                'Position control',
-                'Sweep',
-                'Submission',
-                'Escape position/submission',
+                [
+                  'name' => 'Pukulan',
+                  'type' => 'text',
+                ],
+                [
+                  'name' => 'Tendangan',
+                  'type' => 'text',
+                ],
+                [
+                  'name' => 'Tangkasan',
+                  'type' => 'text',
+                ],
+                [
+                  'name' => 'Footwork',
+                  'type' => 'text',
+                ],
+                [
+                  'name' => 'Takedown',
+                  'type' => 'text',
+                ],
+                [
+                  'name' => 'Passing guard',
+                  'type' => 'text',
+                ],
+                [
+                  'name' => 'Position control',
+                  'type' => 'text',
+                ],
+                [
+                  'name' => 'Sweep',
+                  'type' => 'text',
+                ],
+                [
+                  'name' => 'Submission',
+                  'type' => 'text',
+                ],
+                [
+                  'name' => 'Escape position/submission',
+                  'type' => 'text',
+                ],
               ],
             ],
           ],
         ],
         [
-          'criteria' => 'Fisik',
+          'name' => 'Fisik',
           'sub-criterias' => [
             [
-              'sub-criteria' => 'Power',
+              'name' => 'Power',
               'sub-sub-criterias' => [
-                'Standing board jump',
-                'Vertical jump',
+                [
+                  'name' => 'Standing board jump',
+                  'description' => 'Jarak dalam satuan meter',
+                  'type' => 'number',
+                ],
+                [
+                  'name' => 'Vertical jump',
+                  'description' => 'Jarak dalam satuan meter',
+                  'type' => 'number',
+                ],
               ],
             ],
             [
-              'sub-criteria' => 'Flexibility',
+              'name' => 'Flexibility',
               'sub-sub-criterias' => [
-                'Sit and react test',
-                'Split flex',
+                [
+                  'name' => 'Sit and react test',
+                  'description' => 'Jarak dalam satuan sentimeter',
+                  'type' => 'number',
+                ],
+                [
+                  'name' => 'Split flex',
+                  'description' => 'Jarak dalam satuan sentimeter',
+                  'type' => 'number',
+                ],
               ],
             ],
             [
-              'sub-criteria' => 'Speed',
+              'name' => 'Speed',
               'sub-sub-criterias' => [
-                '20 meter speed test',
-                '30 meter speed test',
+                [
+                  'name' => '20 meter speed test',
+                  'description' => 'Jarak dalam satuan meter',
+                  'type' => 'number',
+                ],
+                [
+                  'name' => '30 meter speed test',
+                  'description' => 'Jarak dalam satuan meter',
+                  'type' => 'number',
+                ],
               ],
             ],
             [
-              'sub-criteria' => 'Agility',
+              'name' => 'Agility',
               'sub-sub-criterias' => [
-                'Shuttle run',
-                '4 cone agility test',
+                [
+                  'name' => 'Shuttle run',
+                  'description' => 'Waktu dalam satuan detik',
+                  'type' => 'number',
+                ],
+                [
+                  'name' => '4 cone agility test',
+                  'description' => 'Waktu dalam satuan detik',
+                  'type' => 'number',
+                ],
               ],
             ],
             [
-              'sub-criteria' => 'Muscle Strenght',
+              'name' => 'Muscle Strenght',
               'sub-sub-criterias' => [
-                'Push up',
-                'Sit up',
-                'Wall sit',
-                'Bodyweight squad',
-                'Core strength',
+                [
+                  'name' => 'Push up',
+                  'description' => 'Hitung dalam satuan repetisi',
+                  'type' => 'number',
+                ],
+                [
+                  'name' => 'Sit up',
+                  'description' => 'Hitung dalam satuan repetisi',
+                  'type' => 'number',
+                ],
+                [
+                  'name' => 'Wall sit',
+                  'description' => 'Hitung dalam satuan repetisi',
+                  'type' => 'number',
+                ],
+                [
+                  'name' => 'Bodyweight squad',
+                  'description' => 'Hitung dalam satuan repetisi',
+                  'type' => 'number',
+                ],
+                [
+                  'name' => 'Core strength',
+                  'description' => 'Hitung dalam satuan repetisi',
+                  'type' => 'number',
+                ],
               ],
             ],
             [
-              'sub-criteria' => 'VO2MAX',
+              'name' => 'VO2MAX',
               'sub-sub-criterias' => [
-                'Sprint 100m',
-                'Bleep Test',
+                [
+                  'name' => 'Bleep test',
+                  'description' => 'Isi dalam satuan ML/KG/MIN',
+                  'type' => 'number',
+                ],
+                [
+                  'name' => 'Cooper test',
+                  'description' => 'Isi dalam satuan ML/KG/MIN',
+                  'type' => 'number',
+                ],
               ],
             ],
           ],
@@ -118,14 +242,14 @@
       ];
       
       foreach ($criterias as $criteria) {
-        $criteriaModel = Criteria::create(['name' => $criteria['criteria']]);
+        $criteriaModel = Criteria::create(['name' => $criteria['name']]);
         
         foreach ($criteria['sub-criterias'] as $subCriteria) {
-          $subCriteriaData = ['name' => $subCriteria['sub-criteria'], 'criteria_id' => $criteriaModel->id];
+          $subCriteriaData = ['name' => $subCriteria['name'], 'criteria_id' => $criteriaModel->id];
           $subCriteriaModel = SubCriteria::create($subCriteriaData);
           
           foreach ($subCriteria['sub-sub-criterias'] as $subSubCriteria) {
-            $subSubCriteriaData = ['name' => $subSubCriteria, 'sub_criteria_id' => $subCriteriaModel->id];
+            $subSubCriteriaData = ['name' => $subSubCriteria['name'], 'sub_criteria_id' => $subCriteriaModel->id, 'description' => isset($subSubCriteria['description']) ? $subSubCriteria['description'] : '', 'type' => $subSubCriteria['type']];
             SubSubCriteria::create($subSubCriteriaData);
           }
         }

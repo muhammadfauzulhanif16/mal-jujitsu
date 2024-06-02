@@ -21,7 +21,7 @@
       $authedUser = Auth::user();
       $authedUser->avatar = str_contains($authedUser->avatar, 'https') ? $authedUser->avatar : ($authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null);
       
-      return Inertia('Coach/Index', [
+      return Inertia('Coach/ExercisesByAthlete', [
         'coaches' => Coach::with('user')->get()->map(function ($coach) {
           $coach->user->avatar = str_contains($coach->user->avatar, 'https') ? $coach->user->avatar : ($coach->user->avatar ? asset('storage/' . $coach->user->avatar) : null);
           return $coach;

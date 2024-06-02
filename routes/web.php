@@ -53,16 +53,6 @@
       Route::delete('{exercise}', [ExerciseController::class, 'destroy'])->name('exercises.destroy');
     });
     
-    Route::group(['prefix' => 'exercises'], function () {
-      Route::get('', [ExerciseController::class, 'index'])->name('exercises.index');
-      Route::get('create', [ExerciseController::class, 'create'])->name('exercises.create');
-      Route::post('', [ExerciseController::class, 'store'])->name('exercises.store');
-      Route::get('{exercise}', [ExerciseController::class, 'show'])->name('exercises.show');
-      Route::get('{exercise}/edit', [ExerciseController::class, 'edit'])->name('exercises.edit');
-      Route::put('{exercise}', [ExerciseController::class, 'update'])->name('exercises.update');
-      Route::delete('{exercise}', [ExerciseController::class, 'destroy'])->name('exercises.destroy');
-    });
-    
     Route::group(['prefix' => 'tournaments'], function () {
       Route::get('', [TournamentController::class, 'index'])->name('tournaments.index');
       Route::get('create', [TournamentController::class, 'create'])->name('tournaments.create');
@@ -75,12 +65,13 @@
     
     Route::group(['prefix' => 'evaluations'], function () {
       Route::get('', [EvaluationController::class, 'index'])->name('evaluations.index');
+      Route::get('users/{user}/exercises', [EvaluationController::class, 'users_index'])->name('evaluations.users.index');
       Route::get('create', [EvaluationController::class, 'create'])->name('evaluations.create');
       Route::post('', [EvaluationController::class, 'store'])->name('evaluations.store');
-      Route::get('{evaluation}', [EvaluationController::class, 'show'])->name('evaluations.show');
-      Route::get('{evaluation}/edit', [EvaluationController::class, 'edit'])->name('evaluations.edit');
-      Route::put('{evaluation}', [EvaluationController::class, 'update'])->name('evaluations.update');
-      Route::delete('{evaluation}', [EvaluationController::class, 'destroy'])->name('evaluations.destroy');
+      Route::get('users/{user}/exercises/{exercise}', [EvaluationController::class, 'show'])->name('evaluations.show');
+      Route::get('users/{user}/exercises/{exercise}', [EvaluationController::class, 'edit'])->name('evaluations.edit');
+      Route::put('users/{user}/exercises/{exercise}', [EvaluationController::class, 'update'])->name('evaluations.update');
+      Route::delete('users/{user}/exercises/{exercise}', [EvaluationController::class, 'destroy'])->name('evaluations.destroy');
     });
     
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

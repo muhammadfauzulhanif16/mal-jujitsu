@@ -1,12 +1,13 @@
 import { AppLayout } from '@/Layouts/AppLayout.jsx'
 import { ActionIcon, Avatar, Button, Center, Divider, Fieldset, Grid, Group, Indicator, Radio, Select, TextInput, Tooltip } from '@mantine/core'
-import { IconBuilding, IconClipboardText, IconCornerDownLeft, IconUser } from '@tabler/icons-react'
+import { IconBuilding, IconCalendar, IconClipboardText, IconCornerDownLeft, IconUser } from '@tabler/icons-react'
 import { Breadcrumbs } from '@/Components/Breadcrumbs.jsx'
 import { useForm } from '@inertiajs/react'
 import 'dayjs/locale/id'
+import { DatePickerInput } from '@mantine/dates'
 
 const Create = (props) => {
-  const form = useForm({ name: '', place: '', athlete_id: '', medal: '' })
+  const form = useForm({ name: '', place: '', date: '', athlete_id: '', medal: '' })
   
   return (
     <form onSubmit={(e) => {
@@ -113,7 +114,7 @@ const Create = (props) => {
                 error={form.errors.athlete_id}
               />
               
-              <Radio.Group label="Medali" withAsterisk styles={{
+              <Radio.Group mb={16} label="Medali" withAsterisk styles={{
                 label: { marginBottom: 8 }, error: { marginTop: 8 },
               }} onChange={(value) => {
                 form.setData('medal', value)
@@ -130,6 +131,27 @@ const Create = (props) => {
                   <Radio size="md" value="Perunggu" label="🥉 Perunggu" color="gold.1" />
                 </Group>
               </Radio.Group>
+              
+              <DatePickerInput mb={16} locale="id" monthsListFormat="MMMM" withAsterisk clearable allowDeselect firstDayOfWeek={0} variant="filled"
+                               valueFormat="dddd, D MMMM YYYY" leftSection={<IconCalendar />} label="Tanggal Pertandingan"
+                               placeholder="Masukkan tanggal pertandingan..."
+                               styles={{
+                                 label: { marginBottom: 8 },
+                                 input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 16 },
+                                 section: { marginLeft: 0, width: 48, height: 48 },
+                                 error: { marginTop: 8 },
+                                 calendarHeader: { height: 48 },
+                                 calendarHeaderControl: { height: 48, width: 48, borderRadius: 32 },
+                               }} onChange={(value) => {
+                form.setData('date', value)
+                
+                if (!value) {
+                  form.setError({ date: 'Tanggal latihan tidak boleh kosong.' })
+                } else {
+                  form.clearErrors('date')
+                }
+              }} error={form.errors.date}
+              />
             </Fieldset>
           </Grid.Col>
         </Grid>

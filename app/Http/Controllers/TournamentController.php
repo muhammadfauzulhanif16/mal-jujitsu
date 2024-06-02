@@ -6,6 +6,7 @@
   use App\Models\Tournament;
   use Exception;
   use Illuminate\Http\Request;
+  use Illuminate\Support\Carbon;
   use Illuminate\Support\Facades\Auth;
   
   class TournamentController extends Controller
@@ -18,7 +19,7 @@
       $authedUser = Auth::user();
       $authedUser->avatar = str_contains($authedUser->avatar, 'https') ? $authedUser->avatar : ($authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null);
       
-      return Inertia('Tournament/Index', [
+      return Inertia('Tournament/ExercisesByAthlete', [
         'tournaments' => Tournament::with('athlete')->get(),
         'meta' => session('meta'),
         'auth' => ['user' => $authedUser]
@@ -34,6 +35,7 @@
         Tournament::create([
           'name' => $request->name,
           'place' => $request->place,
+          'date' => Carbon::parse($request->date)->format('Y-m-d'),
           'athlete_id' => $request->athlete_id,
           'medal' => $request->medal,
         ]);
@@ -114,6 +116,7 @@
         $tournament->update([
           'name' => $request->name,
           'place' => $request->place,
+          'date' => Carbon::parse($request->date)->format('Y-m-d'),
           'athlete_id' => $request->athlete_id,
           'medal' => $request->medal,
         ]);

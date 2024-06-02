@@ -47,6 +47,16 @@
       return $this->hasOne(Coach::class);
     }
     
+    public function evaluations()
+    {
+      return $this->hasMany(Evaluation::class);
+    }
+    
+    public function exercises()
+    {
+      return $this->hasMany(Exercise::class);
+    }
+    
     /**
      * Get the attributes that should be cast.
      *
@@ -57,8 +67,6 @@
       return [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
-        'created_at' => 'datetime:d-m-Y H:i:s',
-        'updated_at' => 'datetime:d-m-Y H:i:s',
       ];
     }
   }

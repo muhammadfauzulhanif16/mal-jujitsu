@@ -20,7 +20,7 @@
       $authedUser = Auth::user();
       $authedUser->avatar = str_contains($authedUser->avatar, 'https') ? $authedUser->avatar : ($authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null);
       
-      return Inertia('Exercise/Index', [
+      return Inertia('Exercise/ExercisesByAthlete', [
         'exercises' => Exercise::with(['athlete', 'coach'])->get(),
         'meta' => session('meta'),
         'auth' => ['user' => $authedUser]
