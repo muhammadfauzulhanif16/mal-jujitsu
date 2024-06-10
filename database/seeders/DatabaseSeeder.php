@@ -23,6 +23,8 @@
         CoachSeeder::class,
         AthleteSeeder::class,
         CriteriaSeeder::class,
+        ExerciseSeeder::class,
+        TournamentSeeder::class
       ]);
     }
   }

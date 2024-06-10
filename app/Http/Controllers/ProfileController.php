@@ -2,7 +2,7 @@
   
   namespace App\Http\Controllers;
   
-  use App\Http\Requests\ProfileUpdateRequest;
+  use Exception;
   use Illuminate\Http\RedirectResponse;
   use Illuminate\Http\Request;
   use Illuminate\Support\Facades\Auth;
@@ -33,17 +33,37 @@
     /**
      * Update the user's profile information.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function update(Request $request): RedirectResponse
     {
-      $request->user()->fill($request->validated());
-      
-      if ($request->user()->isDirty('email')) {
-        $request->user()->email_verified_at = null;
+      try {
+        $user = $request->user();
+        
+        if ($request->hasFile('avatar')) {
+          $avatar = $request->file('avatar');
+          
+          $user->update([
+            'avatar' => $avatar->store('avatars', 'public'),
+          ]);
+        }
+        
+        $user->update([
+          'full_name' => $request->full_name,
+          'email' => $request->email,
+        ]);
+        
+        return Redirect::to('/profile')->with('meta', [
+          'status' => true,
+          'title' => 'Berhasil memperbarui profil',
+          'message' => 'Profil Anda berhasil diperbarui!'
+        ]);
+      } catch (Exception $e) {
+        return Redirect::back()->with('meta', [
+          'status' => false,
+          'title' => 'Gagal memperbarui profil',
+          'message' => 'Terjadi kesalahan saat memperbarui profil Anda!'
+        ]);
+        
       }
-      
-      $request->user()->save();
-      
-      return Redirect::route('profile.edit');
     }
     
     /**

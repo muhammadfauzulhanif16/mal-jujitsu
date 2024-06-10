@@ -1,5 +1,5 @@
 import { AppLayout } from '@/Layouts/AppLayout.jsx'
-import { ActionIcon, Button, Divider, Group, Stack, Table as MantineTable, TextInput, Tooltip } from '@mantine/core'
+import { ActionIcon, Avatar, Button, Divider, Flex, Group, Stack, Table as MantineTable, TextInput, Tooltip } from '@mantine/core'
 import { IconEye, IconPlus, IconSearch } from '@tabler/icons-react'
 import { Breadcrumbs } from '@/Components/Breadcrumbs.jsx'
 import { router } from '@inertiajs/core'
@@ -9,14 +9,12 @@ import { Table } from '@/Components/Table.jsx'
 const Index = (props) => {
   console.log(props)
   const [athleteSearch, setAthleteSearch] = useState('')
-  const THList = ['#', 'Nama Atlet', 'Sistem Pertandingan', 'Aksi']
+  const THList = ['#', 'Foto', 'Nama Atlet', 'Sistem Pertandingan', 'Aksi']
   const actionList = [
     {
       label: 'Daftar Penilaian Latihan',
       icon: <IconEye />,
-      onClick: (evaluation) => router.get(route('evaluations.users.index', {
-        user: evaluation.athlete,
-      })),
+      onClick: (athlete) => router.get(route('athletes.evaluations.index', athlete)),
       color: 'blue',
       // disabled: !['Pelatih Teknik', 'Pelatih Fisik'].includes(props.auth.user.role),
     },
@@ -35,10 +33,10 @@ const Index = (props) => {
     //   disabled: !['Pelatih Teknik', 'Pelatih Fisik'].includes(props.auth.user.role),
     // },
   ]
-  const evaluationList = props.evaluations.filter((evaluation) => {
-    return evaluation.athlete.full_name.toLowerCase().includes(athleteSearch.toLowerCase())
+  const athleteList = props.athletes.filter((athlete) => {
+    return athlete.full_name.toLowerCase().includes(athleteSearch.toLowerCase())
   })
-  const TDList = evaluationList.map((evaluation, id) => (
+  const TDList = athleteList.map((athlete, id) => (
     <MantineTable.Tr h={64} key={id}>
       <MantineTable.Td
         px={16} py={0}
@@ -46,17 +44,22 @@ const Index = (props) => {
       <MantineTable.Td
         px={16} py={0}
         style={{ whiteSpace: 'nowrap' }}>
-        {evaluation.athlete.full_name}
+        <Avatar size={48} src={athlete.avatar} />
       </MantineTable.Td>
       <MantineTable.Td
         px={16} py={0}
         style={{ whiteSpace: 'nowrap' }}>
-        {evaluation.athlete.role}
+        {athlete.full_name}
       </MantineTable.Td>
       <MantineTable.Td
         px={16} py={0}
         style={{ whiteSpace: 'nowrap' }}>
-        <Button.Group>
+        {athlete.role}
+      </MantineTable.Td>
+      <MantineTable.Td
+        px={16} py={0}
+        style={{ whiteSpace: 'nowrap' }}>
+        <Flex gap={8} style={{ whiteSpace: 'nowrap' }}>
           {actionList.map((action, id) => (
             <Tooltip label={action.label} key={id} style={{
               borderRadius: 32,
@@ -64,14 +67,14 @@ const Index = (props) => {
             }}>
               <ActionIcon size={48} radius={32} variant="subtle"
                           aria-label={action.label} color={action.color}
-                          onClick={() => action.onClick(evaluation)}
+                          onClick={() => action.onClick(athlete)}
                 // disabled={props.auth.user.id === athlete.user.id || action.disabled}
               >
                 {action.icon}
               </ActionIcon>
             </Tooltip>
           ))}
-        </Button.Group>
+        </Flex>
       </MantineTable.Td>
     </MantineTable.Tr>
   ))

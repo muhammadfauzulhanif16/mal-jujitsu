@@ -1,14 +1,16 @@
 <?php
-
-namespace Database\Factories;
-
-use Illuminate\Database\Eloquent\Factories\Factory;
-
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Tournament>
- */
-class TournamentFactory extends Factory
-{
+  
+  namespace Database\Factories;
+  
+  use App\Models\Tournament;
+  use Carbon\Carbon;
+  use Illuminate\Database\Eloquent\Factories\Factory;
+  
+  /**
+   * @extends Factory<Tournament>
+   */
+  class TournamentFactory extends Factory
+  {
     /**
      * Define the model's default state.
      *
@@ -16,8 +18,11 @@ class TournamentFactory extends Factory
      */
     public function definition(): array
     {
-        return [
-            //
-        ];
+      return [
+        'name' => $this->faker->word(),
+        'place' => $this->faker->address,
+        'date' => Carbon::parse($this->faker->date())->format('Y-m-d'),
+        'medal' => $this->faker->randomElement(['Emas', 'Perak', 'Perunggu']),
+      ];
     }
-}
+  }

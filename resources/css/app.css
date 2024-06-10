@@ -1,8 +1,33 @@
-@font-face {
-  font-family: 'Outfit, sans-serif';
-  src: url(/fonts/Outfit/static/Outfit-Regular.ttf); /* IE9 Compat Modes */
-}
-
 input:focus {
   border-color: #463b00;
+}
+
+.tiptap .ProseMirror:focus {
+  border-color: #463b00;
+}
+
+div[contenteditable="true"] {
+  min-height: 160px !important;
+}
+
+.mantine-RichTextEditor-content {
+  border-radius: 22px !important;
+  background-color: #f1f4f5 !important;
+}
+
+p[data-placeholder="Masukkan catatan"] {
+  font-size: 14px !important;
+}
+
+.mantine-RichTextEditor-root {
+  border: none !important;
+}
+
+button[data-active="true"] {
+  color: #463b00;
+}
+
+.mantine-RichTextEditor-toolbar {
+  padding: 8px 0 !important;
+  border: none !important;
 }

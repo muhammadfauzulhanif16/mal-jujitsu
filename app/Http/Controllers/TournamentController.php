@@ -20,7 +20,10 @@
       $authedUser->avatar = str_contains($authedUser->avatar, 'https') ? $authedUser->avatar : ($authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null);
       
       return Inertia('Tournament/Index', [
-        'tournaments' => Tournament::with('athlete')->get(),
+        'tournaments' => Tournament::with('athlete')->get()->map(function ($tournament) {
+          $tournament->athlete->avatar = str_contains($tournament->athlete->avatar, 'https') ? $tournament->athlete->avatar : ($tournament->athlete->avatar ? asset('storage/' . $tournament->athlete->avatar) : null);
+          return $tournament;
+        }),
         'meta' => session('meta'),
         'auth' => ['user' => $authedUser]
       ]);
@@ -66,7 +69,8 @@
         'meta' => session('meta'),
         'auth' => ['user' => $authedUser],
         'athletes' => Athlete::with('user')->get()->sortBy(function ($athlete) {
-          return $athlete->user->full_name;
+          $athlete->user->avatar = str_contains($athlete->user->avatar, 'https') ? $athlete->user->avatar : ($athlete->user->avatar ? asset('storage/' . $athlete->user->avatar) : null);
+          return $athlete;
         })->values(),
       ]);
     }

@@ -8,6 +8,7 @@ import { DatePickerInput } from '@mantine/dates'
 
 const Edit = (props) => {
   const form = useForm({
+    _method: 'put',
     avatar: props.auth.user.avatar,
     email: props.auth.user.email,
     password: '',
@@ -17,11 +18,11 @@ const Edit = (props) => {
     weight: props.auth.user.athlete ? props.auth.user.athlete.weight : null,
     role: props.auth.user.role,
   })
-  console.log(props)
+  
   return (
     <form onSubmit={(e) => {
       e.preventDefault()
-      form.post(route('profile.update', props.user.id))
+      form.post(route('profile.update', props.auth.user.id))
     }}>
       <AppLayout title="Profil" authed={props.auth.user} meta={props.meta}>
         <Group justify="space-between">

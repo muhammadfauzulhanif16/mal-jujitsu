@@ -58,27 +58,27 @@
               'sub-sub-criterias' => [
                 [
                   'name' => 'Takedown',
-                  'type' => 'text',
+                  'type' => 'radio',
                 ],
                 [
                   'name' => 'Passing guard',
-                  'type' => 'text',
+                  'type' => 'radio',
                 ],
                 [
                   'name' => 'Position control',
-                  'type' => 'text',
+                  'type' => 'radio',
                 ],
                 [
                   'name' => 'Sweep',
-                  'type' => 'text',
+                  'type' => 'radio',
                 ],
                 [
                   'name' => 'Submission',
-                  'type' => 'text',
+                  'type' => 'radio',
                 ],
                 [
                   'name' => 'Escape position/submission',
-                  'type' => 'text',
+                  'type' => 'radio',
                 ],
               ],
             ],
@@ -87,43 +87,43 @@
               'sub-sub-criterias' => [
                 [
                   'name' => 'Pukulan',
-                  'type' => 'text',
+                  'type' => 'radio',
                 ],
                 [
                   'name' => 'Tendangan',
-                  'type' => 'text',
+                  'type' => 'radio',
                 ],
                 [
                   'name' => 'Tangkasan',
-                  'type' => 'text',
+                  'type' => 'radio',
                 ],
                 [
                   'name' => 'Footwork',
-                  'type' => 'text',
+                  'type' => 'radio',
                 ],
                 [
                   'name' => 'Takedown',
-                  'type' => 'text',
+                  'type' => 'radio',
                 ],
                 [
                   'name' => 'Passing guard',
-                  'type' => 'text',
+                  'type' => 'radio',
                 ],
                 [
                   'name' => 'Position control',
-                  'type' => 'text',
+                  'type' => 'radio',
                 ],
                 [
                   'name' => 'Sweep',
-                  'type' => 'text',
+                  'type' => 'radio',
                 ],
                 [
                   'name' => 'Submission',
-                  'type' => 'text',
+                  'type' => 'radio',
                 ],
                 [
                   'name' => 'Escape position/submission',
-                  'type' => 'text',
+                  'type' => 'radio',
                 ],
               ],
             ],

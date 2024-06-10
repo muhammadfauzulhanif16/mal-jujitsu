@@ -23,14 +23,14 @@ const Index = (props) => {
       icon: <IconPencil />,
       onClick: (exercise) => router.get(route('exercises.edit', exercise.id)),
       color: 'yellow',
-      disabled: !['Pelatih Teknik', 'Pelatih Fisik'].includes(props.auth.user.role),
+      disabled: !props.auth.user.role.includes('Pelatih'),
     },
     {
       label: 'Hapus Atlet',
       icon: <IconTrash />,
       onClick: (exercise) => router.delete(route('exercises.destroy', exercise.id)),
       color: 'red',
-      disabled: !['Pelatih Teknik', 'Pelatih Fisik'].includes(props.auth.user.role),
+      disabled: !props.auth.user.role.includes('Pelatih'),
     },
   ]
   const exerciseList = props.exercises.filter((exercise) => {
@@ -76,25 +76,17 @@ const Index = (props) => {
       <MantineTable.Td
         px={16} py={0}
         style={{ whiteSpace: 'nowrap' }}>{exercise.end_time}</MantineTable.Td>
-      <MantineTable.Td
-        px={16} py={0}
-        style={{ whiteSpace: 'nowrap' }}>
-        <Button.Group>
+      <MantineTable.Td px={16} py={0} style={{ whiteSpace: 'nowrap' }}>
+        <Flex gap={8} style={{ whiteSpace: 'nowrap' }}>
           {actionList.map((action, id) => (
-            <Tooltip label={action.label} key={id} style={{
-              borderRadius: 32,
-              padding: '.5rem 1rem',
-            }}>
-              <ActionIcon size={48} radius={32} variant="subtle"
-                          aria-label={action.label} color={action.color}
-                          onClick={() => action.onClick(exercise)}
-                // disabled={props.auth.user.id === athlete.user.id || action.disabled}
-              >
+            <Tooltip label={action.label} key={id} style={{ borderRadius: 32, padding: '.5rem 1rem' }}>
+              <ActionIcon size={48} radius={32} variant="subtle" aria-label={action.label} color={action.color} onClick={() => action.onClick(exercise)}
+                          disabled={action.disabled}>
                 {action.icon}
               </ActionIcon>
             </Tooltip>
           ))}
-        </Button.Group>
+        </Flex>
       </MantineTable.Td>
     </MantineTable.Tr>
   ))
@@ -114,7 +106,7 @@ const Index = (props) => {
                        color="gold.1"
                        placeholder="Cari latihan..." onChange={(e) => setExerciseSearch(e.target.value)} />
             
-            {['Pelatih Teknik', 'Pelatih Fisik'].includes(props.auth.user.role) && (
+            {props.auth.user.role.includes('Pelatih') && (
               <>
                 <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Tambah Latihan">
                   <ActionIcon ml="auto" h={48} w={48} color="gold.1" radius={32} display={{ base: 'block', sm: 'none' }}

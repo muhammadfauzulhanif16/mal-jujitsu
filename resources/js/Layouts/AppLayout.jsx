@@ -1,9 +1,9 @@
 import { Head } from '@inertiajs/react'
-import React, { useEffect } from 'react'
-import { Box, Flex } from '@mantine/core'
+import React, { useEffect, useState } from 'react'
+import { ActionIcon, Box, Flex } from '@mantine/core'
 import { Header } from '@/Components/Header.jsx'
 import { notifications } from '@mantine/notifications'
-import { IconCheck, IconX } from '@tabler/icons-react'
+import { IconArrowNarrowUp, IconCheck, IconX } from '@tabler/icons-react'
 
 export const AppLayout = (props) => {
   useEffect(() => {
@@ -25,6 +25,20 @@ export const AppLayout = (props) => {
       })
     }
   }, [props.meta])
+  const [showScrollTop, setShowScrollTop] = useState(false)
+  
+  useEffect(() => {
+    const checkScrollTop = () => {
+      if (!showScrollTop && window.pageYOffset > window.innerHeight) {
+        setShowScrollTop(true)
+      } else if (showScrollTop && window.pageYOffset <= window.innerHeight) {
+        setShowScrollTop(false)
+      }
+    }
+    
+    window.addEventListener('scroll', checkScrollTop)
+    return () => window.removeEventListener('scroll', checkScrollTop)
+  }, [showScrollTop])
   
   return (
     <Flex
@@ -47,6 +61,17 @@ export const AppLayout = (props) => {
       >
         {props.children}
       </Box>
+      
+      {showScrollTop && (
+        <ActionIcon onClick={() =>
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+          })
+        } pos="fixed" h={48} w={48} color="gold.1" radius={32} m={16} bottom={0} right={0} variant="light" aria-label="Settings">
+          <IconArrowNarrowUp />
+        </ActionIcon>
+      )}
     </Flex>
   )
 }

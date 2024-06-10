@@ -3,7 +3,7 @@
   namespace App\Http\Controllers;
   
   use App\Models\Athlete;
-  use App\Models\Coach;
+  use App\Models\ExerciseEvaluation;
   use App\Models\User;
   use Exception;
   use Illuminate\Http\Request;
@@ -27,7 +27,20 @@
           $athlete->user->avatar = str_contains($athlete->user->avatar, 'https') ? $athlete->user->avatar : ($athlete->user->avatar ? asset('storage/' . $athlete->user->avatar) : null);
           return $athlete;
         }),
-        'coaches' => Coach::all(),
+        'meta' => session('meta'),
+        'auth' => ['user' => $authedUser]
+      ]);
+    }
+    
+    public function evaluation_index(User $user)
+    {
+      $authedUser = Auth::user();
+      $authedUser->avatar = str_contains($authedUser->avatar, 'https') ? $authedUser->avatar : ($authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null);
+      
+      return Inertia('Athlete/Evalution/Index', [
+        'evaluations' => ExerciseEvaluation::with('exercise.athlete')->whereHas('exercise.athlete', function ($query) use ($user) {
+          $query->where('id', $user->id);
+        })->get(),
         'meta' => session('meta'),
         'auth' => ['user' => $authedUser]
       ]);

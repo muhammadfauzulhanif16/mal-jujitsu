@@ -12,9 +12,9 @@
     {
       Schema::create('evaluations', function (Blueprint $table) {
         $table->uuid('id')->primary();
-        $table->foreignUuid('exercise_id')->constrained();
+        $table->foreignUuid('exercise_evaluation_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
         $table->foreignUuid('sub_sub_criteria_id')->constrained();
-        $table->string('value');
+        $table->string('value')->nullable();
         $table->timestamps();
       });
     }

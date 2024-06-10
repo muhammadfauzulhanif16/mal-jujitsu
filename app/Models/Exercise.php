@@ -41,12 +41,17 @@
       return $this->hasMany(Evaluation::class);
     }
     
+    public function exerciseEvaluation()
+    {
+      return $this->hasOne(ExerciseEvaluation::class);
+    }
+    
     protected function casts(): array
     {
       return [
         'date' => 'datetime:d-m-Y',
-        'start_time' => 'datetime:H.i.s',
-        'end_time' => 'datetime:H.i.s',
+//        'start_time' => 'datetime:H.i.s',
+//        'end_time' => 'datetime:H.i.s',
       ];
     }
   }

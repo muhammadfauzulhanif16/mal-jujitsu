@@ -5,6 +5,7 @@
   use App\Models\Criteria;
   use App\Models\Evaluation;
   use App\Models\Exercise;
+  use App\Models\ExerciseEvaluation;
   use App\Models\User;
   use Exception;
   use Illuminate\Http\Request;
@@ -21,19 +22,13 @@
       $authedUser->avatar = str_contains($authedUser->avatar, 'https') ? $authedUser->avatar : ($authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null);
       
       return Inertia('Evaluation/Index', [
-        'evaluations' => Exercise::whereHas('evaluations')
-          ->with(['evaluations', 'athlete'])
+        'athletes' => ExerciseEvaluation::with('exercise.athlete')
           ->get()
-          ->filter(function ($exercise) {
-            return $exercise->evaluations->isNotEmpty();
+          ->map(function ($exerciseEvaluation) {
+            $exerciseEvaluation->exercise->athlete->avatar = str_contains($exerciseEvaluation->exercise->athlete->avatar, 'https') ? $exerciseEvaluation->exercise->athlete->avatar : ($exerciseEvaluation->exercise->athlete->avatar ? asset('storage/' . $exerciseEvaluation->exercise->athlete->avatar) : null);
+            return $exerciseEvaluation->exercise->athlete;
           })
-          ->groupBy('athlete_id')
-          ->map(function ($exercises) {
-            return [
-              'athlete' => $exercises->first()->athlete,
-              'exercises' => $exercises->values()
-            ];
-          })
+          ->unique('id')
           ->values(),
         'meta' => session('meta'),
         'auth' => ['user' => $authedUser]
@@ -46,20 +41,14 @@
       $authedUser->avatar = str_contains($authedUser->avatar, 'https') ? $authedUser->avatar : ($authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null);
       
       return Inertia('Evaluation/ExercisesByAthlete', [
-        'exercises' => Exercise::whereHas('evaluations')
-          ->where('athlete_id', $user->id)
-          ->get()
-          ->filter(function ($exercise) {
-            return $exercise->evaluations->isNotEmpty();
-          })
-          ->map(function ($exercise) {
-            return [
-              'id' => $exercise->id,
-              'name' => $exercise->name,
-              'place' => $exercise->place,
-              'evaluation_time' => $exercise->evaluations->first()->created_at->format('d-m-Y H.i.s'),
-            ];
-          }),
+        'exercises' => ExerciseEvaluation::all()->filter(function ($exercise) use ($user) {
+          return $exercise->exercise->athlete_id === $user->id;
+        })->map(function ($exercise) {
+          return [
+            'exercise' => $exercise->exercise,
+            'evaluations' => $exercise->evaluations
+          ];
+        }),
         'athlete' => $user,
         'meta' => session('meta'),
         'auth' => ['user' => $authedUser]
@@ -72,9 +61,14 @@
     public function store(Request $request)
     {
       try {
+        $exercise_evaluation = ExerciseEvaluation::create([
+          'exercise_id' => $request->exercise_id,
+          'note' => $request->note,
+        ]);
+        
         foreach ($request->evaluations as $evaluation) {
           Evaluation::create([
-            'exercise_id' => $request->exercise_id,
+            'exercise_evaluation_id' => $exercise_evaluation->id,
             'sub_sub_criteria_id' => $evaluation['sub_sub_criteria_id'],
             'value' => $evaluation['value'],
           ]);
@@ -105,7 +99,10 @@
       return Inertia('Evaluation/Create', [
         'meta' => session('meta'),
         'auth' => ['user' => $authedUser],
-        'exercises' => Exercise::with('athlete')->doesntHave('evaluations')->get(),
+        'exercises' => Exercise::with('athlete')->doesntHave('exerciseEvaluation')->get()->map(function ($exercise) {
+          $exercise->athlete->avatar = str_contains($exercise->athlete->avatar, 'https') ? $exercise->athlete->avatar : ($exercise->athlete->avatar ? asset('storage/' . $exercise->athlete->avatar) : null);
+          return $exercise;
+        }),
         'criterias' => Criteria::with(['subCriterias.subSubCriterias'])->get()
       ]);
     }

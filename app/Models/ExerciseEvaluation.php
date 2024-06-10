@@ -6,23 +6,22 @@
   use Illuminate\Database\Eloquent\Factories\HasFactory;
   use Illuminate\Database\Eloquent\Model;
   
-  class Evaluation extends Model
+  class ExerciseEvaluation extends Model
   {
     use HasFactory, HasUuids;
     
     protected $fillable = [
-      'exercise_evaluation_id',
-      'sub_sub_criteria_id',
-      'value',
+      'exercise_id',
+      'note',
     ];
     
-    public function subSubCriteria()
+    public function exercise()
     {
-      return $this->belongsTo(SubSubCriteria::class);
+      return $this->belongsTo(Exercise::class);
     }
     
-    public function exerciseEvaluation()
+    public function evaluations()
     {
-      return $this->belongsTo(ExerciseEvaluation::class);
+      return $this->hasMany(Evaluation::class);
     }
   }

@@ -1,5 +1,5 @@
 import { AppLayout } from '@/Layouts/AppLayout.jsx'
-import { ActionIcon, Avatar, Button, Divider, Group, Stack, Table as MantineTable, TextInput, Tooltip } from '@mantine/core'
+import { ActionIcon, Avatar, Button, Divider, Flex, Group, Stack, Table as MantineTable, TextInput, Tooltip } from '@mantine/core'
 import { IconEye, IconPencil, IconPlus, IconSearch, IconTrash } from '@tabler/icons-react'
 import { router } from '@inertiajs/core'
 import { Table } from '@/Components/Table.jsx'
@@ -19,13 +19,13 @@ const Index = (props) => {
     icon: <IconPencil />,
     onClick: (user) => router.get(route('coaches.edit', user.id)),
     color: 'yellow',
-    disabled: !['Pelatih Teknik', 'Pelatih Fisik'].includes(props.auth.user.role),
+    disabled: !props.auth.user.role.includes('Pelatih'),
   }, {
     label: 'Hapus Pelatih',
     icon: <IconTrash />,
     onClick: (user) => router.delete(route('coaches.destroy', user.id)),
     color: 'red',
-    disabled: !['Pelatih Teknik', 'Pelatih Fisik'].includes(props.auth.user.role),
+    disabled: !props.auth.user.role.includes('Pelatih'),
   }]
   const coachList = props.coaches
     .filter((coach) => coach.user.full_name.toLowerCase().includes(coachSearch.toLowerCase()))
@@ -37,7 +37,7 @@ const Index = (props) => {
       <MantineTable.Td px={16} py={0} style={{ whiteSpace: 'nowrap' }}>{coach.user.full_name}</MantineTable.Td>
       <MantineTable.Td px={16} py={0} style={{ whiteSpace: 'nowrap' }}>{coach.user.role}</MantineTable.Td>
       <MantineTable.Td px={16} py={0} style={{ whiteSpace: 'nowrap' }}>
-        <Button.Group>
+        <Flex gap={8} style={{ whiteSpace: 'nowrap' }}>
           {actionList.map((action, id) => (
             <Tooltip label={action.label} key={id} style={{ borderRadius: 32, padding: '.5rem 1rem' }}>
               <ActionIcon size={48} radius={32} variant="subtle" aria-label={action.label} color={action.color} onClick={() => action.onClick(coach.user)}
@@ -46,7 +46,7 @@ const Index = (props) => {
               </ActionIcon>
             </Tooltip>
           ))}
-        </Button.Group>
+        </Flex>
       </MantineTable.Td>
     </MantineTable.Tr>
   ))
@@ -66,7 +66,7 @@ const Index = (props) => {
                        color="gold.1"
                        placeholder="Cari pelatih..." onChange={(e) => setCoachSearch(e.target.value)} />
             
-            {['Pelatih Teknik', 'Pelatih Fisik'].includes(props.auth.user.role) && (
+            {props.auth.user.role.includes('Pelatih') && (
               <>
                 <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Tambah Pelatih">
                   <ActionIcon ml="auto" h={48} w={48} color="gold.1" radius={32} display={{ base: 'block', sm: 'none' }}

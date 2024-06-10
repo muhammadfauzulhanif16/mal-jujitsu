@@ -14,6 +14,7 @@ import {
   Radio,
   Select,
   Stack,
+  Text,
   TextInput,
   Tooltip,
 } from '@mantine/core'
@@ -21,10 +22,15 @@ import { IconCornerDownLeft, IconUser } from '@tabler/icons-react'
 import { Breadcrumbs } from '@/Components/Breadcrumbs.jsx'
 import { useForm } from '@inertiajs/react'
 import 'dayjs/locale/id'
+import { Link, RichTextEditor } from '@mantine/tiptap'
+import { useEditor } from '@tiptap/react'
+import StarterKit from '@tiptap/starter-kit'
+import { Placeholder } from '@tiptap/extension-placeholder'
 
 const Create = (props) => {
   const form = useForm({
     exercise_id: '',
+    note: '',
     evaluations: props.criterias.flatMap(criteria =>
       criteria.sub_criterias.flatMap(sub_criteria =>
         sub_criteria.sub_sub_criterias.map(sub_sub_criteria => ({
@@ -34,6 +40,15 @@ const Create = (props) => {
       ),
     ),
   })
+  console.log(form.data)
+  const editor = useEditor({
+    extensions: [StarterKit, Link, Placeholder.configure({ placeholder: 'Masukkan catatan' })],
+    content: form.data.note,
+    onUpdate({ editor }) {
+      form.setData('note', editor.getHTML())
+    },
+  })
+  
   console.log(props)
   return (
     <form onSubmit={(e) => {
@@ -108,7 +123,7 @@ const Create = (props) => {
                 }}
                 data={props.exercises.map((exercise) => ({
                   value: exercise.id,
-                  label: `${exercise.name} ~ ${exercise.date} (${exercise.athlete.full_name} - ${exercise.athlete.role})`,
+                  label: `${exercise.name} ~ ${exercise.date} (${exercise.athlete.full_name} ~ ${exercise.athlete.role})`,
                 }))}
                 error={form.errors.exercise_id}
               />
@@ -206,6 +221,61 @@ const Create = (props) => {
                 </Box>
               ))}
             </Box>
+            
+            <Fieldset radius={20} legend="Informasi Tambahan"
+                      styles={{ root: { margin: 0, padding: 16 }, legend: { borderRadius: 20, fontSize: 16, padding: 16, fontWeight: 'bold' } }}>
+              <Text fz={14}>Catatan</Text>
+              <RichTextEditor editor={editor} style={{
+                borderRadius: 20,
+              }}>
+                <RichTextEditor.Toolbar>
+                  <RichTextEditor.ControlsGroup>
+                    <RichTextEditor.Bold />
+                    <RichTextEditor.Italic />
+                    <RichTextEditor.Underline />
+                    <RichTextEditor.Strikethrough />
+                    <RichTextEditor.ClearFormatting />
+                    <RichTextEditor.Highlight />
+                    <RichTextEditor.Code />
+                  </RichTextEditor.ControlsGroup>
+                  
+                  <RichTextEditor.ControlsGroup>
+                    <RichTextEditor.H1 />
+                    <RichTextEditor.H2 />
+                    <RichTextEditor.H3 />
+                    <RichTextEditor.H4 />
+                  </RichTextEditor.ControlsGroup>
+                  
+                  <RichTextEditor.ControlsGroup>
+                    <RichTextEditor.Blockquote />
+                    <RichTextEditor.Hr />
+                    <RichTextEditor.BulletList />
+                    <RichTextEditor.OrderedList />
+                    <RichTextEditor.Subscript />
+                    <RichTextEditor.Superscript />
+                  </RichTextEditor.ControlsGroup>
+                  
+                  <RichTextEditor.ControlsGroup>
+                    <RichTextEditor.Link />
+                    <RichTextEditor.Unlink />
+                  </RichTextEditor.ControlsGroup>
+                  
+                  <RichTextEditor.ControlsGroup>
+                    <RichTextEditor.AlignLeft />
+                    <RichTextEditor.AlignCenter />
+                    <RichTextEditor.AlignJustify />
+                    <RichTextEditor.AlignRight />
+                  </RichTextEditor.ControlsGroup>
+                  
+                  <RichTextEditor.ControlsGroup>
+                    <RichTextEditor.Undo />
+                    <RichTextEditor.Redo />
+                  </RichTextEditor.ControlsGroup>
+                </RichTextEditor.Toolbar>
+                
+                <RichTextEditor.Content />
+              </RichTextEditor>
+            </Fieldset>
           </Grid.Col>
         </Grid>
       </AppLayout>
