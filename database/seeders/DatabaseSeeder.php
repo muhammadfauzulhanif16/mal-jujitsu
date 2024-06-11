@@ -16,6 +16,7 @@
       User::create([
         'full_name' => 'Admin',
         'email' => 'admin@jujitsu.id',
+        'role' => 'Pelatih',
         'password' => Hash::make('admin@jujitsu.id'),
       ]);
       
@@ -24,7 +25,8 @@
         AthleteSeeder::class,
         CriteriaSeeder::class,
         ExerciseSeeder::class,
-        TournamentSeeder::class
+        TournamentSeeder::class,
+        EvaluationSeeder::class
       ]);
     }
   }

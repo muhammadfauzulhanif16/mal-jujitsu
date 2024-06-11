@@ -37,10 +37,12 @@
       $authedUser = Auth::user();
       $authedUser->avatar = str_contains($authedUser->avatar, 'https') ? $authedUser->avatar : ($authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null);
       
-      return Inertia('Athlete/Evalution/Index', [
-        'evaluations' => ExerciseEvaluation::with('exercise.athlete')->whereHas('exercise.athlete', function ($query) use ($user) {
-          $query->where('id', $user->id);
-        })->get(),
+      return Inertia('Athlete/Evaluation/Index', [
+        'evaluations' => ExerciseEvaluation::with(['exercise.athlete', 'exercise.coach'])
+          ->whereHas('exercise.athlete', function ($query) use ($user) {
+            $query->where('id', $user->id);
+          })
+          ->get(),
         'meta' => session('meta'),
         'auth' => ['user' => $authedUser]
       ]);

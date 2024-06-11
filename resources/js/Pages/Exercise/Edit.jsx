@@ -1,5 +1,5 @@
 import { AppLayout } from '@/Layouts/AppLayout.jsx'
-import { ActionIcon, Avatar, Button, Divider, Fieldset, Grid, Group, Indicator, Select, SimpleGrid, TextInput, Tooltip } from '@mantine/core'
+import { ActionIcon, Avatar, Button, Fieldset, Grid, Group, Indicator, Select, SimpleGrid, TextInput, Tooltip } from '@mantine/core'
 import { IconBuilding, IconCalendar, IconClipboardText, IconClockPause, IconClockPlay, IconCornerDownLeft, IconUser } from '@tabler/icons-react'
 import { Breadcrumbs } from '@/Components/Breadcrumbs.jsx'
 import { useForm } from '@inertiajs/react'
@@ -23,7 +23,7 @@ const Edit = (props) => {
       form.put(route('exercises.update', props.exercise.id))
     }}>
       <AppLayout title="Latihan" authed={props.auth.user} meta={props.meta}>
-        <Group w="100%" justify="space-between">
+        <Group w="100%" mb={32} justify="space-between">
           <Breadcrumbs navList={[{ label: 'Latihan', route: 'exercises.index' }, { label: 'Ubah' }]} />
           
           <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Tambah Latihan">
@@ -39,8 +39,6 @@ const Edit = (props) => {
             Ubah Latihan
           </Button>
         </Group>
-        
-        <Divider my={32} />
         
         <Grid grow justify="space-between">
           <Grid.Col span={{ base: 12, md: 4 }}>

@@ -1,5 +1,5 @@
 import { AppLayout } from '@/Layouts/AppLayout.jsx'
-import { ActionIcon, Avatar, Button, Center, Divider, Fieldset, Grid, Group, Indicator, Radio, Select, TextInput, Tooltip } from '@mantine/core'
+import { ActionIcon, Avatar, Button, Center, Fieldset, Grid, Group, Indicator, Radio, Select, TextInput, Tooltip } from '@mantine/core'
 import { IconBuilding, IconCalendar, IconClipboardText, IconCornerDownLeft, IconUser } from '@tabler/icons-react'
 import { Breadcrumbs } from '@/Components/Breadcrumbs.jsx'
 import { useForm } from '@inertiajs/react'
@@ -15,7 +15,7 @@ const Create = (props) => {
       form.post(route('tournaments.store'))
     }}>
       <AppLayout title="Pertandingan" authed={props.auth.user} meta={props.meta}>
-        <Group w="100%" justify="space-between">
+        <Group w="100%" mb={32} justify="space-between">
           <Breadcrumbs navList={[{ label: 'Pertandingan', route: 'tournaments.index' }, { label: 'Tambah' }]} />
           
           <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Tambah Pertandingan">
@@ -31,8 +31,6 @@ const Create = (props) => {
             Tambah Latihan
           </Button>
         </Group>
-        
-        <Divider my={32} />
         
         <Grid grow justify="space-between">
           <Grid.Col span={{ base: 12, md: 4 }}>

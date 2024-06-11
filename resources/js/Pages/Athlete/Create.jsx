@@ -1,5 +1,5 @@
 import { AppLayout } from '@/Layouts/AppLayout.jsx'
-import { ActionIcon, Avatar, Button, Divider, Fieldset, FileButton, Grid, Group, NumberInput, Radio, TextInput, Tooltip } from '@mantine/core'
+import { ActionIcon, Avatar, Button, Fieldset, FileButton, Grid, Group, NumberInput, Radio, TextInput, Tooltip } from '@mantine/core'
 import { IconCalendar, IconCornerDownLeft, IconId, IconMail, IconPassword, IconPhotoUp, IconWeight } from '@tabler/icons-react'
 import { Breadcrumbs } from '@/Components/Breadcrumbs.jsx'
 import { useForm } from '@inertiajs/react'
@@ -15,12 +15,12 @@ const Create = (props) => {
       form.post(route('athletes.store'))
     }}>
       <AppLayout title="Atlet" authed={props.auth.user} meta={props.meta}>
-        <Group justify="space-between">
+        <Group justify="space-between" mb={32}>
           <Breadcrumbs navList={[{ label: 'Atlet', route: 'athletes.index' }, { label: 'Tambah' }]} />
           
           <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Tambah Pelatih">
             <ActionIcon type="submit" ml="auto" h={48} w={48} color="gold.1" radius={32} display={{ base: 'block', xs: 'none' }}
-                        disabled={form.hasErrors || !form.data.password || !form.data.email || !form.data.full_name || !form.data.birth_date || !form.data.gender || !form.data.weight || !form.data.role}
+                        disabled={form.hasErrors || Object.values(form.data).some(field => !field)}
             >
               <IconCornerDownLeft />
             </ActionIcon>
@@ -28,12 +28,10 @@ const Create = (props) => {
           
           <Button display={{ base: 'none', xs: 'block' }} type="submit" w={240} leftSection={<IconCornerDownLeft />} variant="filled" color="gold.1" h={48}
                   px={16} styles={{ section: { marginRight: 12 } }} radius={32} loading={form.processing}
-                  disabled={form.hasErrors || !form.data.password || !form.data.email || !form.data.full_name || !form.data.birth_date || !form.data.gender || !form.data.weight || !form.data.role}>
+                  disabled={form.hasErrors || Object.values(form.data).some(field => !field)}>
             Tambah Atlet
           </Button>
         </Group>
-        
-        <Divider my={32} />
         
         <Grid justify="space-between">
           <Grid.Col span={{ base: 12, md: 4 }}>

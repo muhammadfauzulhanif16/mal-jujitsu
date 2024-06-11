@@ -1,9 +1,10 @@
 import { Head } from '@inertiajs/react'
-import React, { useEffect, useState } from 'react'
-import { ActionIcon, Box, Flex } from '@mantine/core'
+import React, { useEffect } from 'react'
+import { ActionIcon, Affix, Box, Flex, Tooltip, Transition } from '@mantine/core'
 import { Header } from '@/Components/Header.jsx'
-import { notifications } from '@mantine/notifications'
+import { useWindowScroll } from '@mantine/hooks'
 import { IconArrowNarrowUp, IconCheck, IconX } from '@tabler/icons-react'
+import { notifications } from '@mantine/notifications'
 
 export const AppLayout = (props) => {
   useEffect(() => {
@@ -25,20 +26,7 @@ export const AppLayout = (props) => {
       })
     }
   }, [props.meta])
-  const [showScrollTop, setShowScrollTop] = useState(false)
-  
-  useEffect(() => {
-    const checkScrollTop = () => {
-      if (!showScrollTop && window.pageYOffset > window.innerHeight) {
-        setShowScrollTop(true)
-      } else if (showScrollTop && window.pageYOffset <= window.innerHeight) {
-        setShowScrollTop(false)
-      }
-    }
-    
-    window.addEventListener('scroll', checkScrollTop)
-    return () => window.removeEventListener('scroll', checkScrollTop)
-  }, [showScrollTop])
+  const [scroll, scrollTo] = useWindowScroll()
   
   return (
     <Flex
@@ -62,16 +50,21 @@ export const AppLayout = (props) => {
         {props.children}
       </Box>
       
-      {showScrollTop && (
-        <ActionIcon onClick={() =>
-          window.scrollTo({
-            top: 0,
-            behavior: 'smooth',
-          })
-        } pos="fixed" h={48} w={48} color="gold.1" radius={32} m={16} bottom={0} right={0} variant="light" aria-label="Settings">
-          <IconArrowNarrowUp />
-        </ActionIcon>
-      )}
+      <Affix position={{ bottom: 20, right: 20 }}>
+        <Transition transition="fade" mounted={scroll.y > 0}>
+          {(transitionStyles) => (
+            <Tooltip label="Gulir ke atas" style={{
+              borderRadius: 32,
+              padding: '.5rem 1rem',
+            }}>
+              <ActionIcon onClick={() => scrollTo({ y: 0 })} pos="fixed" h={48} w={48} color="gold.1" radius={32} m={16} bottom={0} right={0} variant="filled"
+                          style={transitionStyles} aria-label="Scroll to top">
+                <IconArrowNarrowUp />
+              </ActionIcon>
+            </Tooltip>
+          )}
+        </Transition>
+      </Affix>
     </Flex>
   )
 }

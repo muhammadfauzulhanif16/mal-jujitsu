@@ -16,40 +16,24 @@
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+      if ($request->query('user')) {
+        dd($request->query('user') ? 'ada' : 'tidak ada');
+      }
       $authedUser = Auth::user();
       $authedUser->avatar = str_contains($authedUser->avatar, 'https') ? $authedUser->avatar : ($authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null);
       
       return Inertia('Evaluation/Index', [
-        'athletes' => ExerciseEvaluation::with('exercise.athlete')
-          ->get()
-          ->map(function ($exerciseEvaluation) {
-            $exerciseEvaluation->exercise->athlete->avatar = str_contains($exerciseEvaluation->exercise->athlete->avatar, 'https') ? $exerciseEvaluation->exercise->athlete->avatar : ($exerciseEvaluation->exercise->athlete->avatar ? asset('storage/' . $exerciseEvaluation->exercise->athlete->avatar) : null);
-            return $exerciseEvaluation->exercise->athlete;
-          })
-          ->unique('id')
-          ->values(),
-        'meta' => session('meta'),
-        'auth' => ['user' => $authedUser]
-      ]);
-    }
-    
-    public function users_index(User $user)
-    {
-      $authedUser = Auth::user();
-      $authedUser->avatar = str_contains($authedUser->avatar, 'https') ? $authedUser->avatar : ($authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null);
-      
-      return Inertia('Evaluation/ExercisesByAthlete', [
-        'exercises' => ExerciseEvaluation::all()->filter(function ($exercise) use ($user) {
-          return $exercise->exercise->athlete_id === $user->id;
-        })->map(function ($exercise) {
-          return [
-            'exercise' => $exercise->exercise,
-            'evaluations' => $exercise->evaluations
-          ];
-        }),
-        'athlete' => $user,
+//        'athletes' => ExerciseEvaluation::with('exercise.athlete')
+//          ->get()
+//          ->map(function ($exerciseEvaluation) {
+//            $exerciseEvaluation->exercise->athlete->avatar = str_contains($exerciseEvaluation->exercise->athlete->avatar, 'https') ? $exerciseEvaluation->exercise->athlete->avatar : ($exerciseEvaluation->exercise->athlete->avatar ? asset('storage/' . $exerciseEvaluation->exercise->athlete->avatar) : null);
+//            return $exerciseEvaluation->exercise->athlete;
+//          })
+//          ->unique('id')
+//          ->values(),
+        'exercise_evaluations' => ExerciseEvaluation::with('exercise.athlete')->get(),
         'meta' => session('meta'),
         'auth' => ['user' => $authedUser]
       ]);
@@ -130,17 +114,19 @@
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(User $user, Exercise $exercise)
+    public function edit(ExerciseEvaluation $exerciseEvaluation)
     {
       $authedUser = Auth::user();
       $authedUser->avatar = str_contains($authedUser->avatar, 'https') ? $authedUser->avatar : ($authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null);
       
       return Inertia('Evaluation/Edit', [
-        'athlete' => $user,
-        'exercise' => $exercise,
-        'exercises' => Exercise::with('athlete')->doesntHave('evaluations')->get()->push($exercise->load('athlete')),
+        'exercise_evaluation' => $exerciseEvaluation->load(['exercise.athlete', 'evaluations.subSubCriteria']),
+        'exercises' => Exercise::with('athlete')->doesntHave('exerciseEvaluation')->get()->map(function ($exercise) {
+          $exercise->athlete->avatar = str_contains($exercise->athlete->avatar, 'https') ? $exercise->athlete->avatar : ($exercise->athlete->avatar ? asset('storage/' . $exercise->athlete->avatar) : null);
+          return $exercise;
+        }),
         'criterias' => Criteria::with(['subCriterias.subSubCriterias'])->get(),
-        'evaluations' => $exercise->evaluations,
+        'evaluations' => $exerciseEvaluation->evaluations,
         'meta' => session('meta'),
         'auth' => ['user' => Auth::user()]
       ]);
@@ -179,29 +165,18 @@
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user, Exercise $exercise)
+    public function destroy(ExerciseEvaluation $exerciseEvaluation)
     {
       try {
-        $exercise->evaluations()->delete();
+        $exerciseEvaluation->delete();
         
-        // Check if there are still exercises with evaluations for the specific athlete
-        $hasEvaluations = Exercise::where('athlete_id', $user->id)->whereHas('evaluations')->exists();
-        
-        if ($hasEvaluations) {
-          return to_route('evaluations.users.index', ['user' => $user->id])->with('meta', [
-            'status' => true,
-            'title' => 'Berhasil menghapus penilaian',
-            'message' => "Penilaian latihan '{$exercise->name}' berhasil dihapus!"
-          ]);
-        } else {
-          return to_route('evaluations.index')->with('meta', [
-            'status' => true,
-            'title' => 'Berhasil menghapus penilaian',
-            'message' => "Penilaian latihan '{$exercise->name}' berhasil dihapus!"
-          ]);
-        }
+        return to_route('evaluations.index')->with('meta', [
+          'status' => true,
+          'title' => 'Berhasil menghapus penilaian',
+          'message' => "Penilaian latihan '{$exerciseEvaluation->exercise->name}' berhasil dihapus!"
+        ]);
       } catch (Exception $e) {
-        return to_route('evaluations.users.index', ['user' => $user->id])->with('meta', [
+        return to_route('evaluations.index')->with('meta', [
           'status' => false,
           'title' => 'Gagal menghapus penilaian',
           'message' => $e->getMessage()

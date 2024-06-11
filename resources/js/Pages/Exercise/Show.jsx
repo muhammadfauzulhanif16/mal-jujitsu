@@ -1,5 +1,5 @@
 import { AppLayout } from '@/Layouts/AppLayout.jsx'
-import { Avatar, Divider, Fieldset, Grid, Indicator, Select, SimpleGrid, TextInput } from '@mantine/core'
+import { Avatar, Box, Fieldset, Grid, Indicator, Select, SimpleGrid, TextInput } from '@mantine/core'
 import { IconBuilding, IconCalendar, IconClipboardText, IconClockPause, IconClockPlay, IconUser } from '@tabler/icons-react'
 import { Breadcrumbs } from '@/Components/Breadcrumbs.jsx'
 import { useForm } from '@inertiajs/react'
@@ -19,9 +19,9 @@ const Show = (props) => {
   
   return (
     <AppLayout title="Latihan" authed={props.auth.user} meta={props.meta}>
-      <Breadcrumbs navList={[{ label: 'Latihan', route: 'exercises.index' }, { label: 'Rincian' }]} />
-      
-      <Divider my={32} />
+      <Box mb={32}>
+        <Breadcrumbs navList={[{ label: 'Latihan', route: 'exercises.index' }, { label: 'Rincian' }]} />
+      </Box>
       
       <Grid grow justify="space-between">
         <Grid.Col span={{ base: 12, md: 4 }}>

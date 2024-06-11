@@ -1,4 +1,4 @@
-import { ActionIcon, Breadcrumbs as MantineBreadcrumbs, Group, Title } from '@mantine/core'
+import { ActionIcon, Anchor, Breadcrumbs as MantineBreadcrumbs, Group, Title } from '@mantine/core'
 import { router } from '@inertiajs/core'
 import { IconArrowNarrowLeft } from '@tabler/icons-react'
 
@@ -14,11 +14,12 @@ export const Breadcrumbs = (props) => {
       
       <MantineBreadcrumbs>
         {props.navList.map((nav, id) => (
-          <Title style={{ cursor: 'pointer' }} key={id} order={id === 0 ? 1 : 4}>
-            {nav.label}
-          </Title>
+          <Anchor key={id} underline="hover" c="neutral.0" onClick={() => router.get(route(nav.route, nav.data))}>
+            <Title style={{ cursor: 'pointer' }} order={id === 0 ? 1 : 4}>
+              {nav.label}
+            </Title>
+          </Anchor>
         ))}
-      
       </MantineBreadcrumbs>
     </Group>
   )

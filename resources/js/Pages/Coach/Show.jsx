@@ -1,5 +1,5 @@
 import { AppLayout } from '@/Layouts/AppLayout.jsx'
-import { Avatar, Divider, Fieldset, Grid, Group, Radio, TextInput } from '@mantine/core'
+import { Avatar, Box, Fieldset, Grid, Group, Radio, TextInput } from '@mantine/core'
 import { IconCalendar, IconId, IconMail } from '@tabler/icons-react'
 import { useForm } from '@inertiajs/react'
 import { DatePickerInput } from '@mantine/dates'
@@ -15,12 +15,12 @@ const Show = (props) => {
     birth_date: props.user.birth_date,
     role: props.user.role,
   })
-  console.log(props)
+  
   return (
-    <AppLayout title="Pelatih" authed={props.auth.user} meta={props.meta}>
-      <Breadcrumbs navList={[{ label: 'Pelatih', route: 'coaches.index' }, { label: 'Rincian' }]} />
-      
-      <Divider my={32} />
+    <AppLayout title={`Pelatih '${props.user.full_name}'`} authed={props.auth.user} meta={props.meta}>
+      <Box mb={32}>
+        <Breadcrumbs navList={[{ label: 'Pelatih', route: 'coaches.index' }, { label: 'Rincian' }]} />
+      </Box>
       
       <Grid justify="space-between">
         <Grid.Col span={{ base: 12, md: 4 }}>

@@ -2,13 +2,13 @@
   
   namespace Database\Factories;
   
-  use App\Models\Evaluation;
+  use App\Models\ExerciseEvaluation;
   use Illuminate\Database\Eloquent\Factories\Factory;
   
   /**
-   * @extends Factory<Evaluation>
+   * @extends Factory<ExerciseEvaluation>
    */
-  class EvaluationFactory extends Factory
+  class ExerciseEvaluationFactory extends Factory
   {
     /**
      * Define the model's default state.
@@ -18,7 +18,7 @@
     public function definition(): array
     {
       return [
-        'value' => $this->faker->numberBetween(1, 5),
+        'note' => $this->faker->sentence,
       ];
     }
   }

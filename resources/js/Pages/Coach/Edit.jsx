@@ -1,5 +1,5 @@
 import { AppLayout } from '@/Layouts/AppLayout.jsx'
-import { ActionIcon, Avatar, Button, Divider, Fieldset, FileButton, Grid, Group, Radio, TextInput, Tooltip } from '@mantine/core'
+import { ActionIcon, Avatar, Button, Fieldset, FileButton, Grid, Group, Radio, TextInput, Tooltip } from '@mantine/core'
 import { IconCalendar, IconCornerDownLeft, IconId, IconMail, IconPassword, IconPhotoUp } from '@tabler/icons-react'
 import { Breadcrumbs } from '@/Components/Breadcrumbs.jsx'
 import { useForm } from '@inertiajs/react'
@@ -23,13 +23,13 @@ const Edit = (props) => {
       e.preventDefault()
       form.post(route('coaches.update', props.user.id))
     }}>
-      <AppLayout title="Pelatih" authed={props.auth.user} meta={props.meta}>
-        <Group w="100%" justify="space-between">
+      <AppLayout title={`Pelatih ${form.data.full_name ? `'${form.data.full_name}'` : ''}`} authed={props.auth.user} meta={props.meta}>
+        <Group w="100%" mb={32} justify="space-between">
           <Breadcrumbs navList={[{ label: 'Pelatih', route: 'coaches.index' }, { label: 'Ubah' }]} />
           
           <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Ubah Pelatih">
             <ActionIcon ml="auto" h={48} w={48} color="gold.1" radius={32} display={{ base: 'block', xs: 'none' }}
-                        disabled={form.hasErrors || !form.data.email || !form.data.full_name || !form.data.gender || !form.data.birth_date || !form.data.role}>
+                        disabled={form.hasErrors || Object.entries(form.data).some(([key, value]) => key !== 'password' && !value)}>
               <IconCornerDownLeft />
             </ActionIcon>
           </Tooltip>
@@ -37,12 +37,10 @@ const Edit = (props) => {
           <Button w={240} display={{ base: 'none', xs: 'block' }} type="submit" fullWidth leftSection={<IconCornerDownLeft />} variant="filled" color="gold.1"
                   h={48}
                   radius={32} px={16} styles={{ section: { marginRight: 12 } }} loading={form.processing}
-                  disabled={form.hasErrors || !form.data.email || !form.data.full_name || !form.data.gender || !form.data.birth_date || !form.data.role}>
+                  disabled={form.hasErrors || Object.entries(form.data).some(([key, value]) => key !== 'password' && !value)}>
             Ubah Pelatih
           </Button>
         </Group>
-        
-        <Divider my={32} />
         
         <Grid justify="space-between">
           <Grid.Col span={{ base: 12, md: 4 }}>

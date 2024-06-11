@@ -1,5 +1,5 @@
 import { AppLayout } from '@/Layouts/AppLayout.jsx'
-import { Avatar, Center, Divider, Fieldset, Grid, Group, Indicator, Radio, Select, TextInput } from '@mantine/core'
+import { Avatar, Box, Center, Fieldset, Grid, Group, Indicator, Radio, Select, TextInput } from '@mantine/core'
 import { IconBuilding, IconClipboardText, IconUser } from '@tabler/icons-react'
 import { Breadcrumbs } from '@/Components/Breadcrumbs.jsx'
 import { useForm } from '@inertiajs/react'
@@ -10,9 +10,9 @@ const Edit = (props) => {
   
   return (
     <AppLayout title="Turnamen" authed={props.auth.user} meta={props.meta}>
-      <Breadcrumbs navList={[{ label: 'Turnamen', route: 'tournaments.index' }, { label: 'Rincian' }]} />
-      
-      <Divider my={32} />
+      <Box mb={32}>
+        <Breadcrumbs navList={[{ label: 'Turnamen', route: 'tournaments.index' }, { label: 'Rincian' }]} />
+      </Box>
       
       <Grid grow justify="space-between">
         <Grid.Col span={{ base: 12, md: 4 }}>

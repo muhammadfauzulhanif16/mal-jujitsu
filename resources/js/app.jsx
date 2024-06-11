@@ -15,7 +15,7 @@ import { Notifications } from '@mantine/notifications'
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel'
 
 createInertiaApp({
-  title: (title) => `${title} - ${appName}`,
+  title: (title) => `${title} ~ ${appName}`,
   resolve: (name) => resolvePageComponent(`./Pages/${name}.jsx`, import.meta.glob('./Pages/**/*.jsx')),
   setup({ el, App, props }) {
     const root = createRoot(el)
@@ -32,7 +32,7 @@ createInertiaApp({
             //   light: 'red',
             //   dark: 'netral'
             // }),
-            netral: [
+            neutral: [
               '#0c0c0c',
               '#232323',
               '#3a3a3a',

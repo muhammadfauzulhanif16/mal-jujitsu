@@ -18,11 +18,12 @@ export const NavBar = (props) => {
         <Flex style={{ cursor: 'pointer' }} w="100%" direction={{ base: 'row', md: 'column' }} gap={{ base: 8, md: 4 }} align="center" key={id}
               h={{ base: 48, md: 'auto' }}
               onClick={() => router.get(route(nav.route))}>
-          <ActionIcon variant={props.title === nav.label ? 'filled' : 'subtle'} h={32} w={48} radius="xl" color="gold.1" aria-label={nav.label}>
+          <ActionIcon variant={props.title.split(' ')[0] === nav.label
+            ? 'filled' : 'subtle'} h={32} w={48} radius="xl" color="gold.1" aria-label={nav.label}>
             {nav.icon}
           </ActionIcon>
           
-          <Text size="sm" fw={props.title === nav.label ? 'bold' : 'normal'}>
+          <Text size="sm" fw={props.title.split(' ')[0] === nav.label ? 'bold' : 'normal'}>
             {nav.label}
           </Text>
         </Flex>

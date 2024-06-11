@@ -25,7 +25,7 @@
         'coaches' => Coach::with('user')->get()->map(function ($coach) {
           $coach->user->avatar = str_contains($coach->user->avatar, 'https') ? $coach->user->avatar : ($coach->user->avatar ? asset('storage/' . $coach->user->avatar) : null);
           return $coach;
-        }),
+        })->sortBy('user.full_name')->values(),
         'meta' => session('meta'),
         'auth' => ['user' => $authedUser]
       ]);

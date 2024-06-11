@@ -1,5 +1,5 @@
 import { AppLayout } from '@/Layouts/AppLayout.jsx'
-import { ActionIcon, Avatar, Button, Divider, Flex, Group, Stack, Table as MantineTable, TextInput, Tooltip } from '@mantine/core'
+import { ActionIcon, Avatar, Button, Flex, Group, Stack, Table as MantineTable, TextInput, Tooltip } from '@mantine/core'
 import { IconEye, IconPencil, IconPlus, IconSearch, IconTrash } from '@tabler/icons-react'
 import { Breadcrumbs } from '@/Components/Breadcrumbs.jsx'
 import { router } from '@inertiajs/core'
@@ -9,7 +9,7 @@ import { Table } from '@/Components/Table.jsx'
 const Index = (props) => {
   console.log(props)
   const [exerciseSearch, setExerciseSearch] = useState('')
-  const THList = ['#', 'Nama Latihan', 'Tempat Latihan', 'Atlet', 'Pelatih', 'Tanggal Latihan', 'Waktu Mulai', 'Waktu Selesai', 'Aksi']
+  const THList = ['#', 'Nama', 'Tempat', 'Atlet', 'Pelatih', 'Tanggal', 'Waktu Mulai', 'Waktu Selesai', 'Aksi']
   const actionList = [
     {
       label: 'Rincian Atlet',
@@ -93,7 +93,7 @@ const Index = (props) => {
   
   return (
     <AppLayout title="Latihan" authed={props.auth.user} meta={props.meta}>
-      <Stack>
+      <Stack mb={32}>
         <Group w="100%" justify="space-between">
           <Breadcrumbs navList={[{ label: 'Latihan' }]} />
           
@@ -129,8 +129,6 @@ const Index = (props) => {
                    color="gold.1"
                    placeholder="Cari atlet..." onChange={(e) => setExerciseSearch(e.target.value)} />
       </Stack>
-      
-      <Divider my={32} />
       
       <Table thList={THList} tdList={TDList} />
     </AppLayout>

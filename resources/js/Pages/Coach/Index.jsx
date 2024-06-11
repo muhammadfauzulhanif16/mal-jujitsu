@@ -1,5 +1,5 @@
 import { AppLayout } from '@/Layouts/AppLayout.jsx'
-import { ActionIcon, Avatar, Button, Divider, Flex, Group, Stack, Table as MantineTable, TextInput, Tooltip } from '@mantine/core'
+import { ActionIcon, Avatar, Button, Flex, Group, Stack, Table as MantineTable, TextInput, Tooltip } from '@mantine/core'
 import { IconEye, IconPencil, IconPlus, IconSearch, IconTrash } from '@tabler/icons-react'
 import { router } from '@inertiajs/core'
 import { Table } from '@/Components/Table.jsx'
@@ -7,6 +7,7 @@ import { useState } from 'react'
 import { Breadcrumbs } from '@/Components/Breadcrumbs.jsx'
 
 const Index = (props) => {
+  console.log(props)
   const [coachSearch, setCoachSearch] = useState('')
   const THList = ['#', 'Foto', 'Nama Lengkap', 'Peran', 'Aksi']
   const actionList = [{
@@ -29,7 +30,6 @@ const Index = (props) => {
   }]
   const coachList = props.coaches
     .filter((coach) => coach.user.full_name.toLowerCase().includes(coachSearch.toLowerCase()))
-    .sort((a, b) => a.user.full_name.localeCompare(b.user.full_name))
   const TDList = coachList.map((coach, id) => (
     <MantineTable.Tr h={64} key={id}>
       <MantineTable.Td px={16} py={0} style={{ whiteSpace: 'nowrap' }}>{id + 1}</MantineTable.Td>
@@ -53,7 +53,7 @@ const Index = (props) => {
   
   return (
     <AppLayout title="Pelatih" authed={props.auth.user} meta={props.meta}>
-      <Stack>
+      <Stack mb={32}>
         <Group w="100%" justify="space-between">
           <Breadcrumbs navList={[{ label: 'Pelatih' }]} />
           
@@ -89,8 +89,6 @@ const Index = (props) => {
                    color="gold.1"
                    placeholder="Cari atlet..." onChange={(e) => setCoachSearch(e.target.value)} />
       </Stack>
-      
-      <Divider my={32} />
       
       <Table thList={THList} tdList={TDList} />
     </AppLayout>
