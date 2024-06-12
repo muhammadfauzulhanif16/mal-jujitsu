@@ -6,7 +6,7 @@ import { useForm } from '@inertiajs/react'
 import { DatePickerInput } from '@mantine/dates'
 import 'dayjs/locale/id'
 
-const Edit = (props) => {
+const Show = (props) => {
   const form = useForm({
     _method: 'put',
     avatar: props.user.avatar,
@@ -179,4 +179,4 @@ const Edit = (props) => {
   )
 }
 
-export default Edit
+export default Show

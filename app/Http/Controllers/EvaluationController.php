@@ -6,7 +6,6 @@
   use App\Models\Evaluation;
   use App\Models\Exercise;
   use App\Models\ExerciseEvaluation;
-  use App\Models\User;
   use Exception;
   use Illuminate\Http\Request;
   use Illuminate\Support\Facades\Auth;
@@ -94,20 +93,21 @@
     /**
      * Display the specified resource.
      */
-    public function show(User $user, Exercise $exercise)
+    public function show(ExerciseEvaluation $exerciseEvaluation)
     {
       $authedUser = Auth::user();
       $authedUser->avatar = str_contains($authedUser->avatar, 'https') ? $authedUser->avatar : ($authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null);
       
       return Inertia('Evaluation/Show', [
-        'athlete' => $user,
-        'exercise' => $exercise,
-        'exercises' => Exercise::with('athlete')->doesntHave('evaluations')->get()->push($exercise->load('athlete')),
+        'exercise_evaluation' => $exerciseEvaluation->load(['exercise.athlete', 'evaluations.subSubCriteria']),
+        'exercises' => Exercise::with('athlete')->doesntHave('exerciseEvaluation')->get()->map(function ($exercise) {
+          $exercise->athlete->avatar = str_contains($exercise->athlete->avatar, 'https') ? $exercise->athlete->avatar : ($exercise->athlete->avatar ? asset('storage/' . $exercise->athlete->avatar) : null);
+          return $exercise;
+        }),
         'criterias' => Criteria::with(['subCriterias.subSubCriterias'])->get(),
-        'evaluations' => $exercise->evaluations,
+        'evaluations' => $exerciseEvaluation->evaluations,
         'meta' => session('meta'),
         'auth' => ['user' => Auth::user()]
-      
       ]);
     }
     
@@ -135,14 +135,18 @@
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user, Exercise $exercise)
+    public function update(ExerciseEvaluation $exerciseEvaluation)
     {
       try {
-        $exercise->evaluations()->delete();
+        $exerciseEvaluation->update([
+          'note' => request('note'),
+        ]);
         
-        foreach ($request->evaluations as $evaluation) {
+        $exerciseEvaluation->evaluations()->delete();
+        
+        foreach (request('evaluations') as $evaluation) {
           Evaluation::create([
-            'exercise_id' => $request->exercise_id,
+            'exercise_evaluation_id' => $exerciseEvaluation->id,
             'sub_sub_criteria_id' => $evaluation['sub_sub_criteria_id'],
             'value' => $evaluation['value'],
           ]);
@@ -151,8 +155,9 @@
         return to_route('evaluations.index')->with('meta', [
           'status' => true,
           'title' => 'Berhasil mengubah penilaian',
-          'message' => "Penilaian latihan '{$exercise->name}' berhasil diubah!"
+          'message' => "Penilaian latihan '{$exerciseEvaluation->exercise->name}' berhasil diubah!"
         ]);
+        
       } catch (Exception $e) {
         return to_route('evaluations.index')->with('meta', [
           'status' => false,

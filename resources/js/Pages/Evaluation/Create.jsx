@@ -227,6 +227,7 @@ const Create = (props) => {
               <Text fz={14}>Catatan</Text>
               <RichTextEditor editor={editor} style={{
                 borderRadius: 20,
+                fontSize: 14,
               }}>
                 <RichTextEditor.Toolbar>
                   <RichTextEditor.ControlsGroup>

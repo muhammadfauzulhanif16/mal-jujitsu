@@ -56,7 +56,7 @@ const Edit = (props) => {
         <Group w="100%" justify="space-between" mb={32}>
           <Breadcrumbs navList={[{ label: 'Penilaian', route: 'evaluations.index' }, { label: 'Ubah' }]} />
           
-          <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Tambah Penilaian">
+          <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Ubah Penilaian">
             <ActionIcon type="submit" ml="auto" h={48} w={48} color="gold.1" radius={32} display={{ base: 'block', xs: 'none' }}
               // disabled={form.hasErrors || !form.data.name || !form.data.place || !form.data.athlete_id || !form.data.medal}
             >
@@ -68,7 +68,7 @@ const Edit = (props) => {
                   px={16} styles={{ section: { marginRight: 12 } }} radius={32} loading={form.processing}
             // disabled={form.hasErrors || !form.data.name || !form.data.place || !form.data.athlete_id || !form.data.medal}
           >
-            Tambah Penilaian
+            Ubah Penilaian
           </Button>
         </Group>
         
@@ -227,6 +227,7 @@ const Edit = (props) => {
               <Text fz={14}>Catatan</Text>
               <RichTextEditor editor={editor} style={{
                 borderRadius: 20,
+                fontSize: 14,
               }}>
                 <RichTextEditor.Toolbar>
                   <RichTextEditor.ControlsGroup>
