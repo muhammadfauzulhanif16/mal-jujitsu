@@ -51,7 +51,10 @@ const Create = (props) => {
           
           <Grid.Col span={{ base: 12, md: 8 }}>
             <Fieldset mb={16} radius={20} legend="Informasi Akun"
-                      styles={{ root: { margin: 0, padding: 16 }, legend: { borderRadius: 20, fontSize: 16, padding: 16, fontWeight: 'bold' } }}>
+                      styles={{
+                        root: { margin: 0, padding: 16, border: '1px solid #dcdcdc' },
+                        legend: { borderRadius: 20, fontSize: 16, padding: 16, fontWeight: 'bold' },
+                      }}>
               <TextInput withAsterisk variant="filled" leftSection={<IconMail />} styles={{
                 label: { marginBottom: 8 },
                 input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 16 },
@@ -90,7 +93,10 @@ const Create = (props) => {
             </Fieldset>
             
             <Fieldset mb={16} radius={20} legend="Informasi Pribadi"
-                      styles={{ root: { margin: 0, padding: 16 }, legend: { borderRadius: 20, fontSize: 16, padding: 16, fontWeight: 'bold' } }}>
+                      styles={{
+                        root: { margin: 0, padding: 16, border: '1px solid #dcdcdc' },
+                        legend: { borderRadius: 20, fontSize: 16, padding: 16, fontWeight: 'bold' },
+                      }}>
               <TextInput withAsterisk variant="filled" leftSection={<IconId />} styles={{
                 label: { marginBottom: 8 },
                 input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 16 },
@@ -162,7 +168,10 @@ const Create = (props) => {
             </Fieldset>
             
             <Fieldset radius={20} legend="Informasi Atlet"
-                      styles={{ root: { margin: 0, padding: 16 }, legend: { borderRadius: 20, fontSize: 16, padding: 16, fontWeight: 'bold' } }}
+                      styles={{
+                        root: { margin: 0, padding: 16, border: '1px solid #dcdcdc' },
+                        legend: { borderRadius: 20, fontSize: 16, padding: 16, fontWeight: 'bold' },
+                      }}
             >
               <Radio.Group label="Peran" withAsterisk styles={{
                 label: { marginBottom: 8 }, error: { marginTop: 8 },

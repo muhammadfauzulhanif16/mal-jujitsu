@@ -56,13 +56,16 @@ const Show = (props) => {
         
         <Grid.Col span={{ base: 12, md: 8 }}>
           <Fieldset mb={16} radius={20} legend="Informasi Latihan"
-                    styles={{ root: { margin: 0, padding: 16 }, legend: { borderRadius: 20, fontSize: 16, padding: 16, fontWeight: 'bold' } }}>
-            <TextInput withAsterisk variant="filled" leftSection={<IconClipboardText />} styles={{
+                    styles={{
+                      root: { margin: 0, padding: 16, border: '1px solid #dcdcdc' },
+                      legend: { borderRadius: 20, fontSize: 16, padding: 16, fontWeight: 'bold' },
+                    }}>
+            <TextInput variant="filled" leftSection={<IconClipboardText />} styles={{
               label: { marginBottom: 8 },
               input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 16 },
               section: { marginLeft: 0, width: 48, height: 48 },
               error: { marginTop: 8 },
-            }} mb={16} label="Nama Latihan" placeholder="Masukkan nama latihan..." onChange={(e) => {
+            }} mb={16} label="Nama" placeholder="Masukkan nama..." onChange={(e) => {
               form.setData('name', e.target.value)
               
               if (!e.target.value) {
@@ -72,12 +75,12 @@ const Show = (props) => {
               }
             }} error={form.errors.name} value={form.data.name} disabled />
             
-            <TextInput withAsterisk variant="filled" leftSection={<IconBuilding />} styles={{
+            <TextInput variant="filled" leftSection={<IconBuilding />} styles={{
               label: { marginBottom: 8 },
               input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 16 },
               section: { marginLeft: 0, width: 48, height: 48 },
               error: { marginTop: 8 },
-            }} mb={16} label="Nama Tempat" placeholder="Masukkan nama tempat..." onChange={(e) => {
+            }} mb={16} label="Tempat" placeholder="Masukkan nama..." onChange={(e) => {
               form.setData('place', e.target.value)
               
               if (!e.target.value) {
@@ -91,7 +94,6 @@ const Show = (props) => {
               disabled
               mb={16}
               value={form.data.athlete_id}
-              withAsterisk
               variant="filled"
               styles={{
                 label: { marginBottom: 8 },
@@ -123,7 +125,6 @@ const Show = (props) => {
               disabled
               mb={16}
               value={form.data.coach_id}
-              withAsterisk
               variant="filled"
               styles={{
                 label: { marginBottom: 8 },
@@ -151,9 +152,9 @@ const Show = (props) => {
               error={form.errors.coach_id}
             />
             
-            <DatePickerInput disabled mb={16} locale="id" monthsListFormat="MMMM" withAsterisk clearable allowDeselect firstDayOfWeek={0} variant="filled"
-                             valueFormat="dddd, D MMMM YYYY" leftSection={<IconCalendar />} label="Tanggal Latihan"
-                             placeholder="Masukkan tanggal latihan..."
+            <DatePickerInput disabled mb={16} locale="id" monthsListFormat="MMMM" clearable allowDeselect firstDayOfWeek={0} variant="filled"
+                             valueFormat="dddd, D MMMM YYYY" leftSection={<IconCalendar />} label="Tanggal"
+                             placeholder="Masukkan tanggal..."
                              styles={{
                                label: { marginBottom: 8 },
                                input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 16 },
@@ -172,7 +173,7 @@ const Show = (props) => {
             }} error={form.errors.date} value={new Date(form.data.date)}
             />
             
-            <TimeInput disabled mb={16} color="gold.1" placeholder="HH:MM" locale="id" withAsterisk variant="filled"
+            <TimeInput disabled mb={16} color="gold.1" placeholder="HH:MM" locale="id" variant="filled"
                        leftSection={<IconClockPlay />} label="Waktu Mulai"
                        styles={{
                          label: { marginBottom: 8 },
@@ -191,7 +192,7 @@ const Show = (props) => {
               }
             }} error={form.errors.start_time} value={form.data.start_time} />
             
-            <TimeInput disabled color="gold.1" placeholder="HH:MM" locale="id" withAsterisk variant="filled"
+            <TimeInput disabled color="gold.1" placeholder="HH:MM" locale="id" variant="filled"
                        leftSection={<IconClockPause />} label="Waktu Selesai"
                        styles={{
                          label: { marginBottom: 8 },

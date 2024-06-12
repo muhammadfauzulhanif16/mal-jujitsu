@@ -20,14 +20,14 @@ const Create = (props) => {
           
           <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Tambah Latihan">
             <ActionIcon type="submit" ml="auto" h={48} w={48} color="gold.1" radius={32} display={{ base: 'block', xs: 'none' }}
-                        disabled={form.hasErrors || !form.data.name || !form.data.place || !form.data.athlete_id || !form.data.coach_id || !form.data.date || !form.data.start_time || !form.data.end_time}>
+                        disabled={form.hasErrors || Object.values(form.data).some(field => !field)}>
               <IconCornerDownLeft />
             </ActionIcon>
           </Tooltip>
           
           <Button display={{ base: 'none', xs: 'block' }} type="submit" w={240} leftSection={<IconCornerDownLeft />} variant="filled" color="gold.1" h={48}
                   px={16} styles={{ section: { marginRight: 12 } }} radius={32} loading={form.processing}
-                  disabled={form.hasErrors || !form.data.name || !form.data.place || !form.data.athlete_id || !form.data.coach_id || !form.data.date || !form.data.start_time || !form.data.end_time}>
+                  disabled={form.hasErrors || Object.values(form.data).some(field => !field)}>
             Tambah Latihan
           </Button>
         </Group>
@@ -65,18 +65,21 @@ const Create = (props) => {
           
           <Grid.Col span={{ base: 12, md: 8 }}>
             <Fieldset mb={16} radius={20} legend="Informasi Latihan"
-                      styles={{ root: { margin: 0, padding: 16 }, legend: { borderRadius: 20, fontSize: 16, padding: 16, fontWeight: 'bold' } }}>
+                      styles={{
+                        root: { margin: 0, padding: 16, border: '1px solid #dcdcdc' },
+                        legend: { borderRadius: 20, fontSize: 16, padding: 16, fontWeight: 'bold' },
+                      }}>
               
               <TextInput withAsterisk variant="filled" leftSection={<IconClipboardText />} styles={{
                 label: { marginBottom: 8 },
                 input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 16 },
                 section: { marginLeft: 0, width: 48, height: 48 },
                 error: { marginTop: 8 },
-              }} mb={16} label="Nama Latihan" placeholder="Masukkan nama latihan..." onChange={(e) => {
+              }} mb={16} label="Nama" placeholder="Masukkan nama..." onChange={(e) => {
                 form.setData('name', e.target.value)
                 
                 if (!e.target.value) {
-                  form.setError({ name: 'Nama latihan tidak boleh kosong.' })
+                  form.setError({ name: 'Nama tidak boleh kosong.' })
                 } else {
                   form.clearErrors('name')
                 }
@@ -87,11 +90,11 @@ const Create = (props) => {
                 input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 16 },
                 section: { marginLeft: 0, width: 48, height: 48 },
                 error: { marginTop: 8 },
-              }} mb={16} label="Tempat Latihan" placeholder="Masukkan tempat latihan..." onChange={(e) => {
+              }} mb={16} label="Tempat" placeholder="Masukkan tempat..." onChange={(e) => {
                 form.setData('place', e.target.value)
                 
                 if (!e.target.value) {
-                  form.setError({ place: 'Nama tempat tidak boleh kosong.' })
+                  form.setError({ place: 'Tempat tidak boleh kosong.' })
                 } else {
                   form.clearErrors('place')
                 }
@@ -158,8 +161,8 @@ const Create = (props) => {
               />
               
               <DatePickerInput mb={16} locale="id" monthsListFormat="MMMM" withAsterisk clearable allowDeselect firstDayOfWeek={0} variant="filled"
-                               valueFormat="dddd, D MMMM YYYY" leftSection={<IconCalendar />} label="Tanggal Latihan"
-                               placeholder="Masukkan tanggal latihan..."
+                               valueFormat="dddd, D MMMM YYYY" leftSection={<IconCalendar />} label="Tanggal"
+                               placeholder="Masukkan tanggal..."
                                styles={{
                                  label: { marginBottom: 8 },
                                  input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 16 },

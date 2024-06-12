@@ -2,8 +2,6 @@
   
   namespace Database\Seeders;
   
-  use App\Models\Athlete;
-  use App\Models\Coach;
   use App\Models\Exercise;
   use Illuminate\Database\Seeder;
   
@@ -14,14 +12,6 @@
      */
     public function run(): void
     {
-      $athleteIds = Athlete::with('user')->get()->pluck('user.id')->toArray();
-      $coachIds = Coach::with('user')->get()->pluck('user.id')->toArray();
-      
-      foreach (range(1, 16) as $_) {
-        Exercise::factory()->create([
-          'athlete_id' => $athleteIds[array_rand($athleteIds)],
-          'coach_id' => $coachIds[array_rand($coachIds)],
-        ]);
-      }
+      Exercise::factory(random_int(1, 16))->create();
     }
   }

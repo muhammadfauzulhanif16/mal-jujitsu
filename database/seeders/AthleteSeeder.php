@@ -15,9 +15,10 @@
     {
       $roles = ['Ne-Waza', 'Fighting',];
       
-      User::factory(16)->create()->each(function ($user) use ($roles) {
-        $user->role = fake()->randomElement($roles);
+      User::factory(random_int(1, 16))->create()->map(function ($user) use ($roles) {
+        $user->role = $roles[array_rand($roles)];
         $user->save();
+        
         Athlete::factory()->create(['user_id' => $user->id]);
       });
     }

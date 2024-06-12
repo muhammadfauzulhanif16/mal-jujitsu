@@ -27,8 +27,8 @@
         'auth' => ['user' => $authedUser],
         'coaches' => Coach::all(),
         'athletes' => Athlete::all(),
-        'exercises' => Exercise::all(),
-        'tournaments' => Tournament::all(),
+        'exercises' => Exercise::orderBy('date', 'desc')->get(),
+        'tournaments' => Tournament::orderBy('date', 'desc')->get(),
         'evaluations' => ExerciseEvaluation::all(),
       ]);
     })->name('dashboard');

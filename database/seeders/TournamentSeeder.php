@@ -15,10 +15,10 @@
     {
       $athleteIds = Athlete::with('user')->get()->pluck('user.id')->toArray();
       
-      foreach (range(1, 16) as $_) {
+      collect(range(1, random_int(1, 16)))->map(function () use ($athleteIds) {
         Tournament::factory()->create([
           'athlete_id' => $athleteIds[array_rand($athleteIds)],
         ]);
-      }
+      });
     }
   }

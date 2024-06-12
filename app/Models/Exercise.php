@@ -49,7 +49,7 @@
     protected function casts(): array
     {
       return [
-        'date' => 'datetime:d-m-Y',
+//        'date' => 'datetime:d-m-Y',
 //        'start_time' => 'datetime:H.i.s',
 //        'end_time' => 'datetime:H.i.s',
       ];

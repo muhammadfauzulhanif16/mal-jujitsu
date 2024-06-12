@@ -12,21 +12,21 @@ const Index = (props) => {
   const THList = ['#', 'Nama', 'Tempat', 'Atlet', 'Pelatih', 'Tanggal', 'Waktu Mulai', 'Waktu Selesai', 'Aksi']
   const actionList = [
     {
-      label: 'Rincian Atlet',
+      label: 'Rincian Latihan',
       icon: <IconEye />,
       onClick: (exercise) => router.get(route('exercises.show', exercise.id)),
       color: 'blue',
       // disabled: !['Pelatih Teknik', 'Pelatih Fisik'].includes(props.auth.user.role),
     },
     {
-      label: 'Ubah Atlet',
+      label: 'Ubah Latihan',
       icon: <IconPencil />,
       onClick: (exercise) => router.get(route('exercises.edit', exercise.id)),
       color: 'yellow',
       disabled: !props.auth.user.role.includes('Pelatih'),
     },
     {
-      label: 'Hapus Atlet',
+      label: 'Hapus Latihan',
       icon: <IconTrash />,
       onClick: (exercise) => router.delete(route('exercises.destroy', exercise.id)),
       color: 'red',

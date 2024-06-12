@@ -2,6 +2,8 @@
   
   namespace Database\Factories;
   
+  use App\Models\Athlete;
+  use App\Models\Coach;
   use App\Models\Exercise;
   use Carbon\Carbon;
   use Illuminate\Database\Eloquent\Factories\Factory;
@@ -18,7 +20,12 @@
      */
     public function definition(): array
     {
+      $athleteIds = Athlete::all()->pluck('user_id')->toArray();
+      $coachIds = Coach::all()->pluck('user_id')->toArray();
+      
       return [
+        'athlete_id' => $this->faker->randomElement($athleteIds),
+        'coach_id' => $this->faker->randomElement($coachIds),
         'name' => $this->faker->word(),
         'place' => $this->faker->address,
         'date' => Carbon::parse($this->faker->date())->format('Y-m-d'),

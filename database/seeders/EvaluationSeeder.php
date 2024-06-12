@@ -15,20 +15,28 @@
      */
     public function run(): void
     {
-      $exercises = Exercise::all();
-      $subSubCriterias = SubSubCriteria::all();
+      $exerciseIds = Exercise::all()->pluck('id');
+      $subSubCriteriaIds = SubSubCriteria::all()->pluck('id');
       
-      foreach ($exercises as $exercise) {
-        $exerciseEvaluation = ExerciseEvaluation::factory()->create([
-          'exercise_id' => $exercise->id,
-        ]);
-        
-        foreach ($subSubCriterias as $subSubCriteria) {
-          Evaluation::factory()->create([
-            'exercise_evaluation_id' => $exerciseEvaluation->id,
-            'sub_sub_criteria_id' => $subSubCriteria->id,
-          ]);
-        }
-      }
+      ExerciseEvaluation::factory(random_int(1, 16))
+        ->create(function () use (&$exerciseIds) {
+          $randomExerciseId = $exerciseIds->random();
+          
+          $exerciseIds = $exerciseIds->filter(function ($exerciseId) use ($randomExerciseId) {
+            return $exerciseId !== $randomExerciseId;
+          });
+          
+          return [
+            'exercise_id' => $randomExerciseId,
+          ];
+        })
+        ->map(function ($exerciseEvaluation) use ($subSubCriteriaIds) {
+          Evaluation::factory()
+            ->count($subSubCriteriaIds->count())
+            ->create([
+              'exercise_evaluation_id' => $exerciseEvaluation->id,
+              'sub_sub_criteria_id' => $subSubCriteriaIds->random(),
+            ]);
+        });
     }
   }

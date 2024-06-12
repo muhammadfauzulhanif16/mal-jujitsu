@@ -25,8 +25,8 @@
         AthleteSeeder::class,
         CriteriaSeeder::class,
         ExerciseSeeder::class,
-        TournamentSeeder::class,
-        EvaluationSeeder::class
+//        TournamentSeeder::class,
+//        EvaluationSeeder::class
       ]);
     }
   }
