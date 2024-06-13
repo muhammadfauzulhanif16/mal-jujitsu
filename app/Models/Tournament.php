@@ -27,7 +27,7 @@
     protected function casts(): array
     {
       return [
-        'date' => 'datetime:d-m-Y',
+//        'date' => 'datetime:d-m-Y',
       ];
     }
   }

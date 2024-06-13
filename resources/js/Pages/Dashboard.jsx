@@ -6,61 +6,68 @@ import { AreaChart, BarChart } from '@mantine/charts'
 import { useState } from 'react'
 
 const Dashboard = (props) => {
-  const [exerciseTime, setExerciseTime] = useState('Tahunan')
-  const [tournamentTime, setTournamentTime] = useState(`Tahunan`)
+  const [exerciseTime, setExerciseTime] = useState(`Tahunan (${new Date().getFullYear()})`)
+  const [tournamentTime, setTournamentTime] = useState(`Tahunan (${new Date().getFullYear()})`)
   
+  console.log(props)
   
-  function formatExercises(dataList) {
-    return {
-      'Tahunan': ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'].map((month, index) => {
-        const currentYear = new Date().getFullYear()
-        const filteredExercises = dataList.filter(data => {
-          const date = new Date(data.date)
-          return date.getMonth() === index && date.getFullYear() === currentYear
-        })
-        return {
-          name: month,
-          'Total': filteredExercises.length,
-        }
-      }),
-      'Bulanan': [...Array(5)].map((_, index) => {
-        const currentDate = new Date()
-        const currentMonth = currentDate.getMonth()
-        const currentYear = currentDate.getFullYear()
-        const filteredExercises = dataList.filter(data => {
-          const date = new Date(data.date)
-          const { weekOfMonth, monthOfYear, year } = {
-            weekOfMonth: Math.floor(date.getDate() / 7),
-            monthOfYear: date.getMonth(),
-            year: date.getFullYear(),
+  function format(dataList) {
+    return [
+      {
+        time: `Tahunan (${new Date().getFullYear()})`,
+        dataList: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'].map((month, index) => {
+          const currentYear = new Date().getFullYear()
+          const filteredExercises = dataList.filter(data => {
+            const date = new Date(data.date)
+            return date.getMonth() === index && date.getFullYear() === currentYear
+          })
+          return {
+            name: month,
+            'Total': filteredExercises.length,
           }
-          return weekOfMonth === index && monthOfYear === currentMonth && year === currentYear
-        })
-        return {
-          name: index + 1,
-          'Total': filteredExercises.length,
-        }
-      }),
-      'Mingguan': [...Array(7)].map((_, index) => {
-        const currentDate = new Date()
-        const filteredExercises = dataList.filter(data => {
-          const date = new Date(data.date)
-          const dayOfWeek = date.getDay()
-          const weekOfMonth = Math.floor(date.getDate() / 7)
-          const monthOfYear = date.getMonth()
-          const year = date.getFullYear()
-          return dayOfWeek === index && weekOfMonth === Math.floor(currentDate.getDate() / 7) && monthOfYear === currentDate.getMonth() && year === currentDate.getFullYear()
-        })
-        return {
-          name: ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'][index],
-          'Total': filteredExercises.length,
-        }
-      }),
-    }
+        }),
+      },
+      {
+        time: `Bulanan (${new Date().getMonth()})`,
+        dataList: [...Array(5)].map((_, index) => {
+          const currentDate = new Date()
+          const currentMonth = currentDate.getMonth()
+          const currentYear = currentDate.getFullYear()
+          const filteredExercises = dataList.filter(data => {
+            const date = new Date(data.date)
+            const { weekOfMonth, monthOfYear, year } = {
+              weekOfMonth: Math.floor(date.getDate() / 7),
+              monthOfYear: date.getMonth(),
+              year: date.getFullYear(),
+            }
+            return weekOfMonth === index && monthOfYear === currentMonth && year === currentYear
+          })
+          return {
+            name: index + 1,
+            'Total': filteredExercises.length,
+          }
+        }),
+      },
+      {
+        time: `Mingguan (${Math.ceil(new Date().getDate() / 7)})`,
+        dataList: [...Array(7)].map((_, index) => {
+          const currentDate = new Date()
+          const filteredExercises = dataList.filter(data => {
+            const date = new Date(data.date)
+            const dayOfWeek = date.getDay()
+            const weekOfMonth = Math.floor(date.getDate() / 7)
+            const monthOfYear = date.getMonth()
+            const year = date.getFullYear()
+            return dayOfWeek === index && weekOfMonth === Math.floor(currentDate.getDate() / 7) && monthOfYear === currentDate.getMonth() && year === currentDate.getFullYear()
+          })
+          return {
+            name: ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'][index],
+            'Total': filteredExercises.length,
+          }
+        }),
+      },
+    ]
   }
-  
-  console.log('formattedExercises', formatExercises(props.exercises, 'Latihan')[exerciseTime])
-  // console.log('formattedtournaments', formatExercises(props.tournaments))
   
   const colorList = ['red', 'pink', 'grape', 'violet', 'indigo', 'blue', 'cyan', 'teal', 'green', 'lime', 'yellow', 'orange']
   
@@ -119,12 +126,6 @@ const Dashboard = (props) => {
     },
   ]
   
-  // const monthNames = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']
-  // const date = new Date()
-  // const currentMonth = monthNames[date.getMonth()]
-  // const currentWeek = Math.ceil(date.getDate() / 7)
-  
-  
   return (
     <AppLayout title="Beranda" authed={props.auth.user} meta={props.meta}>
       <Box pb={54}>
@@ -172,8 +173,7 @@ const Dashboard = (props) => {
                     onChange={(value) => setExerciseTime(value)}
                     value={exerciseTime}
                     allowDeselect={false}
-                    data={[`Tahunan`, `Bulanan`, `Mingguan`]}
-                    // data={[`Tahunan (${date.getFullYear()})`, `Bulanan (${currentMonth})`, `Mingguan (${currentWeek})`]}
+                    data={[`Tahunan (${new Date().getFullYear()})`, `Bulanan (${new Date().getMonth()})`, `Mingguan (${Math.ceil(new Date().getDate() / 7)})`]}
                   />
                 </Group>
                 
@@ -181,13 +181,13 @@ const Dashboard = (props) => {
                   h={320}
                   tickLine="xy"
                   gridAxis="xy"
-                  data={formatExercises(props.exercises)[exerciseTime]}
+                  data={format(props.exercises).filter(item => item.time === exerciseTime)[0].dataList}
                   dataKey="name"
                   series={[{ name: 'Total', color: colorList[Math.floor(Math.random() * colorList.length)] }]}
                   curveType="bump"
-                  connectNulls
-                  xAxisLabel={exerciseTime === 'Tahunan' ? 'Bulan' : exerciseTime === 'Bulanan' ? 'Minggu' : 'Hari'}
-                  yAxisLabel={`Total : ${formatExercises(props.exercises)[exerciseTime].reduce((total, item) => total + item.Total, 0)} Latihan`}
+                  // connectNulls
+                  xAxisLabel={exerciseTime === `Tahunan (${new Date().getFullYear()})` ? 'Bulan' : exerciseTime === `Bulanan (${new Date().getMonth()})` ? 'Minggu' : 'Hari'}
+                  yAxisLabel={`Total : ${format(props.exercises).filter(item => item.time === exerciseTime)[0].dataList.reduce((total, item) => total + item.Total, 0)} Latihan`}
                 />
               </Stack>
               
@@ -212,10 +212,8 @@ const Dashboard = (props) => {
                     placeholder="Pilih waktu..."
                     checkIconPosition="right"
                     value={tournamentTime}
-                    tickLine="xy"
-                    gridAxis="xy"
                     onChange={(value) => setTournamentTime(value)}
-                    data={[`Tahunan`, `Bulanan`, `Mingguan`]}
+                    data={[`Tahunan (${new Date().getFullYear()})`, `Bulanan (${new Date().getMonth()})`, `Mingguan (${Math.ceil(new Date().getDate() / 7)})`]}
                   />
                 </Group>
                 
@@ -223,13 +221,12 @@ const Dashboard = (props) => {
                   h={320}
                   tickLine="xy"
                   gridAxis="xy"
-                  data={formatExercises(props.tournaments)[tournamentTime]}
+                  data={format(props.tournaments).filter(item => item.time === tournamentTime)[0].dataList}
                   dataKey="name"
                   series={[{ name: 'Total', color: colorList[Math.floor(Math.random() * colorList.length)] }]}
                   curveType="bump"
-                  connectNulls
-                  xAxisLabel={tournamentTime === 'Tahunan' ? 'Bulan' : tournamentTime === 'Bulanan' ? 'Minggu' : 'Hari'}
-                  yAxisLabel={`Total : ${formatExercises(props.tournaments)[tournamentTime].reduce((total, item) => total + item.Total, 0)} Pertandingan`}
+                  xAxisLabel={tournamentTime === `Tahunan (${new Date().getFullYear()})` ? 'Bulan' : tournamentTime === `Bulanan (${new Date().getMonth()})` ? 'Minggu' : 'Hari'}
+                  yAxisLabel={`Total : ${format(props.tournaments).filter(item => item.time === tournamentTime)[0].dataList.reduce((total, item) => total + item.Total, 0)} Pertandingan`}
                 />
               </Stack>
             </Stack>
@@ -275,14 +272,10 @@ const Dashboard = (props) => {
             </Stack>
           </Grid.Col>
         </Grid>
+        
+        <Text fz={14} c="neutral.5" textAlign="center">© {new Date().getFullYear()} Sistem Informasi Manajemen Olahraga Ju-Jitsu oleh Muhammad Fauzul
+                                                       Hanif</Text>
       </Stack>
-      {/*<Center bg="gold.1" h="25vh" style={{*/}
-      {/*  borderRadius: 16,*/}
-      {/*}}>*/}
-      {/*  <Title order={1} c="gold.9">*/}
-      {/*    Selamat datang, {props.auth.user.full_name}!*/}
-      {/*  </Title>*/}
-      {/*</Center>*/}
     </AppLayout>
   )
 }
