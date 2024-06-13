@@ -16,7 +16,7 @@
     public function run(): void
     {
       $exerciseIds = Exercise::all()->pluck('id');
-      $subSubCriteriaIds = SubSubCriteria::all()->pluck('id');
+      $subSubCriteriaIds = SubSubCriteria::all()->pluck('id')->toArray();
       
       ExerciseEvaluation::factory(random_int(1, 16))
         ->create(function () use (&$exerciseIds) {

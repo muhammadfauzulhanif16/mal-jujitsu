@@ -21,8 +21,6 @@ const Dashboard = (props) => {
     return grouped
   }, [])
   
-  console.log(groupedExercises)
-  
   const colorList = ['red', 'pink', 'grape', 'violet', 'indigo', 'blue', 'cyan', 'teal', 'green', 'lime', 'yellow', 'orange']
   
   function shuffleArray(array) {
@@ -115,14 +113,14 @@ const Dashboard = (props) => {
     },
   ]
   
-  const barData = [
-    { month: 'January', Smartphones: 1200, Laptops: 900, Tablets: 200 },
-    { month: 'February', Smartphones: 1900, Laptops: 1200, Tablets: 400 },
-    { month: 'March', Smartphones: 400, Laptops: 1000, Tablets: 200 },
-    { month: 'April', Smartphones: 1000, Laptops: 200, Tablets: 800 },
-    { month: 'May', Smartphones: 800, Laptops: 1400, Tablets: 1200 },
-    { month: 'June', Smartphones: 750, Laptops: 600, Tablets: 1000 },
-  ]
+  // [
+  //   { month: 'January', Smartphones: 1200, Laptops: 900, Tablets: 200 },
+  //   { month: 'February', Smartphones: 1900, Laptops: 1200, Tablets: 400 },
+  //   { month: 'March', Smartphones: 400, Laptops: 1000, Tablets: 200 },
+  //   { month: 'April', Smartphones: 1000, Laptops: 200, Tablets: 800 },
+  //   { month: 'May', Smartphones: 800, Laptops: 1400, Tablets: 1200 },
+  //   { month: 'June', Smartphones: 750, Laptops: 600, Tablets: 1000 },
+  // ]
   
   return (
     <AppLayout title="Beranda" authed={props.auth.user} meta={props.meta}>
@@ -250,9 +248,39 @@ const Dashboard = (props) => {
               
               <BarChart
                 h="100%"
-                data={barData}
-                dataKey="month"
-                series={[{ name: 'Smartphones', color: 'blue' }]}
+                withLegend
+                xAxisLabel="Atlet"
+                yAxisLabel="Total Medali"
+                data={props.athletes
+                  .sort((a, b) => {
+                    if (b.total_medals === a.total_medals) {
+                      return b.goldMedals - a.goldMedals
+                    }
+                    return b.total_medals - a.total_medals
+                  })
+                  .slice(0, 3)
+                  .map((athlete, index) => ({
+                    name: `${['🥇', '🥈', '🥉'][index]} ${athlete.user.full_name}`,
+                    'Emas': athlete.gold_medals,
+                    'Perak': athlete.silver_medals,
+                    'Perunggu': athlete.bronze_medals,
+                  }))}
+                tickLine="xy"
+                gridAxis="xy"
+                dataKey="name"
+                series={[{
+                  name: 'Emas', color: colorList[
+                    Math.floor(Math.random() * colorList.length)
+                    ],
+                }, {
+                  name: 'Perak', color: colorList[
+                    Math.floor(Math.random() * colorList.length)
+                    ],
+                }, {
+                  name: 'Perunggu', color: colorList[
+                    Math.floor(Math.random() * colorList.length)
+                    ],
+                }]}
               />
             </Stack>
           </Grid.Col>

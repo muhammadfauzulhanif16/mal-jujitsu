@@ -2,6 +2,7 @@
   
   namespace Database\Factories;
   
+  use App\Models\Exercise;
   use App\Models\ExerciseEvaluation;
   use Illuminate\Database\Eloquent\Factories\Factory;
   
@@ -17,7 +18,10 @@
      */
     public function definition(): array
     {
+      $exerciseIds = Exercise::all()->pluck('id')->toArray();
+      
       return [
+        'exercise_id' => $this->faker->unique()->randomElement($exerciseIds),
         'note' => $this->faker->sentence,
       ];
     }

@@ -16,12 +16,13 @@
       'weight',
     ];
     
-    protected $hidden = [
-      'user_id',
-    ];
-    
     public function user()
     {
       return $this->belongsTo(User::class);
+    }
+    
+    public function tournaments()
+    {
+      return $this->hasMany(Tournament::class, 'athlete_id', 'user_id');
     }
   }

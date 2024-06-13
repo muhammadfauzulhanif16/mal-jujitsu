@@ -26,9 +26,15 @@
         'meta' => session('meta'),
         'auth' => ['user' => $authedUser],
         'coaches' => Coach::all(),
-        'athletes' => Athlete::all(),
+        'athletes' => Athlete::with(['user', 'tournaments'])->get()->map(function ($athlete) {
+          $athlete->gold_medals = $athlete->tournaments->where('medal', 'Emas')->count();
+          $athlete->silver_medals = $athlete->tournaments->where('medal', 'Perak')->count();
+          $athlete->bronze_medals = $athlete->tournaments->where('medal', 'Perunggu')->count();
+          $athlete->total_medals = $athlete->gold_medals + $athlete->silver_medals + $athlete->bronze_medals;
+          return $athlete;
+        }),
         'exercises' => Exercise::orderBy('date', 'desc')->get(),
-        'tournaments' => Tournament::orderBy('date', 'desc')->get(),
+        'tournaments' => Tournament::all(),
         'evaluations' => ExerciseEvaluation::all(),
       ]);
     })->name('dashboard');

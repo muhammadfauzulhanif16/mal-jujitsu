@@ -18,9 +18,6 @@
       'medal',
     ];
     
-    protected $hidden = [
-      'athlete_id',
-    ];
     
     public function athlete()
     {
