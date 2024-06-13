@@ -36,6 +36,9 @@
      */
     public function store(Request $request)
     {
+//      dd($request->all());
+//      $date = Carbon::parse($request->date, 'Asia/Jakarta')->format('Y-m-d');
+//      dd($date);
       try {
         Exercise::create([
           'name' => $request->name,

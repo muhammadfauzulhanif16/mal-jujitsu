@@ -24,6 +24,7 @@ createInertiaApp({
     root.render(
       <MantineProvider
         theme={{
+          black: '#0c0c0c',
           primaryColor: 'gold',
           autoContrast: true,
           fontFamily: 'Outfit, sans-serif',

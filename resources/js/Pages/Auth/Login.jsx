@@ -61,19 +61,19 @@ const Login = (props) => {
                 mb={24}
                 styles={{
                   label: { marginLeft: 8, fontSize: 14 },
-                  input: { border: 0, backgroundColor: form.data.remember ? 'var(--mantine-color-gold-1)' : '#f1f3f5' },
+                  input: { border: 0, backgroundColor: form.data.remember ? 'var(--mantine-color-gold-2)' : '#f1f3f5' },
                 }}
                 radius={32}
                 label="Ingat Saya"
                 size="md"
-                color="gold.1"
+                color="gold.2"
                 onChange={(e) => form.setData('remember', e.target.checked)}
               />
               
               <Button px={16} styles={{ section: { marginRight: 16 } }}
                       leftSection={(!form.data.email || !form.data.password || form.hasErrors) ? <IconLock /> : <IconLockOpen />}
                       disabled={!form.data.email || !form.data.password || form.hasErrors} loading={form.processing} variant="filled" type="submit"
-                      color="gold.1" h={48} fullWidth radius={32}>
+                      color="gold.2" h={48} fullWidth radius={32}>
                 Masuk
               </Button>
             </Box>

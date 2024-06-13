@@ -1,25 +1,66 @@
 import { AppLayout } from '@/Layouts/AppLayout.jsx'
 import { Breadcrumbs } from '@/Components/Breadcrumbs.jsx'
 import { Blockquote, Box, Grid, Group, Select, SimpleGrid, Stack, Text, Title } from '@mantine/core'
-import { IconClipboardText, IconMedal, IconReport, IconReportAnalytics, IconUser } from '@tabler/icons-react'
+import { IconCalendar, IconClipboardText, IconMedal, IconReport, IconReportAnalytics, IconUser } from '@tabler/icons-react'
 import { AreaChart, BarChart } from '@mantine/charts'
+import { useState } from 'react'
 
 const Dashboard = (props) => {
-  console.log(props)
-  const exerciseList = props.exercises
-  const groupedExercises = exerciseList.reduce((grouped, exercise) => {
-    const date = new Date(exercise.date)
-    const year = date.getFullYear()
-    
-    let yearGroup = grouped.find(group => group.year === year)
-    if (!yearGroup) {
-      yearGroup = { year, exercises: [] }
-      grouped.push(yearGroup)
+  const [exerciseTime, setExerciseTime] = useState('Tahunan')
+  const [tournamentTime, setTournamentTime] = useState(`Tahunan`)
+  
+  
+  function formatExercises(dataList) {
+    return {
+      'Tahunan': ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'].map((month, index) => {
+        const currentYear = new Date().getFullYear()
+        const filteredExercises = dataList.filter(data => {
+          const date = new Date(data.date)
+          return date.getMonth() === index && date.getFullYear() === currentYear
+        })
+        return {
+          name: month,
+          'Total': filteredExercises.length,
+        }
+      }),
+      'Bulanan': [...Array(5)].map((_, index) => {
+        const currentDate = new Date()
+        const currentMonth = currentDate.getMonth()
+        const currentYear = currentDate.getFullYear()
+        const filteredExercises = dataList.filter(data => {
+          const date = new Date(data.date)
+          const { weekOfMonth, monthOfYear, year } = {
+            weekOfMonth: Math.floor(date.getDate() / 7),
+            monthOfYear: date.getMonth(),
+            year: date.getFullYear(),
+          }
+          return weekOfMonth === index && monthOfYear === currentMonth && year === currentYear
+        })
+        return {
+          name: index + 1,
+          'Total': filteredExercises.length,
+        }
+      }),
+      'Mingguan': [...Array(7)].map((_, index) => {
+        const currentDate = new Date()
+        const filteredExercises = dataList.filter(data => {
+          const date = new Date(data.date)
+          const dayOfWeek = date.getDay()
+          const weekOfMonth = Math.floor(date.getDate() / 7)
+          const monthOfYear = date.getMonth()
+          const year = date.getFullYear()
+          return dayOfWeek === index && weekOfMonth === Math.floor(currentDate.getDate() / 7) && monthOfYear === currentDate.getMonth() && year === currentDate.getFullYear()
+        })
+        return {
+          name: ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'][index],
+          'Total': filteredExercises.length,
+        }
+      }),
     }
-    yearGroup.exercises.push(exercise)
-    
-    return grouped
-  }, [])
+  }
+  
+  console.log('formattedExercises', formatExercises(props.exercises, 'Latihan')[exerciseTime])
+  // console.log('formattedtournaments', formatExercises(props.tournaments))
   
   const colorList = ['red', 'pink', 'grape', 'violet', 'indigo', 'blue', 'cyan', 'teal', 'green', 'lime', 'yellow', 'orange']
   
@@ -78,49 +119,11 @@ const Dashboard = (props) => {
     },
   ]
   
-  const areaData = [
-    {
-      date: 'Mar 22',
-      Apples: 110,
-    },
-    {
-      date: 'Mar 23',
-      Apples: 60,
-    },
-    {
-      date: 'Mar 24',
-      Apples: 80,
-    },
-    {
-      date: 'Mar 25',
-      Apples: null,
-    },
-    {
-      date: 'Mar 26',
-      Apples: null,
-    },
-    {
-      date: 'Mar 27',
-      Apples: 40,
-    },
-    {
-      date: 'Mar 28',
-      Apples: 120,
-    },
-    {
-      date: 'Mar 29',
-      Apples: 80,
-    },
-  ]
+  // const monthNames = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']
+  // const date = new Date()
+  // const currentMonth = monthNames[date.getMonth()]
+  // const currentWeek = Math.ceil(date.getDate() / 7)
   
-  // [
-  //   { month: 'January', Smartphones: 1200, Laptops: 900, Tablets: 200 },
-  //   { month: 'February', Smartphones: 1900, Laptops: 1200, Tablets: 400 },
-  //   { month: 'March', Smartphones: 400, Laptops: 1000, Tablets: 200 },
-  //   { month: 'April', Smartphones: 1000, Laptops: 200, Tablets: 800 },
-  //   { month: 'May', Smartphones: 800, Laptops: 1400, Tablets: 1200 },
-  //   { month: 'June', Smartphones: 750, Laptops: 600, Tablets: 1000 },
-  // ]
   
   return (
     <AppLayout title="Beranda" authed={props.auth.user} meta={props.meta}>
@@ -163,32 +166,28 @@ const Dashboard = (props) => {
                       section: { marginLeft: 0, width: 48, height: 48 },
                       error: { marginTop: 8 },
                     }}
-                    leftSection={<IconUser />}
-                    placeholder="Pilih latihan..."
+                    leftSection={<IconCalendar />}
+                    placeholder="Pilih waktu..."
                     checkIconPosition="right"
-                    // onChange={(value) => {
-                    //   form.setData('exercise_id', value)
-                    //
-                    //   if (!value) {
-                    //     form.setError({ exercise_id: 'Latihan tidak boleh kosong.' })
-                    //   } else {
-                    //     form.clearErrors('exercise_id')
-                    //   }
-                    // }}
-                    // data={props.exercises.map((exercise) => ({
-                    //   value: exercise.id,
-                    //   label: `${exercise.name} ~ ${exercise.date} (${exercise.athlete.full_name} ~ ${exercise.athlete.role})`,
-                    // }))}
+                    onChange={(value) => setExerciseTime(value)}
+                    value={exerciseTime}
+                    allowDeselect={false}
+                    data={[`Tahunan`, `Bulanan`, `Mingguan`]}
+                    // data={[`Tahunan (${date.getFullYear()})`, `Bulanan (${currentMonth})`, `Mingguan (${currentWeek})`]}
                   />
                 </Group>
                 
                 <AreaChart
                   h={320}
-                  data={areaData}
-                  dataKey="date"
-                  series={[{ name: 'Apples', color: 'indigo.6' }]}
+                  tickLine="xy"
+                  gridAxis="xy"
+                  data={formatExercises(props.exercises)[exerciseTime]}
+                  dataKey="name"
+                  series={[{ name: 'Total', color: colorList[Math.floor(Math.random() * colorList.length)] }]}
                   curveType="bump"
                   connectNulls
+                  xAxisLabel={exerciseTime === 'Tahunan' ? 'Bulan' : exerciseTime === 'Bulanan' ? 'Minggu' : 'Hari'}
+                  yAxisLabel={`Total : ${formatExercises(props.exercises)[exerciseTime].reduce((total, item) => total + item.Total, 0)} Latihan`}
                 />
               </Stack>
               
@@ -201,6 +200,7 @@ const Dashboard = (props) => {
                   
                   <Select
                     withAsterisk
+                    allowDeselect={false}
                     variant="filled"
                     styles={{
                       label: { marginBottom: 8 },
@@ -208,32 +208,28 @@ const Dashboard = (props) => {
                       section: { marginLeft: 0, width: 48, height: 48 },
                       error: { marginTop: 8 },
                     }}
-                    leftSection={<IconUser />}
-                    placeholder="Pilih latihan..."
+                    leftSection={<IconCalendar />}
+                    placeholder="Pilih waktu..."
                     checkIconPosition="right"
-                    // onChange={(value) => {
-                    //   form.setData('exercise_id', value)
-                    //
-                    //   if (!value) {
-                    //     form.setError({ exercise_id: 'Latihan tidak boleh kosong.' })
-                    //   } else {
-                    //     form.clearErrors('exercise_id')
-                    //   }
-                    // }}
-                    // data={props.exercises.map((exercise) => ({
-                    //   value: exercise.id,
-                    //   label: `${exercise.name} ~ ${exercise.date} (${exercise.athlete.full_name} ~ ${exercise.athlete.role})`,
-                    // }))}
+                    value={tournamentTime}
+                    tickLine="xy"
+                    gridAxis="xy"
+                    onChange={(value) => setTournamentTime(value)}
+                    data={[`Tahunan`, `Bulanan`, `Mingguan`]}
                   />
                 </Group>
                 
                 <AreaChart
                   h={320}
-                  data={areaData}
-                  dataKey="date"
-                  series={[{ name: 'Apples', color: 'indigo.6' }]}
+                  tickLine="xy"
+                  gridAxis="xy"
+                  data={formatExercises(props.tournaments)[tournamentTime]}
+                  dataKey="name"
+                  series={[{ name: 'Total', color: colorList[Math.floor(Math.random() * colorList.length)] }]}
                   curveType="bump"
                   connectNulls
+                  xAxisLabel={tournamentTime === 'Tahunan' ? 'Bulan' : tournamentTime === 'Bulanan' ? 'Minggu' : 'Hari'}
+                  yAxisLabel={`Total : ${formatExercises(props.tournaments)[tournamentTime].reduce((total, item) => total + item.Total, 0)} Pertandingan`}
                 />
               </Stack>
             </Stack>
@@ -269,17 +265,11 @@ const Dashboard = (props) => {
                 gridAxis="xy"
                 dataKey="name"
                 series={[{
-                  name: 'Emas', color: colorList[
-                    Math.floor(Math.random() * colorList.length)
-                    ],
+                  name: 'Emas', color: colorList[Math.floor(Math.random() * colorList.length)],
                 }, {
-                  name: 'Perak', color: colorList[
-                    Math.floor(Math.random() * colorList.length)
-                    ],
+                  name: 'Perak', color: colorList[Math.floor(Math.random() * colorList.length)],
                 }, {
-                  name: 'Perunggu', color: colorList[
-                    Math.floor(Math.random() * colorList.length)
-                    ],
+                  name: 'Perunggu', color: colorList[Math.floor(Math.random() * colorList.length)],
                 }]}
               />
             </Stack>

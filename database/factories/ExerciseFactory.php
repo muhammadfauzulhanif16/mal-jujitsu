@@ -28,7 +28,7 @@
         'coach_id' => $this->faker->randomElement($coachIds),
         'name' => $this->faker->word(),
         'place' => $this->faker->address,
-        'date' => Carbon::parse($this->faker->date())->format('Y-m-d'),
+        'date' => $this->faker->dateTimeThisYear(),
         'start_time' => Carbon::parse($this->faker->time())->format('H:i:s'),
         'end_time' => Carbon::parse($this->faker->time())->format('H:i:s'),
       ];

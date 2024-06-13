@@ -26,11 +26,11 @@ export const Header = (props) => {
             <Group display={{ base: 'none', md: 'flex' }} variant="subtle" style={{ cursor: 'pointer' }} gap={16} w={240} justify="end">
               <Box align="end" gap={0} w={120}>
                 <Text truncate="end">{props.authed.full_name}</Text>
-                <Badge variant="transparent" px={0} py={0} color="gold.1" size={12} radius={0}>{props.authed.role}</Badge>
+                <Badge variant="transparent" px={0} py={0} color="gold.2" size={12} radius={0}>{props.authed.role}</Badge>
               </Box>
               
               <Avatar src={props.authed.avatar} alt={props.authed.full_name} size={48}
-                      color="gold.1" />
+                      color="gold.2" />
             </Group>
           </Menu.Target>
           
@@ -40,7 +40,7 @@ export const Header = (props) => {
           </Menu.Dropdown>
         </Menu>
         
-        <ActionIcon display={{ base: 'block', md: 'none' }} aria-label="Menu" variant="subtle" color="gold.1" size={48} radius="xl" onClick={open}>
+        <ActionIcon display={{ base: 'block', md: 'none' }} aria-label="Menu" variant="subtle" color="gold.2" size={48} radius="xl" onClick={open}>
           <IconMenu />
         </ActionIcon>
       </Flex>
@@ -48,11 +48,11 @@ export const Header = (props) => {
       <Drawer title={
         <Group>
           <Avatar src={props.authed.avatar} alt={props.authed.full_name} size={48}
-                  color="gold.1" />
+                  color="gold.2" />
           
           <Stack gap={0} w={160}>
             <Text truncate="end">{props.authed.full_name}</Text>
-            <Badge variant="transparent" px={0} py={0} color="gold.1" size={12} radius={0}>{props.authed.role}</Badge>
+            <Badge variant="transparent" px={0} py={0} color="gold.2" size={12} radius={0}>{props.authed.role}</Badge>
           </Stack>
         </Group>
       } styles={{
@@ -61,7 +61,7 @@ export const Header = (props) => {
           display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%',
         },
       }} size={320} position="right" opened={opened} onClose={close} overlayProps={{ backgroundOpacity: 0.5, blur: 4 }} closeButtonProps={{
-        style: { margin: 0, width: 48, height: 48 }, icon: <ActionIcon component="div" aria-label="Menu" variant="subtle" color="gold.1" size={48} radius="xl">
+        style: { margin: 0, width: 48, height: 48 }, icon: <ActionIcon component="div" aria-label="Menu" variant="subtle" color="gold.2" size={48} radius="xl">
           <IconX />
         </ActionIcon>,
       }}>

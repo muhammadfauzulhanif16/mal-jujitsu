@@ -1,9 +1,9 @@
 input:focus {
-  border-color: #463b00;
+  border-color: #746200;
 }
 
 .tiptap .ProseMirror:focus {
-  border-color: #463b00;
+  border-color: #746200;
 }
 
 div[contenteditable="true"] {
@@ -24,7 +24,7 @@ p[data-placeholder="Masukkan catatan"] {
 }
 
 button[data-active="true"] {
-  color: #463b00;
+  color: #746200;
 }
 
 .mantine-RichTextEditor-toolbar {

@@ -19,11 +19,12 @@ export const NavBar = (props) => {
               h={{ base: 48, md: 'auto' }}
               onClick={() => router.get(route(nav.route))}>
           <ActionIcon variant={props.title.split(' ')[0] === nav.label
-            ? 'filled' : 'subtle'} h={32} w={48} radius="xl" color="gold.1" aria-label={nav.label}>
+            ? 'filled' : 'subtle'} h={32} w={48} radius="xl" color="gold.2" aria-label={nav.label}>
             {nav.icon}
           </ActionIcon>
           
-          <Text size="sm" fw={props.title.split(' ')[0] === nav.label ? 'bold' : 'normal'}>
+          <Text size="sm" fw={props.title.split(' ')[0] === nav.label ? 'bold' : 'normal'}
+                c={props.title.split(' ')[0] === nav.label ? 'neutral.0' : 'neutral.2'}>
             {nav.label}
           </Text>
         </Flex>

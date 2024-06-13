@@ -57,7 +57,7 @@ export const AppLayout = (props) => {
               borderRadius: 32,
               padding: '.5rem 1rem',
             }}>
-              <ActionIcon onClick={() => scrollTo({ y: 0 })} pos="fixed" h={48} w={48} color="gold.1" radius={32} m={16} bottom={0} right={0} variant="filled"
+              <ActionIcon onClick={() => scrollTo({ y: 0 })} pos="fixed" h={48} w={48} color="gold.2" radius={32} m={16} bottom={0} right={0} variant="filled"
                           style={transitionStyles} aria-label="Scroll to top">
                 <IconArrowNarrowUp />
               </ActionIcon>

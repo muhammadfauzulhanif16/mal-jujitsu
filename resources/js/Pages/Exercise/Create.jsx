@@ -7,7 +7,7 @@ import 'dayjs/locale/id'
 import { DatePickerInput, TimeInput } from '@mantine/dates'
 
 const Create = (props) => {
-  const form = useForm({ name: '', place: '', athlete_id: '', coach_id: '', date: '', start_time: '', end_time: '' })
+  const form = useForm({ name: '', place: '', athlete_id: '', coach_id: '', date: new Date(), start_time: '', end_time: '' })
   
   return (
     <form onSubmit={(e) => {
@@ -160,8 +160,8 @@ const Create = (props) => {
                 error={form.errors.coach_id}
               />
               
-              <DatePickerInput mb={16} locale="id" monthsListFormat="MMMM" withAsterisk clearable allowDeselect firstDayOfWeek={0} variant="filled"
-                               valueFormat="dddd, D MMMM YYYY" leftSection={<IconCalendar />} label="Tanggal"
+              <DatePickerInput mb={16} withAsterisk clearable allowDeselect firstDayOfWeek={0} variant="filled"
+                               leftSection={<IconCalendar />} label="Tanggal"
                                placeholder="Masukkan tanggal..."
                                styles={{
                                  label: { marginBottom: 8 },
@@ -171,10 +171,10 @@ const Create = (props) => {
                                  calendarHeader: { height: 48 },
                                  calendarHeaderControl: { height: 48, width: 48, borderRadius: 32 },
                                }} onChange={(value) => {
-                form.setData('date', value)
+                form.setData('date', value.toLocaleString())
                 
                 if (!value) {
-                  form.setError({ date: 'Tanggal latihan tidak boleh kosong.' })
+                  form.setError({ date: 'Tanggal tidak boleh kosong.' })
                 } else {
                   form.clearErrors('date')
                 }

@@ -4,7 +4,6 @@
   
   use App\Models\Athlete;
   use App\Models\Tournament;
-  use Carbon\Carbon;
   use Illuminate\Database\Eloquent\Factories\Factory;
   
   /**
@@ -25,7 +24,7 @@
         'athlete_id' => $this->faker->randomElement($athleteIds),
         'name' => $this->faker->word(),
         'place' => $this->faker->address,
-        'date' => Carbon::parse($this->faker->date())->format('Y-m-d'),
+        'date' => $this->faker->dateTimeThisYear(),
         'medal' => $this->faker->randomElement(['Emas', 'Perak', 'Perunggu']),
       ];
     }
