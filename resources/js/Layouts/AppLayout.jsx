@@ -65,6 +65,9 @@ export const AppLayout = (props) => {
           )}
         </Transition>
       </Affix>
+      
+      <Flex fz={14} h={80} align="center" justify="center" c="neutral.5" textAlign="center">© {new Date().getFullYear()} Sistem Informasi Manajemen Olahraga
+                                                                                            Ju-Jitsu</Flex>
     </Flex>
   )
 }

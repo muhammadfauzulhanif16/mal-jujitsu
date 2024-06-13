@@ -272,9 +272,6 @@ const Dashboard = (props) => {
             </Stack>
           </Grid.Col>
         </Grid>
-        
-        <Text fz={14} c="neutral.5" textAlign="center">© {new Date().getFullYear()} Sistem Informasi Manajemen Olahraga Ju-Jitsu oleh Muhammad Fauzul
-                                                       Hanif</Text>
       </Stack>
     </AppLayout>
   )
