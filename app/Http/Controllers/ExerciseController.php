@@ -21,11 +21,11 @@
       $authedUser->avatar = str_contains($authedUser->avatar, 'https') ? $authedUser->avatar : ($authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null);
       
       return Inertia('Exercise/Index', [
-        'exercises' => Exercise::with(['athlete', 'coach'])->get()->map(function ($exercise) {
-          $exercise->athlete->avatar = str_contains($exercise->athlete->avatar, 'https') ? $exercise->athlete->avatar : ($exercise->athlete->avatar ? asset('storage/' . $exercise->athlete->avatar) : null);
-          $exercise->coach->avatar = str_contains($exercise->coach->avatar, 'https') ? $exercise->coach->avatar : ($exercise->coach->avatar ? asset('storage/' . $exercise->coach->avatar) : null);
+        'exercises' => Exercise::with(['athlete.user', 'coach.user'])->get()->map(function ($exercise) {
+          $exercise->athlete->user->avatar = asset('storage/' . $exercise->athlete->user->avatar);
+          $exercise->coach->user->avatar = asset('storage/' . $exercise->coach->user->avatar);
           return $exercise;
-        }),
+        })->values(),
         'meta' => session('meta'),
         'auth' => ['user' => $authedUser]
       ]);

@@ -16,7 +16,7 @@ const Edit = (props) => {
     start_time: props.exercise.start_time,
     end_time: props.exercise.end_time,
   })
-  
+  console.log(props)
   return (
     <form onSubmit={(e) => {
       e.preventDefault()
@@ -27,13 +27,13 @@ const Edit = (props) => {
           <Breadcrumbs navList={[{ label: 'Latihan', route: 'exercises.index' }, { label: 'Ubah' }]} />
           
           <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Tambah Latihan">
-            <ActionIcon type="submit" ml="auto" h={48} w={48} color="gold.1" radius={32} display={{ base: 'block', xs: 'none' }}
+            <ActionIcon type="submit" ml="auto" h={48} w={48} color="gold.2" radius={32} display={{ base: 'block', xs: 'none' }}
                         disabled={form.hasErrors || Object.values(form.data).some(field => !field)}>
               <IconCornerDownLeft />
             </ActionIcon>
           </Tooltip>
           
-          <Button display={{ base: 'none', xs: 'block' }} type="submit" w={240} leftSection={<IconCornerDownLeft />} variant="filled" color="gold.1" h={48}
+          <Button display={{ base: 'none', xs: 'block' }} type="submit" w={240} leftSection={<IconCornerDownLeft />} variant="filled" color="gold.2" h={48}
                   px={16} styles={{ section: { marginRight: 12 } }} radius={32} loading={form.processing}
                   disabled={form.hasErrors || Object.values(form.data).some(field => !field)}>
             Ubah Latihan
@@ -47,7 +47,7 @@ const Edit = (props) => {
               xs: 2,
               md: 1,
             }}>
-              <Indicator inline color="gold.1" styles={{ indicator: { padding: 16 } }}
+              <Indicator inline color="gold.2" styles={{ indicator: { padding: 16 } }}
                          label={form.data.athlete_id ? props.athletes.find((athlete) => athlete.user.id === form.data.athlete_id)?.user.role : 'Atlet'}
                          position="bottom-center" size={32} withBorder>
                 <Avatar
@@ -58,7 +58,7 @@ const Edit = (props) => {
                 />
               </Indicator>
               
-              <Indicator inline color="gold.1" styles={{ indicator: { padding: 16 } }}
+              <Indicator inline color="gold.2" styles={{ indicator: { padding: 16 } }}
                          label={form.data.coach_id ? props.coaches.find((coach) => coach.user.id === form.data.coach_id)?.user.role : 'Pelatih'}
                          position="bottom-center" size={32} withBorder>
                 <Avatar
@@ -180,7 +180,7 @@ const Edit = (props) => {
                                  calendarHeader: { height: 48 },
                                  calendarHeaderControl: { height: 48, width: 48, borderRadius: 32 },
                                }} onChange={(value) => {
-                form.setData('date', value)
+                form.setData('date', value.toLocaleString())
                 
                 if (!value) {
                   form.setError({ date: 'Tanggal latihan tidak boleh kosong.' })
@@ -190,7 +190,7 @@ const Edit = (props) => {
               }} error={form.errors.date} value={new Date(form.data.date)}
               />
               
-              <TimeInput mb={16} color="gold.1" placeholder="HH:MM" locale="id" withAsterisk variant="filled"
+              <TimeInput mb={16} color="gold.2" placeholder="HH:MM" locale="id" withAsterisk variant="filled"
                          leftSection={<IconClockPlay />} label="Waktu Mulai"
                          styles={{
                            label: { marginBottom: 8 },
@@ -209,7 +209,7 @@ const Edit = (props) => {
                 }
               }} error={form.errors.start_time} value={form.data.start_time} />
               
-              <TimeInput color="gold.1" placeholder="HH:MM" locale="id" withAsterisk variant="filled"
+              <TimeInput color="gold.2" placeholder="HH:MM" locale="id" withAsterisk variant="filled"
                          leftSection={<IconClockPause />} label="Waktu Selesai"
                          styles={{
                            label: { marginBottom: 8 },

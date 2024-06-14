@@ -57,14 +57,14 @@ const Edit = (props) => {
           <Breadcrumbs navList={[{ label: 'Penilaian', route: 'evaluations.index' }, { label: 'Ubah' }]} />
           
           <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Ubah Penilaian">
-            <ActionIcon type="submit" ml="auto" h={48} w={48} color="gold.1" radius={32} display={{ base: 'block', xs: 'none' }}
+            <ActionIcon type="submit" ml="auto" h={48} w={48} color="gold.2" radius={32} display={{ base: 'block', xs: 'none' }}
               // disabled={form.hasErrors || !form.data.name || !form.data.place || !form.data.athlete_id || !form.data.medal}
             >
               <IconCornerDownLeft />
             </ActionIcon>
           </Tooltip>
           
-          <Button display={{ base: 'none', xs: 'block' }} type="submit" w={240} leftSection={<IconCornerDownLeft />} variant="filled" color="gold.1" h={48}
+          <Button display={{ base: 'none', xs: 'block' }} type="submit" w={240} leftSection={<IconCornerDownLeft />} variant="filled" color="gold.2" h={48}
                   px={16} styles={{ section: { marginRight: 12 } }} radius={32} loading={form.processing}
             // disabled={form.hasErrors || !form.data.name || !form.data.place || !form.data.athlete_id || !form.data.medal}
           >
@@ -75,7 +75,7 @@ const Edit = (props) => {
         <Grid grow justify="space-between">
           <Grid.Col span={{ base: 12, md: 4 }}>
             <Center>
-              <Indicator styles={{ indicator: { padding: 16, border: '4px solid white' } }} inline color="gold.1"
+              <Indicator styles={{ indicator: { padding: 16, border: '4px solid white' } }} inline color="gold.2"
                          label={form.data.exercise_id ? [...props.exercises, props.exercise_evaluation.exercise].find((exercise) => exercise.id === form.data.exercise_id)?.athlete.role : 'Atlet'}
                          position="bottom-center" size={32} withBorder>
                 <Avatar
@@ -154,11 +154,11 @@ const Edit = (props) => {
                                            // }
                                          }}>
                               <Group gap={32}>
-                                <Radio size="md" value="1" label="1" color="gold.1" />
-                                <Radio size="md" value="2" label="2" color="gold.1" />
-                                <Radio size="md" value="3" label="3" color="gold.1" />
-                                <Radio size="md" value="4" label="4" color="gold.1" />
-                                <Radio size="md" value="5" label="5" color="gold.1" />
+                                <Radio size="md" value="1" label="1" color="gold.2" />
+                                <Radio size="md" value="2" label="2" color="gold.2" />
+                                <Radio size="md" value="3" label="3" color="gold.2" />
+                                <Radio size="md" value="4" label="4" color="gold.2" />
+                                <Radio size="md" value="5" label="5" color="gold.2" />
                               </Group>
                             </Radio.Group>
                           ) : sub_sub_criteria.type === 'number' ? (

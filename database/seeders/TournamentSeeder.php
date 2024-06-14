@@ -12,6 +12,6 @@
      */
     public function run(): void
     {
-      Tournament::factory(random_int(1, 16))->create();
+      Tournament::factory(random_int(1, 160))->create();
     }
   }

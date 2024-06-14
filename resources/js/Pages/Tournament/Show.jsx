@@ -17,7 +17,7 @@ const Edit = (props) => {
       <Grid grow justify="space-between">
         <Grid.Col span={{ base: 12, md: 4 }}>
           <Center>
-            <Indicator styles={{ indicator: { padding: 16, border: '4px solid white' } }} inline color="gold.1"
+            <Indicator styles={{ indicator: { padding: 16, border: '4px solid white' } }} inline color="gold.2"
                        label={form.data.athlete_id ? props.athletes.find((athlete) => athlete.user.id === form.data.athlete_id)?.user.role : 'Atlet'}
                        position="bottom-center" size={32} withBorder>
               <Avatar
@@ -68,9 +68,9 @@ const Edit = (props) => {
               label: { marginBottom: 8 }, error: { marginTop: 8 },
             }}>
               <Group gap={32}>
-                <Radio size="md" value="Emas" label="🥇 Emas" color="gold.1" disabled />
-                <Radio size="md" value="Perak" label="🥈 Perak" color="gold.1" disabled />
-                <Radio size="md" value="Perunggu" label="🥉 Perunggu" color="gold.1" disabled />
+                <Radio size="md" value="Emas" label="🥇 Emas" color="gold.2" disabled />
+                <Radio size="md" value="Perak" label="🥈 Perak" color="gold.2" disabled />
+                <Radio size="md" value="Perunggu" label="🥉 Perunggu" color="gold.2" disabled />
               </Group>
             </Radio.Group>
           </Fieldset>

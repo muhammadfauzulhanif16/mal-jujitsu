@@ -11,6 +11,7 @@
     use HasFactory, HasUuids;
     
     protected $fillable = [
+      'athlete_id',
       'exercise_id',
       'note',
     ];

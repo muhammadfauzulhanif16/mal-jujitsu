@@ -12,6 +12,6 @@
      */
     public function run(): void
     {
-      Exercise::factory(random_int(1, 16))->create();
+      Exercise::factory(random_int(1, 160))->create();
     }
   }

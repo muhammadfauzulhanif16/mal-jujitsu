@@ -19,13 +19,13 @@ const Create = (props) => {
           <Breadcrumbs navList={[{ label: 'Pertandingan', route: 'tournaments.index' }, { label: 'Tambah' }]} />
           
           <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Tambah Pertandingan">
-            <ActionIcon type="submit" ml="auto" h={48} w={48} color="gold.1" radius={32} display={{ base: 'block', xs: 'none' }}
+            <ActionIcon type="submit" ml="auto" h={48} w={48} color="gold.2" radius={32} display={{ base: 'block', xs: 'none' }}
                         disabled={form.hasErrors || !form.data.name || !form.data.place || !form.data.athlete_id || !form.data.medal}>
               <IconCornerDownLeft />
             </ActionIcon>
           </Tooltip>
           
-          <Button display={{ base: 'none', xs: 'block' }} type="submit" w={240} leftSection={<IconCornerDownLeft />} variant="filled" color="gold.1" h={48}
+          <Button display={{ base: 'none', xs: 'block' }} type="submit" w={240} leftSection={<IconCornerDownLeft />} variant="filled" color="gold.2" h={48}
                   px={16} styles={{ section: { marginRight: 12 } }} radius={32} loading={form.processing}
                   disabled={form.hasErrors || !form.data.name || !form.data.place || !form.data.athlete_id || !form.data.medal}>
             Tambah Latihan
@@ -35,7 +35,7 @@ const Create = (props) => {
         <Grid grow justify="space-between">
           <Grid.Col span={{ base: 12, md: 4 }}>
             <Center>
-              <Indicator styles={{ indicator: { padding: 16, border: '4px solid white' } }} inline color="gold.1"
+              <Indicator styles={{ indicator: { padding: 16, border: '4px solid white' } }} inline color="gold.2"
                          label={form.data.athlete_id ? props.athletes.find((athlete) => athlete.user.id === form.data.athlete_id)?.user.role : 'Atlet'}
                          position="bottom-center" size={32} withBorder>
                 <Avatar
@@ -124,15 +124,15 @@ const Create = (props) => {
                 }
               }}>
                 <Group gap={32}>
-                  <Radio size="md" value="Emas" label="🥇 Emas" color="gold.1" />
-                  <Radio size="md" value="Perak" label="🥈 Perak" color="gold.1" />
-                  <Radio size="md" value="Perunggu" label="🥉 Perunggu" color="gold.1" />
+                  <Radio size="md" value="Emas" label="🥇 Emas" color="gold.2" />
+                  <Radio size="md" value="Perak" label="🥈 Perak" color="gold.2" />
+                  <Radio size="md" value="Perunggu" label="🥉 Perunggu" color="gold.2" />
                 </Group>
               </Radio.Group>
               
               <DatePickerInput mb={16} locale="id" monthsListFormat="MMMM" withAsterisk clearable allowDeselect firstDayOfWeek={0} variant="filled"
                                valueFormat="dddd, D MMMM YYYY" leftSection={<IconCalendar />} label="Tanggal Pertandingan"
-                               placeholder="Masukkan tanggal pertandingan..."
+                               placeholder="Masukkan tanggal..."
                                styles={{
                                  label: { marginBottom: 8 },
                                  input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 16 },
@@ -141,10 +141,10 @@ const Create = (props) => {
                                  calendarHeader: { height: 48 },
                                  calendarHeaderControl: { height: 48, width: 48, borderRadius: 32 },
                                }} onChange={(value) => {
-                form.setData('date', value)
+                form.setData('date', value.toLocaleString())
                 
                 if (!value) {
-                  form.setError({ date: 'Tanggal latihan tidak boleh kosong.' })
+                  form.setError({ date: 'Tanggal tidak boleh kosong.' })
                 } else {
                   form.clearErrors('date')
                 }

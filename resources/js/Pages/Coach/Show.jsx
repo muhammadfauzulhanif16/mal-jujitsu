@@ -57,8 +57,8 @@ const Show = (props) => {
               label: { marginBottom: 8 }, error: { marginTop: 8 },
             }}>
               <Group gap={32}>
-                <Radio size="md" value="Laki-laki" label="Laki-laki" color="gold.1" disabled />
-                <Radio size="md" value="Perempuan" label="Perempuan" color="gold.1" disabled />
+                <Radio size="md" value="Laki-laki" label="Laki-laki" color="gold.2" disabled />
+                <Radio size="md" value="Perempuan" label="Perempuan" color="gold.2" disabled />
               </Group>
             </Radio.Group>
             
@@ -83,9 +83,9 @@ const Show = (props) => {
             }}>
             <Radio.Group label="Peran" styles={{ label: { marginBottom: 8 }, error: { marginTop: 8 } }} value={form.data.role}>
               <Group gap={32}>
-                <Radio value="Pengelola Tim" label="Pengelola Tim" color="gold.1" size="md" disabled />
-                <Radio value="Pelatih Fisik" label="Pelatih Fisik" color="gold.1" size="md" disabled />
-                <Radio value="Pelatih Teknik" label="Pelatih Teknik" color="gold.1" size="md" disabled />
+                <Radio value="Pengelola Tim" label="Pengelola Tim" color="gold.2" size="md" disabled />
+                <Radio value="Pelatih Fisik" label="Pelatih Fisik" color="gold.2" size="md" disabled />
+                <Radio value="Pelatih Teknik" label="Pelatih Teknik" color="gold.2" size="md" disabled />
               </Group>
             </Radio.Group>
           </Fieldset>

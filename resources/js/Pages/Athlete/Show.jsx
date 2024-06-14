@@ -1,5 +1,5 @@
 import { AppLayout } from '@/Layouts/AppLayout.jsx'
-import { Avatar, Fieldset, Grid, Group, NumberInput, Radio, TextInput } from '@mantine/core'
+import { Avatar, Box, Fieldset, Grid, Group, NumberInput, Radio, TextInput } from '@mantine/core'
 import { IconCalendar, IconId, IconMail, IconWeight } from '@tabler/icons-react'
 import { useForm } from '@inertiajs/react'
 import { DatePickerInput } from '@mantine/dates'
@@ -19,7 +19,9 @@ const Show = (props) => {
   
   return (
     <AppLayout title="Atlet" authed={props.auth.user} meta={props.meta}>
-      <Breadcrumbs mb={32} navList={[{ label: 'Atlet', route: 'athletes.index' }, { label: 'Rincian' }]} />
+      <Box mb={32}>
+        <Breadcrumbs navList={[{ label: 'Atlet', route: 'athletes.index' }, { label: 'Rincian' }]} />
+      </Box>
       
       <Grid justify="space-between">
         <Grid.Col span={{ base: 12, md: 4 }}>
@@ -56,8 +58,8 @@ const Show = (props) => {
               label: { marginBottom: 8 }, error: { marginTop: 8 },
             }}>
               <Group gap={32}>
-                <Radio size="md" value="Laki-laki" label="Laki-laki" color="gold.1" disabled />
-                <Radio size="md" value="Perempuan" label="Perempuan" color="gold.1" disabled />
+                <Radio size="md" value="Laki-laki" label="Laki-laki" color="gold.2" disabled />
+                <Radio size="md" value="Perempuan" label="Perempuan" color="gold.2" disabled />
               </Group>
             </Radio.Group>
             
@@ -84,15 +86,15 @@ const Show = (props) => {
           
           <Fieldset
             radius={20}
-            legend="Informasi Pelatih"
+            legend="Informasi Peran"
             styles={{
               root: { margin: 0, padding: 16, border: '1px solid #dcdcdc' },
               legend: { borderRadius: 20, fontSize: 16, padding: 16, fontWeight: 'bold' },
             }}>
             <Radio.Group label="Peran" styles={{ label: { marginBottom: 8 }, error: { marginTop: 8 } }} value={form.data.role}>
               <Group gap={32}>
-                <Radio size="md" value="Ne-Waza" label="Ne-Waza" color="gold.1" disabled />
-                <Radio size="md" value="Fighting" label="Fighting" color="gold.1" disabled />
+                <Radio size="md" value="Ne-Waza" label="Ne-Waza" color="gold.2" disabled />
+                <Radio size="md" value="Fighting" label="Fighting" color="gold.2" disabled />
               </Group>
             </Radio.Group>
           </Fieldset>

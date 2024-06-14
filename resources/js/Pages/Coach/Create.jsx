@@ -19,14 +19,14 @@ const Create = (props) => {
           <Breadcrumbs navList={[{ label: 'Pelatih', route: 'coaches.index' }, { label: 'Tambah' }]} />
           
           <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Tambah Pelatih">
-            <ActionIcon ml="auto" h={48} w={48} color="gold.1" radius={32} display={{ base: 'block', xs: 'none' }}
+            <ActionIcon ml="auto" h={48} w={48} color="gold.2" radius={32} display={{ base: 'block', xs: 'none' }}
                         disabled={form.hasErrors || Object.values(form.data).some(field => !field)}
                         type="submit">
               <IconCornerDownLeft />
             </ActionIcon>
           </Tooltip>
           
-          <Button display={{ base: 'none', xs: 'block' }} w={240} type="submit" fullWidth leftSection={<IconCornerDownLeft />} variant="filled" color="gold.1"
+          <Button display={{ base: 'none', xs: 'block' }} w={240} type="submit" fullWidth leftSection={<IconCornerDownLeft />} variant="filled" color="gold.2"
                   h={48}
                   px={16} styles={{ section: { marginRight: 12 } }} radius={32} loading={form.processing}
                   disabled={form.hasErrors || Object.values(form.data).some(field => !field)}>
@@ -42,7 +42,7 @@ const Create = (props) => {
             
             <FileButton onChange={(file) => form.setData('avatar', file)} accept="image/png,image/jpeg,image/jpg">
               {(props) => (
-                <Button px={16} styles={{ section: { marginRight: 12 } }} variant="subtle" {...props} color="gold.1" h={48} radius={32} fullWidth
+                <Button px={16} styles={{ section: { marginRight: 12 } }} variant="subtle" {...props} color="gold.2" h={48} radius={32} fullWidth
                         leftSection={<IconPhotoUp />}>
                   Unggah Foto
                 </Button>
@@ -127,8 +127,8 @@ const Create = (props) => {
               }}>
                 
                 <Group gap={32}>
-                  <Radio size="md" value="Laki-laki" label="Laki-laki" color="gold.1" />
-                  <Radio size="md" value="Perempuan" label="Perempuan" color="gold.1" />
+                  <Radio size="md" value="Laki-laki" label="Laki-laki" color="gold.2" />
+                  <Radio size="md" value="Perempuan" label="Perempuan" color="gold.2" />
                 </Group>
               </Radio.Group>
               
@@ -142,7 +142,7 @@ const Create = (props) => {
                                  calendarHeader: { height: 48 },
                                  calendarHeaderControl: { height: 48, width: 48, borderRadius: 32 },
                                }} onChange={(value) => {
-                form.setData('birth_date', value)
+                form.setData('birth_date', value.toLocaleString())
                 
                 if (!value) {
                   form.setError({ birth_date: 'Tanggal lahir tidak boleh kosong.' })
@@ -170,9 +170,9 @@ const Create = (props) => {
                 }
               }}>
                 <Group gap={32}>
-                  <Radio size="md" value="Pengelola Tim" label="Pengelola Tim" color="gold.1" />
-                  <Radio size="md" value="Pelatih Fisik" label="Pelatih Fisik" color="gold.1" />
-                  <Radio size="md" value="Pelatih Teknik" label="Pelatih Teknik" color="gold.1" />
+                  <Radio size="md" value="Pengelola Tim" label="Pengelola Tim" color="gold.2" />
+                  <Radio size="md" value="Pelatih Fisik" label="Pelatih Fisik" color="gold.2" />
+                  <Radio size="md" value="Pelatih Teknik" label="Pelatih Teknik" color="gold.2" />
                 </Group>
               </Radio.Group>
             </Fieldset>

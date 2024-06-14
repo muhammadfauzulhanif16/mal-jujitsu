@@ -28,12 +28,12 @@
     
     public function athlete()
     {
-      return $this->belongsTo(User::class);
+      return $this->belongsTo(Athlete::class, 'athlete_id', 'user_id');
     }
     
     public function coach()
     {
-      return $this->belongsTo(User::class);
+      return $this->belongsTo(Coach::class, 'coach_id', 'user_id');
     }
     
     public function evaluations()

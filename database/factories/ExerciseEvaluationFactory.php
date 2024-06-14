@@ -18,10 +18,11 @@
      */
     public function definition(): array
     {
-      $exerciseIds = Exercise::all()->pluck('id')->toArray();
+      $exercise = Exercise::inRandomOrder()->first();
       
       return [
-        'exercise_id' => $this->faker->unique()->randomElement($exerciseIds),
+        'athlete_id' => $exercise->athlete_id,
+        'exercise_id' => $exercise->id,
         'note' => $this->faker->sentence,
       ];
     }

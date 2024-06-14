@@ -17,8 +17,7 @@ const Login = (props) => {
           <Flex h={{ base: 120, xs: '100%' }} justify="center">
             <Image fit="contain" src="https://pbjisurabaya.or.id/images/logo/pbji.png" />
           </Flex>
-          {/*<Image radius={16} h={{ base: 120, xs: '100%' }}*/}
-          {/*       src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/GABRIEL_VELLA_vs_ROMINHO_51.jpg/1024px-GABRIEL_VELLA_vs_ROMINHO_51.jpg" />*/}
+          
           <Center>
             <Box w={320}>
               <Title mb={32}>Masuk Akun</Title>

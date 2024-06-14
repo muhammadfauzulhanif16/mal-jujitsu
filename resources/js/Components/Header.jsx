@@ -1,5 +1,5 @@
 import { ActionIcon, Avatar, Badge, Box, Button, Drawer, Flex, Group, Image, Menu, Stack, Text } from '@mantine/core'
-import { IconLogout, IconMenu, IconUser, IconX } from '@tabler/icons-react'
+import { IconBell, IconLogout, IconMenu, IconUser, IconX } from '@tabler/icons-react'
 import { NavBar } from '@/Components/NavBar.jsx'
 import { useDisclosure } from '@mantine/hooks'
 import { router } from '@inertiajs/core'
@@ -10,7 +10,8 @@ export const Header = (props) => {
   return (
     <>
       <Flex px={16} pos="sticky" top={0} bg="white" justify="space-between" h={80} style={{
-        zIndex: 201, alignItems: 'center', borderBottom: '1px solid #f3f3f3',
+        zIndex: 2,
+        alignItems: 'center', borderBottom: '1px solid #f3f3f3',
       }}>
         <Group w={240}>
           <Image radius={16} h={48} src="https://pbjisurabaya.or.id/images/logo/pbji.png" />
@@ -35,6 +36,7 @@ export const Header = (props) => {
           </Menu.Target>
           
           <Menu.Dropdown>
+            <Menu.Item leftSection={<IconBell />} px={16} py={0} color="netral" onClick={() => router.get(route('profile.edit'))}>Notifikasi</Menu.Item>
             <Menu.Item leftSection={<IconUser />} px={16} py={0} color="netral" onClick={() => router.get(route('profile.edit'))}>Profil Saya</Menu.Item>
             <Menu.Item leftSection={<IconLogout />} color="red" px={16} py={0} onClick={() => router.post(route('logout'))}>Keluar Akun</Menu.Item>
           </Menu.Dropdown>
@@ -56,11 +58,11 @@ export const Header = (props) => {
           </Stack>
         </Group>
       } styles={{
-        root: { zIndex: 202 },
         header: { height: 80, padding: 16, gap: 0 }, content: { display: 'flex', flexDirection: 'column' }, body: {
+          zIndex: 203,
           display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%',
         },
-      }} size={320} position="right" opened={opened} onClose={close} overlayProps={{ backgroundOpacity: 0.5, blur: 4 }} closeButtonProps={{
+      }} size={320} position="right" opened={opened} onClose={close} closeButtonProps={{
         style: { margin: 0, width: 48, height: 48 }, icon: <ActionIcon component="div" aria-label="Menu" variant="subtle" color="gold.2" size={48} radius="xl">
           <IconX />
         </ActionIcon>,
@@ -68,10 +70,14 @@ export const Header = (props) => {
         <NavBar title={props.title} />
         
         <Stack gap={0}>
-          <Button px={16} styles={{ section: { marginRight: 16 } }} justify="start" h={48} variant="subtle" color="netral" radius={32}
+          <Button px={16} styles={{ section: { marginRight: 16 } }} justify="start" h={48} fw={400} variant="subtle" color="netral" radius={32}
+                  leftSection={<IconBell />}
+                  p={16}>Notifikasi</Button>
+          <Button px={16} styles={{ section: { marginRight: 16 } }} justify="start" h={48} fw={400} variant="subtle" color="netral" radius={32}
                   leftSection={<IconUser />}
                   p={16}>Profil Saya</Button>
-          <Button px={16} styles={{ section: { marginRight: 16 } }} justify="start" h={48} variant="subtle" color="red" radius={32} leftSection={<IconLogout />}
+          <Button px={16} styles={{ section: { marginRight: 16 } }} justify="start" h={48} fw={400} variant="subtle" color="red" radius={32}
+                  leftSection={<IconLogout />}
                   p={16}>Keluar Akun</Button>
         </Stack>
       </Drawer>

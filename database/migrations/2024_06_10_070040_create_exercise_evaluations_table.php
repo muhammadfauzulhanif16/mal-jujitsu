@@ -13,6 +13,7 @@
       Schema::create('exercise_evaluations', function (Blueprint $table) {
         $table->uuid('id')->primary();
         $table->foreignUuid('exercise_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+        $table->foreignUuid('athlete_id')->constrained('athletes', 'user_id')->cascadeOnUpdate()->cascadeOnDelete();
         $table->text('note')->nullable();
         $table->timestamps();
       });

@@ -9,8 +9,6 @@ const Dashboard = (props) => {
   const [exerciseTime, setExerciseTime] = useState(`Tahunan (${new Date().getFullYear()})`)
   const [tournamentTime, setTournamentTime] = useState(`Tahunan (${new Date().getFullYear()})`)
   
-  console.log(props)
-  
   function format(dataList) {
     return [
       {
@@ -69,60 +67,42 @@ const Dashboard = (props) => {
     ]
   }
   
-  const colorList = ['red', 'pink', 'grape', 'violet', 'indigo', 'blue', 'cyan', 'teal', 'green', 'lime', 'yellow', 'orange']
-  
-  function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]]
-    }
-    return array
-  }
-  
-  const colors = shuffleArray(colorList)
-  
   const statList = [
     {
       icon: <IconUser />,
       label: 'pelatih',
       total: props.coaches.length,
-      color: colors[0],
       description: 'orang',
     },
     {
       icon: <IconUser />,
       label: 'atlet',
       total: props.athletes.length,
-      color: colors[1],
       description: 'orang',
     },
     {
       icon: <IconClipboardText />,
       label: 'latihan',
       total: props.exercises.length,
-      color: colors[2],
       description: 'kali',
     },
     {
       icon: <IconMedal />,
       label: 'pertandingan',
       total: props.tournaments.length,
-      color: colors[3],
       description: 'kali',
     },
     {
       icon: <IconReportAnalytics />,
       label: 'penilaian',
       total: props.evaluations.length,
-      color: colors[4],
       description: `dari ${props.exercises.length} latihan`,
     },
     {
       icon: <IconReport />,
       label: 'laporan',
-      total: 0,
+      total: props.reports.length,
       description: 'orang',
-      color: colors[5],
     },
   ]
   
@@ -140,7 +120,7 @@ const Dashboard = (props) => {
           lg: 6,
         }} spacing={24}>
           {statList.map((stat, id, index) => (
-            <Blockquote key={id} color={stat.color} radius={20} icon={stat.icon} styles={{ root: { padding: 32 } }}>
+            <Blockquote key={id} color="#746200" radius={20} icon={stat.icon} styles={{ root: { padding: 32 } }}>
               <Title mb={16} fz={12} c="neutral.5">{stat.label.toUpperCase()}</Title>
               <Title fz={20}>{stat.total}</Title>
               <Text fz={14} c="neutral.5">{stat.description}</Text>
@@ -183,7 +163,7 @@ const Dashboard = (props) => {
                   gridAxis="xy"
                   data={format(props.exercises).filter(item => item.time === exerciseTime)[0].dataList}
                   dataKey="name"
-                  series={[{ name: 'Total', color: colorList[Math.floor(Math.random() * colorList.length)] }]}
+                  series={[{ name: 'Total', color: '#746200' }]}
                   curveType="bump"
                   // connectNulls
                   xAxisLabel={exerciseTime === `Tahunan (${new Date().getFullYear()})` ? 'Bulan' : exerciseTime === `Bulanan (${new Date().getMonth()})` ? 'Minggu' : 'Hari'}
@@ -223,7 +203,7 @@ const Dashboard = (props) => {
                   gridAxis="xy"
                   data={format(props.tournaments).filter(item => item.time === tournamentTime)[0].dataList}
                   dataKey="name"
-                  series={[{ name: 'Total', color: colorList[Math.floor(Math.random() * colorList.length)] }]}
+                  series={[{ name: 'Total', color: '#746200' }]}
                   curveType="bump"
                   xAxisLabel={tournamentTime === `Tahunan (${new Date().getFullYear()})` ? 'Bulan' : tournamentTime === `Bulanan (${new Date().getMonth()})` ? 'Minggu' : 'Hari'}
                   yAxisLabel={`Total : ${format(props.tournaments).filter(item => item.time === tournamentTime)[0].dataList.reduce((total, item) => total + item.Total, 0)} Pertandingan`}
@@ -242,6 +222,9 @@ const Dashboard = (props) => {
               <BarChart
                 h="100%"
                 withLegend
+                // xAxisProps={{
+                //   padding: 100,
+                // }}
                 xAxisLabel="Atlet"
                 yAxisLabel="Total Medali"
                 data={props.athletes
@@ -261,14 +244,36 @@ const Dashboard = (props) => {
                 tickLine="xy"
                 gridAxis="xy"
                 dataKey="name"
+                withBarValueLabel
+                barProps={{ radius: 20 }}
                 series={[{
-                  name: 'Emas', color: colorList[Math.floor(Math.random() * colorList.length)],
+                  name: 'Emas', color: '#ffd700',
                 }, {
-                  name: 'Perak', color: colorList[Math.floor(Math.random() * colorList.length)],
+                  name: 'Perak', color: '#c0c0c0',
                 }, {
-                  name: 'Perunggu', color: colorList[Math.floor(Math.random() * colorList.length)],
+                  name: 'Perunggu', color: '#cd7f32',
                 }]}
               />
+              
+              {/*<BarChart width={600} height={300} data={props.athletes*/}
+              {/*  .sort((a, b) => {*/}
+              {/*    if (b.total_medals === a.total_medals) {*/}
+              {/*      return b.goldMedals - a.goldMedals*/}
+              {/*    }*/}
+              {/*    return b.total_medals - a.total_medals*/}
+              {/*  })*/}
+              {/*  .slice(0, 3)*/}
+              {/*  .map((athlete, index) => ({*/}
+              {/*    name: `${['🥇', '🥈', '🥉'][index]} ${athlete.user.full_name}`,*/}
+              {/*    'Emas': athlete.gold_medals,*/}
+              {/*    'Perak': athlete.silver_medals,*/}
+              {/*    'Perunggu': athlete.bronze_medals,*/}
+              {/*  }))}>*/}
+              {/*  <XAxis dataKey="name" tick={CustomTick} />*/}
+              {/*  <YAxis />*/}
+              {/*  <Bar dataKey="name" barSize={30} fill="#8884d8"*/}
+              {/*  />*/}
+              {/*</BarChart>*/}
             </Stack>
           </Grid.Col>
         </Grid>

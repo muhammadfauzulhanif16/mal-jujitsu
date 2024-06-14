@@ -1,6 +1,6 @@
 import { Head } from '@inertiajs/react'
 import React, { useEffect } from 'react'
-import { ActionIcon, Affix, Box, Flex, Tooltip, Transition } from '@mantine/core'
+import { ActionIcon, Affix, Box, Flex, Text, Tooltip, Transition } from '@mantine/core'
 import { Header } from '@/Components/Header.jsx'
 import { useWindowScroll } from '@mantine/hooks'
 import { IconArrowNarrowUp, IconCheck, IconX } from '@tabler/icons-react'
@@ -35,10 +35,14 @@ export const AppLayout = (props) => {
     >
       <Head title={props.title} />
       
-      {props.authed && <Header authed={props.authed} title={props.title} />}
+      {!props.isPrint && props.authed && <Header authed={props.authed} title={props.title} />}
+      
       
       <Box
         mih="100vh"
+        style={{
+          zIndex: 1,
+        }}
         px={props.authed && {
           base: 16,
           sm: 32,
@@ -66,8 +70,8 @@ export const AppLayout = (props) => {
         </Transition>
       </Affix>
       
-      <Flex fz={14} h={80} align="center" justify="center" c="neutral.5" textAlign="center">© {new Date().getFullYear()} Sistem Informasi Manajemen Olahraga
-                                                                                            Ju-Jitsu</Flex>
+      {!props.isPrint && <Flex fz={14} h={80} px={{ base: 16, sm: 32, md: 48, lg: 64 }} align="center" justify="center" c="neutral.5">
+        <Text align="center">© {new Date().getFullYear()}, Sistem Informasi Manajemen Olahraga Ju-Jitsu. Hak cipta dilindungi undang-undang.</Text></Flex>}
     </Flex>
   )
 }

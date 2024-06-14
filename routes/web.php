@@ -5,6 +5,7 @@
   use App\Http\Controllers\EvaluationController;
   use App\Http\Controllers\ExerciseController;
   use App\Http\Controllers\ProfileController;
+  use App\Http\Controllers\ReportController;
   use App\Http\Controllers\TournamentController;
   use App\Models\Athlete;
   use App\Models\Coach;
@@ -36,6 +37,10 @@
         'exercises' => Exercise::orderBy('date', 'desc')->get(),
         'tournaments' => Tournament::all(),
         'evaluations' => ExerciseEvaluation::all(),
+        'reports' => Athlete::with(['tournaments', 'evaluations'])
+          ->has('evaluations')
+          ->has('tournaments')
+          ->get()
       ]);
     })->name('dashboard');
     
@@ -47,17 +52,7 @@
       Route::get('{user}/edit', [AthleteController::class, 'edit'])->name('athletes.edit');
       Route::put('{user}', [AthleteController::class, 'update'])->name('athletes.update');
       Route::delete('{user}', [AthleteController::class, 'destroy'])->name('athletes.destroy');
-
-//      Route::group(['prefix' => 'evaluations'], function () {
-//      Route::get('{user}/evaluations', [AthleteController::class, 'evaluation_index'])->name('athletes.evaluations.index');
-//        Route::get('create', [EvaluationController::class, 'create'])->name('athletes.evaluations.create');
-//        Route::post('', [EvaluationController::class, 'store'])->name('athletes.evaluations.store');
-//        Route::get('{evaluation}', [EvaluationController::class, 'show'])->name('athletes.evaluations.show');
-//        Route::get('{evaluation}/edit', [EvaluationController::class, 'edit'])->name('athletes.evaluations.edit');
-//        Route::put('{evaluation}', [EvaluationController::class, 'update'])->name('athletes.evaluations.update');
-//      Route::delete('{user}/evaluations/{evaluation}', [EvaluationController::class, 'destroy'])->name('athletes.evaluations.destroy');
     });
-//    });
     
     Route::group(['prefix' => 'coaches'], function () {
       Route::get('', [CoachController::class, 'index'])->name('coaches.index');
@@ -97,6 +92,16 @@
       Route::get('{exerciseEvaluation}/edit', [EvaluationController::class, 'edit'])->name('evaluations.edit');
       Route::put('{exerciseEvaluation}', [EvaluationController::class, 'update'])->name('evaluations.update');
       Route::delete('{exerciseEvaluation}', [EvaluationController::class, 'destroy'])->name('evaluations.destroy');
+    });
+    
+    Route::group(['prefix' => 'reports'], function () {
+      Route::get('', [ReportController::class, 'index'])->name('reports.index');
+//      Route::get('create', [EvaluationController::class, 'create'])->name('evaluations.create');
+//      Route::post('', [EvaluationController::class, 'store'])->name('evaluations.store');
+//      Route::get('{exerciseEvaluation}', [EvaluationController::class, 'show'])->name('evaluations.show');
+//      Route::get('{exerciseEvaluation}/edit', [EvaluationController::class, 'edit'])->name('evaluations.edit');
+//      Route::put('{exerciseEvaluation}', [EvaluationController::class, 'update'])->name('evaluations.update');
+//      Route::delete('{exerciseEvaluation}', [EvaluationController::class, 'destroy'])->name('evaluations.destroy');
     });
     
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

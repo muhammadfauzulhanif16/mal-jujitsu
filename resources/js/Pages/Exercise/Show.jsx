@@ -30,7 +30,7 @@ const Show = (props) => {
             xs: 2,
             md: 1,
           }}>
-            <Indicator inline color="gold.1" styles={{ indicator: { padding: 16 } }}
+            <Indicator inline color="gold.2" styles={{ indicator: { padding: 16 } }}
                        label={form.data.athlete_id ? props.athletes.find((athlete) => athlete.user.id === form.data.athlete_id)?.user.role : 'Atlet'}
                        position="bottom-center" size={32} withBorder>
               <Avatar
@@ -41,7 +41,7 @@ const Show = (props) => {
               />
             </Indicator>
             
-            <Indicator inline color="gold.1" styles={{ indicator: { padding: 16 } }}
+            <Indicator inline color="gold.2" styles={{ indicator: { padding: 16 } }}
                        label={form.data.coach_id ? props.coaches.find((coach) => coach.user.id === form.data.coach_id)?.user.role : 'Pelatih'}
                        position="bottom-center" size={32} withBorder>
               <Avatar
@@ -173,7 +173,7 @@ const Show = (props) => {
             }} error={form.errors.date} value={new Date(form.data.date)}
             />
             
-            <TimeInput disabled mb={16} color="gold.1" placeholder="HH:MM" locale="id" variant="filled"
+            <TimeInput disabled mb={16} color="gold.2" placeholder="HH:MM" locale="id" variant="filled"
                        leftSection={<IconClockPlay />} label="Waktu Mulai"
                        styles={{
                          label: { marginBottom: 8 },
@@ -192,7 +192,7 @@ const Show = (props) => {
               }
             }} error={form.errors.start_time} value={form.data.start_time} />
             
-            <TimeInput disabled color="gold.1" placeholder="HH:MM" locale="id" variant="filled"
+            <TimeInput disabled color="gold.2" placeholder="HH:MM" locale="id" variant="filled"
                        leftSection={<IconClockPause />} label="Waktu Selesai"
                        styles={{
                          label: { marginBottom: 8 },

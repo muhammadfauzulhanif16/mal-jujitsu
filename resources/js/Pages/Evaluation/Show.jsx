@@ -40,7 +40,7 @@ const Edit = (props) => {
       <Grid grow justify="space-between">
         <Grid.Col span={{ base: 12, md: 4 }}>
           <Center>
-            <Indicator styles={{ indicator: { padding: 16, border: '4px solid white' } }} inline color="gold.1"
+            <Indicator styles={{ indicator: { padding: 16, border: '4px solid white' } }} inline color="gold.2"
                        label={form.data.exercise_id ? [...props.exercises, props.exercise_evaluation.exercise].find((exercise) => exercise.id === form.data.exercise_id)?.athlete.role : 'Atlet'}
                        position="bottom-center" size={32} withBorder>
               <Avatar
@@ -91,11 +91,11 @@ const Edit = (props) => {
                             label: { marginBottom: 8 }, description: { marginBottom: 8 }, error: { marginTop: 8 },
                           }} value={form.data.evaluations.find((evaluation) => evaluation.sub_sub_criteria_id === sub_sub_criteria.id)?.value}>
                             <Group gap={32}>
-                              <Radio disabled size="md" value="1" label="1" color="gold.1" />
-                              <Radio disabled size="md" value="2" label="2" color="gold.1" />
-                              <Radio disabled size="md" value="3" label="3" color="gold.1" />
-                              <Radio disabled size="md" value="4" label="4" color="gold.1" />
-                              <Radio disabled size="md" value="5" label="5" color="gold.1" />
+                              <Radio disabled size="md" value="1" label="1" color="gold.2" />
+                              <Radio disabled size="md" value="2" label="2" color="gold.2" />
+                              <Radio disabled size="md" value="3" label="3" color="gold.2" />
+                              <Radio disabled size="md" value="4" label="4" color="gold.2" />
+                              <Radio disabled size="md" value="5" label="5" color="gold.2" />
                             </Group>
                           </Radio.Group>
                         ) : sub_sub_criteria.type === 'number' ? (

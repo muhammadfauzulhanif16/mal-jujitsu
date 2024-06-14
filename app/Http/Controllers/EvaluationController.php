@@ -32,7 +32,7 @@
 //          })
 //          ->unique('id')
 //          ->values(),
-        'exercise_evaluations' => ExerciseEvaluation::with('exercise.athlete')->get(),
+        'evaluations' => ExerciseEvaluation::with('exercise.athlete')->get(),
         'meta' => session('meta'),
         'auth' => ['user' => $authedUser]
       ]);
@@ -51,6 +51,7 @@
         
         foreach ($request->evaluations as $evaluation) {
           Evaluation::create([
+            'athlete_id' => $request->exercise_evaluation->exercise->athlete_id,
             'exercise_evaluation_id' => $exercise_evaluation->id,
             'sub_sub_criteria_id' => $evaluation['sub_sub_criteria_id'],
             'value' => $evaluation['value'],

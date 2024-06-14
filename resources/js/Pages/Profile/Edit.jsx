@@ -29,14 +29,14 @@ const Edit = (props) => {
           <Breadcrumbs navList={[{ label: 'Profil', route: 'dashboard' }]} />
           
           <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Tambah Pelatih">
-            <ActionIcon type="submit" ml="auto" h={48} w={48} color="gold.1" radius={32} display={{ base: 'block', xs: 'none' }}
+            <ActionIcon type="submit" ml="auto" h={48} w={48} color="gold.2" radius={32} display={{ base: 'block', xs: 'none' }}
               // disabled={form.hasErrors || !form.data.email || !form.data.full_name || !form.data.birth_date || !form.data.gender || !form.data.weight || !form.data.role}
             >
               <IconCornerDownLeft />
             </ActionIcon>
           </Tooltip>
           
-          <Button display={{ base: 'none', xs: 'block' }} type="submit" w={240} leftSection={<IconCornerDownLeft />} variant="filled" color="gold.1" h={48}
+          <Button display={{ base: 'none', xs: 'block' }} type="submit" w={240} leftSection={<IconCornerDownLeft />} variant="filled" color="gold.2" h={48}
                   px={16} styles={{ section: { marginRight: 12 } }} radius={32} loading={form.processing}
             // disabled={form.hasErrors || !form.data.email || !form.data.full_name || !form.data.birth_date || !form.data.gender || !form.data.weight || !form.data.role}
           >
@@ -49,7 +49,7 @@ const Edit = (props) => {
         <Grid justify="space-between">
           <Grid.Col span={{ base: 12, md: 4 }}>
             <Stack>
-              <Indicator styles={{ indicator: { padding: 16, border: '4px solid white' } }} inline color="gold.1"
+              <Indicator styles={{ indicator: { padding: 16, border: '4px solid white' } }} inline color="gold.2"
                          label={form.data.role}
                          position="top-center" size={32} withBorder>
                 <Avatar mx="auto" src={form.data.avatar instanceof File ? URL.createObjectURL(form.data.avatar) : form.data.avatar}
@@ -58,7 +58,7 @@ const Edit = (props) => {
               
               <FileButton onChange={(file) => form.setData('avatar', file)} accept="image/png,image/jpeg,image/jpg">
                 {(props) => (
-                  <Button px={16} styles={{ section: { marginRight: 12 } }} variant="subtle" {...props} color="gold.1" h={48} radius={32} fullWidth
+                  <Button px={16} styles={{ section: { marginRight: 12 } }} variant="subtle" {...props} color="gold.2" h={48} radius={32} fullWidth
                           leftSection={<IconPhotoUp />}>
                     Unggah Foto
                   </Button>
@@ -134,8 +134,8 @@ const Edit = (props) => {
                 }
               }}>
                 <Group gap={32}>
-                  <Radio size="md" value="Laki-laki" label="Laki-laki" color="gold.1" />
-                  <Radio size="md" value="Perempuan" label="Perempuan" color="gold.1" />
+                  <Radio size="md" value="Laki-laki" label="Laki-laki" color="gold.2" />
+                  <Radio size="md" value="Perempuan" label="Perempuan" color="gold.2" />
                 </Group>
               </Radio.Group>
               
@@ -195,8 +195,8 @@ const Edit = (props) => {
             {/*    }*/}
             {/*  }} error={form.errors.role} value={form.data.role}>*/}
             {/*    <Group gap={32}>*/}
-            {/*      <Radio size="md" value="Ne-Waza" label="Ne-Waza" color="gold.1" />*/}
-            {/*      <Radio size="md" value="Fighting" label="Fighting" color="gold.1" />*/}
+            {/*      <Radio size="md" value="Ne-Waza" label="Ne-Waza" color="gold.2" />*/}
+            {/*      <Radio size="md" value="Fighting" label="Fighting" color="gold.2" />*/}
             {/*    </Group>*/}
             {/*  </Radio.Group>*/}
             {/*</Fieldset>*/}

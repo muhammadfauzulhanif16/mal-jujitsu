@@ -15,7 +15,7 @@
     {
       $roles = ['Pengelola Tim', 'Pelatih Fisik', 'Pelatih Teknik'];
       
-      User::factory(random_int(1, 16))->create()->map(function ($user) use ($roles) {
+      User::factory(random_int(1, 160))->create()->map(function ($user) use ($roles) {
         $user->role = $roles[array_rand($roles)];
         $user->save();
         

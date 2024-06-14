@@ -1,9 +1,10 @@
 import { AppLayout } from '@/Layouts/AppLayout.jsx'
 import { ActionIcon, Avatar, Button, Center, Fieldset, Grid, Group, Indicator, Radio, Select, TextInput, Tooltip } from '@mantine/core'
-import { IconBuilding, IconClipboardText, IconCornerDownLeft, IconUser } from '@tabler/icons-react'
+import { IconBuilding, IconCalendar, IconClipboardText, IconCornerDownLeft, IconUser } from '@tabler/icons-react'
 import { Breadcrumbs } from '@/Components/Breadcrumbs.jsx'
 import { useForm } from '@inertiajs/react'
 import 'dayjs/locale/id'
+import { DatePickerInput } from '@mantine/dates'
 
 const Edit = (props) => {
   const form = useForm({ name: props.tournament.name, place: props.tournament.place, athlete_id: props.tournament.athlete.id, medal: props.tournament.medal })
@@ -18,13 +19,13 @@ const Edit = (props) => {
           <Breadcrumbs navList={[{ label: 'Pertandingan', route: 'tournaments.index' }, { label: 'Ubah' }]} />
           
           <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Ubah Pertandingan">
-            <ActionIcon type="submit" ml="auto" h={48} w={48} color="gold.1" radius={32} display={{ base: 'block', xs: 'none' }}
+            <ActionIcon type="submit" ml="auto" h={48} w={48} color="gold.2" radius={32} display={{ base: 'block', xs: 'none' }}
                         disabled={form.hasErrors || !form.data.name || !form.data.place || !form.data.athlete_id || !form.data.medal}>
               <IconCornerDownLeft />
             </ActionIcon>
           </Tooltip>
           
-          <Button w={240} display={{ base: 'none', xs: 'block' }} type="submit" fullWidth leftSection={<IconCornerDownLeft />} variant="filled" color="gold.1"
+          <Button w={240} display={{ base: 'none', xs: 'block' }} type="submit" fullWidth leftSection={<IconCornerDownLeft />} variant="filled" color="gold.2"
                   h={48}
                   px={16} styles={{ section: { marginRight: 12 } }} radius={32} loading={form.processing}
                   disabled={form.hasErrors || !form.data.name || !form.data.place || !form.data.athlete_id || !form.data.medal}>
@@ -35,7 +36,7 @@ const Edit = (props) => {
         <Grid grow justify="space-between">
           <Grid.Col span={{ base: 12, md: 4 }}>
             <Center>
-              <Indicator styles={{ indicator: { padding: 16, border: '4px solid white' } }} inline color="gold.1"
+              <Indicator styles={{ indicator: { padding: 16, border: '4px solid white' } }} inline color="gold.2"
                          label={form.data.athlete_id ? props.athletes.find((athlete) => athlete.user.id === form.data.athlete_id)?.user.role : 'Atlet'}
                          position="bottom-center" size={32} withBorder>
                 <Avatar
@@ -125,11 +126,32 @@ const Edit = (props) => {
                 }
               }}>
                 <Group gap={32}>
-                  <Radio size="md" value="Emas" label="🥇 Emas" color="gold.1" />
-                  <Radio size="md" value="Perak" label="🥈 Perak" color="gold.1" />
-                  <Radio size="md" value="Perunggu" label="🥉 Perunggu" color="gold.1" />
+                  <Radio size="md" value="Emas" label="🥇 Emas" color="gold.2" />
+                  <Radio size="md" value="Perak" label="🥈 Perak" color="gold.2" />
+                  <Radio size="md" value="Perunggu" label="🥉 Perunggu" color="gold.2" />
                 </Group>
               </Radio.Group>
+              
+              <DatePickerInput mb={16} locale="id" monthsListFormat="MMMM" withAsterisk clearable allowDeselect firstDayOfWeek={0} variant="filled"
+                               valueFormat="dddd, D MMMM YYYY" leftSection={<IconCalendar />} label="Tanggal Pertandingan"
+                               placeholder="Masukkan tanggal..."
+                               styles={{
+                                 label: { marginBottom: 8 },
+                                 input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 16 },
+                                 section: { marginLeft: 0, width: 48, height: 48 },
+                                 error: { marginTop: 8 },
+                                 calendarHeader: { height: 48 },
+                                 calendarHeaderControl: { height: 48, width: 48, borderRadius: 32 },
+                               }} onChange={(value) => {
+                form.setData('date', value.toLocaleString())
+                
+                if (!value) {
+                  form.setError({ date: 'Tanggal tidak boleh kosong.' })
+                } else {
+                  form.clearErrors('date')
+                }
+              }} error={form.errors.date} value={new Date(form.data.date)}
+              />
             </Fieldset>
           </Grid.Col>
         </Grid>
