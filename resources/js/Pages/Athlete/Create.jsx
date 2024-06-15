@@ -18,7 +18,7 @@ const Create = (props) => {
         <Group justify="space-between" mb={32}>
           <Breadcrumbs navList={[{ label: 'Atlet', route: 'athletes.index' }, { label: 'Tambah' }]} />
           
-          <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Tambah Pelatih">
+          <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Tambah Atlet">
             <ActionIcon type="submit" ml="auto" h={48} w={48} color="gold.2" radius={32} display={{ base: 'block', xs: 'none' }}
                         disabled={form.hasErrors || Object.values(form.data).some(field => !field)}
             >
@@ -167,7 +167,7 @@ const Create = (props) => {
               }} error={form.errors.weight} />
             </Fieldset>
             
-            <Fieldset radius={20} legend="Informasi Peran"
+            <Fieldset radius={20} legend="Informasi Atlet"
                       styles={{
                         root: { margin: 0, padding: 16, border: '1px solid #dcdcdc' },
                         legend: { borderRadius: 20, fontSize: 16, padding: 16, fontWeight: 'bold' },

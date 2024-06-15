@@ -22,10 +22,11 @@
       
       return Inertia('Exercise/Index', [
         'exercises' => Exercise::with(['athlete.user', 'coach.user'])->get()->map(function ($exercise) {
-          $exercise->athlete->user->avatar = asset('storage/' . $exercise->athlete->user->avatar);
-          $exercise->coach->user->avatar = asset('storage/' . $exercise->coach->user->avatar);
+          $exercise->athlete->user->avatar = str_contains($exercise->athlete->user->avatar, 'https') ? $exercise->athlete->user->avatar : ($exercise->athlete->user->avatar ? asset('storage/' . $exercise->athlete->user->avatar) : null);
+          
+          $exercise->coach->user->avatar = str_contains($exercise->coach->user->avatar, 'https') ? $exercise->coach->user->avatar : ($exercise->coach->user->avatar ? asset('storage/' . $exercise->coach->user->avatar) : null);
           return $exercise;
-        })->values(),
+        })->sortBy('name')->values(),
         'meta' => session('meta'),
         'auth' => ['user' => $authedUser]
       ]);
@@ -78,11 +79,11 @@
         'athletes' => Athlete::with('user')->get()->sortBy(function ($athlete) {
           $athlete->user->avatar = str_contains($athlete->user->avatar, 'https') ? $athlete->user->avatar : ($athlete->user->avatar ? asset('storage/' . $athlete->user->avatar) : null);
           return $athlete;
-        })->values(),
+        })->sortBy('user.full_name')->values(),
         'coaches' => Coach::with('user')->get()->sortBy(function ($coach) {
           $coach->user->avatar = str_contains($coach->user->avatar, 'https') ? $coach->user->avatar : ($coach->user->avatar ? asset('storage/' . $coach->user->avatar) : null);
           return $coach;
-        })->values(),
+        })->sortBy('user.full_name')->values(),
       ]);
     }
     
@@ -98,12 +99,14 @@
         'exercise' => $exercise->load(['athlete', 'coach']),
         'meta' => session('meta'),
         'auth' => ['user' => $authedUser],
-        'athletes' => Athlete::with('user')->get()->sortBy(function ($athlete) {
-          return $athlete->user->full_name;
-        })->values(),
-        'coaches' => Coach::with('user')->get()->sortBy(function ($coach) {
-          return $coach->user->full_name;
-        })->values(),
+        'athletes' => Athlete::with('user')->get()->map(function ($athlete) {
+          $athlete->user->avatar = str_contains($athlete->user->avatar, 'https') ? $athlete->user->avatar : ($athlete->user->avatar ? asset('storage/' . $athlete->user->avatar) : null);
+          return $athlete;
+        })->sortBy('user.full_name')->values(),
+        'coaches' => Coach::with('user')->get()->map(function ($coach) {
+          $coach->user->avatar = str_contains($coach->user->avatar, 'https') ? $coach->user->avatar : ($coach->user->avatar ? asset('storage/' . $coach->user->avatar) : null);
+          return $coach;
+        })->sortBy('user.full_name')->values(),
       ]);
     }
     
@@ -116,15 +119,26 @@
       $authedUser->avatar = str_contains($authedUser->avatar, 'https') ? $authedUser->avatar : ($authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null);
       
       return Inertia('Exercise/Edit', [
+//        'exercise' => $exercise->load(['athlete.user' => function ($query) {
+//          $query->get()->each(function ($user) {
+//            $user->avatar = str_contains($user->avatar, 'https') ? $user->avatar : ($user->avatar ? asset('storage/' . $user->avatar) : null);
+//          });
+//        }, 'coach.user' => function ($query) {
+//          $query->get()->each(function ($user) {
+//            $user->avatar = str_contains($user->avatar, 'https') ? $user->avatar : ($user->avatar ? asset('storage/' . $user->avatar) : null);
+//          });
+//        }]),
         'exercise' => $exercise->load(['athlete', 'coach']),
         'meta' => session('meta'),
         'auth' => ['user' => $authedUser],
-        'athletes' => Athlete::with('user')->get()->sortBy(function ($athlete) {
-          return $athlete->user->full_name;
-        })->values(),
-        'coaches' => Coach::with('user')->get()->sortBy(function ($coach) {
-          return $coach->user->full_name;
-        })->values(),
+        'athletes' => Athlete::with('user')->get()->map(function ($athlete) {
+          $athlete->user->avatar = str_contains($athlete->user->avatar, 'https') ? $athlete->user->avatar : ($athlete->user->avatar ? asset('storage/' . $athlete->user->avatar) : null);
+          return $athlete;
+        })->sortBy('user.full_name')->values(),
+        'coaches' => Coach::with('user')->get()->map(function ($coach) {
+          $coach->user->avatar = str_contains($coach->user->avatar, 'https') ? $coach->user->avatar : ($coach->user->avatar ? asset('storage/' . $coach->user->avatar) : null);
+          return $coach;
+        })->sortBy('user.full_name')->values(),
       ]);
     }
     

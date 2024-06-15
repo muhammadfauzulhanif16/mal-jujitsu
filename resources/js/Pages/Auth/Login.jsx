@@ -70,8 +70,9 @@ const Login = (props) => {
               />
               
               <Button px={16} styles={{ section: { marginRight: 16 } }}
-                      leftSection={(!form.data.email || !form.data.password || form.hasErrors) ? <IconLock /> : <IconLockOpen />}
-                      disabled={!form.data.email || !form.data.password || form.hasErrors} loading={form.processing} variant="filled" type="submit"
+                      leftSection={form.hasErrors || Object.values(form.data).some(field => !field) ? <IconLock /> : <IconLockOpen />}
+                      disabled={form.hasErrors || Object.entries(form.data).some(([key, value]) => key !== 'remember' && !value)} loading={form.processing}
+                      variant="filled" type="submit"
                       color="gold.2" h={48} fullWidth radius={32}>
                 Masuk
               </Button>

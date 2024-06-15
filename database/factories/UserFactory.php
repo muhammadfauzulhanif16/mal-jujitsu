@@ -28,7 +28,6 @@
       $gender = $gender === 'male' ? 'Laki-laki' : 'Perempuan';
       
       return [
-        'id' => $this->faker->uuid,
         'full_name' => $full_name,
         'gender' => $gender,
         'avatar' => $this->faker->imageUrl(640, 480, $full_name, false,),

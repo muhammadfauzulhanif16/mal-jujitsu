@@ -69,13 +69,13 @@ const Index = (props) => {
       </MantineTable.Td>
       <MantineTable.Td
         px={16} py={0}
-        style={{ whiteSpace: 'nowrap' }}>{exercise.date}</MantineTable.Td>
+        style={{ whiteSpace: 'nowrap' }}>{new Date(exercise.date).toLocaleDateString('id').split('/').join('-')}</MantineTable.Td>
       <MantineTable.Td
         px={16} py={0}
-        style={{ whiteSpace: 'nowrap' }}>{exercise.start_time}</MantineTable.Td>
+        style={{ whiteSpace: 'nowrap' }}>{exercise.start_time.split(':').join('.')}</MantineTable.Td>
       <MantineTable.Td
         px={16} py={0}
-        style={{ whiteSpace: 'nowrap' }}>{exercise.end_time}</MantineTable.Td>
+        style={{ whiteSpace: 'nowrap' }}>{exercise.end_time.split(':').join('.')}</MantineTable.Td>
       <MantineTable.Td px={16} py={0} style={{ whiteSpace: 'nowrap' }}>
         <Flex gap={8} style={{ whiteSpace: 'nowrap' }}>
           {actionList.map((action, id) => (

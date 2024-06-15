@@ -20,15 +20,15 @@ const Create = (props) => {
           
           <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Tambah Pertandingan">
             <ActionIcon type="submit" ml="auto" h={48} w={48} color="gold.2" radius={32} display={{ base: 'block', xs: 'none' }}
-                        disabled={form.hasErrors || !form.data.name || !form.data.place || !form.data.athlete_id || !form.data.medal}>
+                        disabled={form.hasErrors || Object.values(form.data).some(field => !field)}>
               <IconCornerDownLeft />
             </ActionIcon>
           </Tooltip>
           
           <Button display={{ base: 'none', xs: 'block' }} type="submit" w={240} leftSection={<IconCornerDownLeft />} variant="filled" color="gold.2" h={48}
                   px={16} styles={{ section: { marginRight: 12 } }} radius={32} loading={form.processing}
-                  disabled={form.hasErrors || !form.data.name || !form.data.place || !form.data.athlete_id || !form.data.medal}>
-            Tambah Latihan
+                  disabled={form.hasErrors || Object.values(form.data).some(field => !field)}>
+            Tambah Pertandingan
           </Button>
         </Group>
         
@@ -57,7 +57,7 @@ const Create = (props) => {
                 input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 16 },
                 section: { marginLeft: 0, width: 48, height: 48 },
                 error: { marginTop: 8 },
-              }} mb={16} label="Nama Pertandingan" placeholder="Masukkan nama pertandingan..." onChange={(e) => {
+              }} mb={16} label="Nama" placeholder="Masukkan nama..." onChange={(e) => {
                 form.setData('name', e.target.value)
                 
                 if (!e.target.value) {
@@ -72,7 +72,7 @@ const Create = (props) => {
                 input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 16 },
                 section: { marginLeft: 0, width: 48, height: 48 },
                 error: { marginTop: 8 },
-              }} mb={16} label="Tempat Pertandingan" placeholder="Masukkan tempat pertandingan..." onChange={(e) => {
+              }} mb={16} label="Tempat" placeholder="Masukkan tempat..." onChange={(e) => {
                 form.setData('place', e.target.value)
                 
                 if (!e.target.value) {
@@ -131,7 +131,7 @@ const Create = (props) => {
               </Radio.Group>
               
               <DatePickerInput mb={16} locale="id" monthsListFormat="MMMM" withAsterisk clearable allowDeselect firstDayOfWeek={0} variant="filled"
-                               valueFormat="dddd, D MMMM YYYY" leftSection={<IconCalendar />} label="Tanggal Pertandingan"
+                               valueFormat="dddd, D MMMM YYYY" leftSection={<IconCalendar />} label="Tanggal"
                                placeholder="Masukkan tanggal..."
                                styles={{
                                  label: { marginBottom: 8 },

@@ -32,7 +32,7 @@
 //          })
 //          ->unique('id')
 //          ->values(),
-        'evaluations' => ExerciseEvaluation::with('exercise.athlete')->get(),
+        'evaluations' => ExerciseEvaluation::with('exercise.athlete')->get()->sortBy('exercise.name')->values(),
         'meta' => session('meta'),
         'auth' => ['user' => $authedUser]
       ]);
@@ -45,13 +45,13 @@
     {
       try {
         $exercise_evaluation = ExerciseEvaluation::create([
+          'athlete_id' => Exercise::where('id', $request->exercise_id)->first()->athlete_id,
           'exercise_id' => $request->exercise_id,
           'note' => $request->note,
         ]);
         
         foreach ($request->evaluations as $evaluation) {
           Evaluation::create([
-            'athlete_id' => $request->exercise_evaluation->exercise->athlete_id,
             'exercise_evaluation_id' => $exercise_evaluation->id,
             'sub_sub_criteria_id' => $evaluation['sub_sub_criteria_id'],
             'value' => $evaluation['value'],
@@ -83,10 +83,10 @@
       return Inertia('Evaluation/Create', [
         'meta' => session('meta'),
         'auth' => ['user' => $authedUser],
-        'exercises' => Exercise::with('athlete')->doesntHave('exerciseEvaluation')->get()->map(function ($exercise) {
-          $exercise->athlete->avatar = str_contains($exercise->athlete->avatar, 'https') ? $exercise->athlete->avatar : ($exercise->athlete->avatar ? asset('storage/' . $exercise->athlete->avatar) : null);
+        'exercises' => Exercise::with('athlete.user')->doesntHave('exerciseEvaluation')->get()->map(function ($exercise) {
+          $exercise->athlete->user->avatar = str_contains($exercise->athlete->user->avatar, 'https') ? $exercise->athlete->user->avatar : ($exercise->athlete->user->avatar ? asset('storage/' . $exercise->athlete->user->avatar) : null);
           return $exercise;
-        }),
+        })->sortBy('name')->values(),
         'criterias' => Criteria::with(['subCriterias.subSubCriterias'])->get()
       ]);
     }
@@ -99,12 +99,20 @@
       $authedUser = Auth::user();
       $authedUser->avatar = str_contains($authedUser->avatar, 'https') ? $authedUser->avatar : ($authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null);
       
+      $exerciseEvaluation = $exerciseEvaluation->load(['exercise.athlete.user', 'evaluations.subSubCriteria']);
+      
+      $exerciseEvaluation->exercise->athlete->user->avatar = str_contains($exerciseEvaluation->exercise->athlete->user->avatar, 'https')
+        ? $exerciseEvaluation->exercise->athlete->user->avatar
+        : ($exerciseEvaluation->exercise->athlete->user->avatar
+          ? asset('storage/' . $exerciseEvaluation->exercise->athlete->user->avatar)
+          : null);
+      
       return Inertia('Evaluation/Show', [
-        'exercise_evaluation' => $exerciseEvaluation->load(['exercise.athlete', 'evaluations.subSubCriteria']),
-        'exercises' => Exercise::with('athlete')->doesntHave('exerciseEvaluation')->get()->map(function ($exercise) {
-          $exercise->athlete->avatar = str_contains($exercise->athlete->avatar, 'https') ? $exercise->athlete->avatar : ($exercise->athlete->avatar ? asset('storage/' . $exercise->athlete->avatar) : null);
+        'exercise_evaluation' => $exerciseEvaluation,
+        'exercises' => Exercise::with('athlete.user')->doesntHave('exerciseEvaluation')->get()->map(function ($exercise) {
+          $exercise->athlete->user->avatar = str_contains($exercise->athlete->user->avatar, 'https') ? $exercise->athlete->user->avatar : ($exercise->athlete->user->avatar ? asset('storage/' . $exercise->athlete->user->avatar) : null);
           return $exercise;
-        }),
+        })->sortBy('name')->values(),
         'criterias' => Criteria::with(['subCriterias.subSubCriterias'])->get(),
         'evaluations' => $exerciseEvaluation->evaluations,
         'meta' => session('meta'),
@@ -120,12 +128,20 @@
       $authedUser = Auth::user();
       $authedUser->avatar = str_contains($authedUser->avatar, 'https') ? $authedUser->avatar : ($authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null);
       
+      $exerciseEvaluation = $exerciseEvaluation->load(['exercise.athlete.user', 'evaluations.subSubCriteria']);
+      
+      $exerciseEvaluation->exercise->athlete->user->avatar = str_contains($exerciseEvaluation->exercise->athlete->user->avatar, 'https')
+        ? $exerciseEvaluation->exercise->athlete->user->avatar
+        : ($exerciseEvaluation->exercise->athlete->user->avatar
+          ? asset('storage/' . $exerciseEvaluation->exercise->athlete->user->avatar)
+          : null);
+      
       return Inertia('Evaluation/Edit', [
-        'exercise_evaluation' => $exerciseEvaluation->load(['exercise.athlete', 'evaluations.subSubCriteria']),
-        'exercises' => Exercise::with('athlete')->doesntHave('exerciseEvaluation')->get()->map(function ($exercise) {
-          $exercise->athlete->avatar = str_contains($exercise->athlete->avatar, 'https') ? $exercise->athlete->avatar : ($exercise->athlete->avatar ? asset('storage/' . $exercise->athlete->avatar) : null);
+        'exercise_evaluation' => $exerciseEvaluation,
+        'exercises' => Exercise::with('athlete.user')->doesntHave('exerciseEvaluation')->get()->map(function ($exercise) {
+          $exercise->athlete->user->avatar = str_contains($exercise->athlete->user->avatar, 'https') ? $exercise->athlete->user->avatar : ($exercise->athlete->user->avatar ? asset('storage/' . $exercise->athlete->user->avatar) : null);
           return $exercise;
-        }),
+        })->sortBy('name')->values(),
         'criterias' => Criteria::with(['subCriterias.subSubCriterias'])->get(),
         'evaluations' => $exerciseEvaluation->evaluations,
         'meta' => session('meta'),
@@ -136,16 +152,18 @@
     /**
      * Update the specified resource in storage.
      */
-    public function update(ExerciseEvaluation $exerciseEvaluation)
+    public function update(Request $request, ExerciseEvaluation $exerciseEvaluation)
     {
       try {
         $exerciseEvaluation->update([
-          'note' => request('note'),
+          'athlete_id' => Exercise::where('id', $request->exercise_id)->first()->athlete_id,
+          'exercise_id' => $request->exercise_id,
+          'note' => $request->note,
         ]);
         
         $exerciseEvaluation->evaluations()->delete();
         
-        foreach (request('evaluations') as $evaluation) {
+        foreach ($request->evaluations as $evaluation) {
           Evaluation::create([
             'exercise_evaluation_id' => $exerciseEvaluation->id,
             'sub_sub_criteria_id' => $evaluation['sub_sub_criteria_id'],

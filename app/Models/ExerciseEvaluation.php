@@ -23,6 +23,11 @@
     
     public function evaluations()
     {
-      return $this->hasMany(Evaluation::class);
+      return $this->hasMany(Evaluation::class, 'exercise_evaluation_id', 'id');
+    }
+    
+    public function athlete()
+    {
+      return $this->belongsTo(Athlete::class, 'athlete_id', 'user_id');
     }
   }

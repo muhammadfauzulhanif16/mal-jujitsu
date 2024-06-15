@@ -49,13 +49,13 @@ const Index = (props) => {
         style={{ whiteSpace: 'nowrap' }}>{evaluation.exercise.place}</MantineTable.Td>
       <MantineTable.Td
         px={16} py={0}
-        style={{ whiteSpace: 'nowrap' }}>{evaluation.exercise.date}</MantineTable.Td>
+        style={{ whiteSpace: 'nowrap' }}>{new Date(evaluation.exercise.date).toLocaleDateString('id').split('/').join('-')}</MantineTable.Td>
       <MantineTable.Td
         px={16} py={0}
-        style={{ whiteSpace: 'nowrap' }}>{evaluation.exercise.start_time}</MantineTable.Td>
+        style={{ whiteSpace: 'nowrap' }}>{evaluation.exercise.start_time.split(':').join('.')}</MantineTable.Td>
       <MantineTable.Td
         px={16} py={0}
-        style={{ whiteSpace: 'nowrap' }}>{evaluation.exercise.end_time}</MantineTable.Td>
+        style={{ whiteSpace: 'nowrap' }}>{evaluation.exercise.end_time.split(':').join('.')}</MantineTable.Td>
       <MantineTable.Td
         px={16} py={0}
         style={{ whiteSpace: 'nowrap' }}>

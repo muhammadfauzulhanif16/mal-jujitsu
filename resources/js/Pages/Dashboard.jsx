@@ -15,34 +15,34 @@ const Dashboard = (props) => {
         time: `Tahunan (${new Date().getFullYear()})`,
         dataList: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'].map((month, index) => {
           const currentYear = new Date().getFullYear()
-          const filteredExercises = dataList.filter(data => {
+          const filtered = dataList.filter(data => {
             const date = new Date(data.date)
             return date.getMonth() === index && date.getFullYear() === currentYear
           })
           return {
             name: month,
-            'Total': filteredExercises.length,
+            'Total': filtered.length,
           }
         }),
       },
       {
-        time: `Bulanan (${new Date().getMonth()})`,
+        time: `Bulanan (${new Date().getMonth() + 1})`,
         dataList: [...Array(5)].map((_, index) => {
           const currentDate = new Date()
           const currentMonth = currentDate.getMonth()
           const currentYear = currentDate.getFullYear()
-          const filteredExercises = dataList.filter(data => {
+          const filtered = dataList.filter(data => {
             const date = new Date(data.date)
             const { weekOfMonth, monthOfYear, year } = {
-              weekOfMonth: Math.floor(date.getDate() / 7),
+              weekOfMonth: Math.ceil(date.getDate() / 7),
               monthOfYear: date.getMonth(),
               year: date.getFullYear(),
             }
-            return weekOfMonth === index && monthOfYear === currentMonth && year === currentYear
+            return weekOfMonth === (index + 1) && monthOfYear === currentMonth && year === currentYear
           })
           return {
             name: index + 1,
-            'Total': filteredExercises.length,
+            'Total': filtered.length,
           }
         }),
       },
@@ -53,10 +53,10 @@ const Dashboard = (props) => {
           const filteredExercises = dataList.filter(data => {
             const date = new Date(data.date)
             const dayOfWeek = date.getDay()
-            const weekOfMonth = Math.floor(date.getDate() / 7)
+            const weekOfMonth = Math.ceil(date.getDate() / 7)
             const monthOfYear = date.getMonth()
             const year = date.getFullYear()
-            return dayOfWeek === index && weekOfMonth === Math.floor(currentDate.getDate() / 7) && monthOfYear === currentDate.getMonth() && year === currentDate.getFullYear()
+            return dayOfWeek === index && weekOfMonth === Math.ceil(currentDate.getDate() / 7) && monthOfYear === currentDate.getMonth() && year === currentDate.getFullYear()
           })
           return {
             name: ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'][index],
@@ -153,7 +153,7 @@ const Dashboard = (props) => {
                     onChange={(value) => setExerciseTime(value)}
                     value={exerciseTime}
                     allowDeselect={false}
-                    data={[`Tahunan (${new Date().getFullYear()})`, `Bulanan (${new Date().getMonth()})`, `Mingguan (${Math.ceil(new Date().getDate() / 7)})`]}
+                    data={[`Tahunan (${new Date().getFullYear()})`, `Bulanan (${new Date().getMonth() + 1})`, `Mingguan (${Math.ceil(new Date().getDate() / 7)})`]}
                   />
                 </Group>
                 
@@ -166,7 +166,7 @@ const Dashboard = (props) => {
                   series={[{ name: 'Total', color: '#746200' }]}
                   curveType="bump"
                   // connectNulls
-                  xAxisLabel={exerciseTime === `Tahunan (${new Date().getFullYear()})` ? 'Bulan' : exerciseTime === `Bulanan (${new Date().getMonth()})` ? 'Minggu' : 'Hari'}
+                  xAxisLabel={exerciseTime === `Tahunan (${new Date().getFullYear()})` ? 'Bulan' : exerciseTime === `Bulanan (${new Date().getMonth() + 1})` ? 'Minggu' : 'Hari'}
                   yAxisLabel={`Total : ${format(props.exercises).filter(item => item.time === exerciseTime)[0].dataList.reduce((total, item) => total + item.Total, 0)} Latihan`}
                 />
               </Stack>
@@ -193,7 +193,7 @@ const Dashboard = (props) => {
                     checkIconPosition="right"
                     value={tournamentTime}
                     onChange={(value) => setTournamentTime(value)}
-                    data={[`Tahunan (${new Date().getFullYear()})`, `Bulanan (${new Date().getMonth()})`, `Mingguan (${Math.ceil(new Date().getDate() / 7)})`]}
+                    data={[`Tahunan (${new Date().getFullYear()})`, `Bulanan (${new Date().getMonth() + 1})`, `Mingguan (${Math.ceil(new Date().getDate() / 7)})`]}
                   />
                 </Group>
                 
@@ -205,7 +205,7 @@ const Dashboard = (props) => {
                   dataKey="name"
                   series={[{ name: 'Total', color: '#746200' }]}
                   curveType="bump"
-                  xAxisLabel={tournamentTime === `Tahunan (${new Date().getFullYear()})` ? 'Bulan' : tournamentTime === `Bulanan (${new Date().getMonth()})` ? 'Minggu' : 'Hari'}
+                  xAxisLabel={tournamentTime === `Tahunan (${new Date().getFullYear()})` ? 'Bulan' : tournamentTime === `Bulanan (${new Date().getMonth() + 1})` ? 'Minggu' : 'Hari'}
                   yAxisLabel={`Total : ${format(props.tournaments).filter(item => item.time === tournamentTime)[0].dataList.reduce((total, item) => total + item.Total, 0)} Pertandingan`}
                 />
               </Stack>
@@ -254,26 +254,6 @@ const Dashboard = (props) => {
                   name: 'Perunggu', color: '#cd7f32',
                 }]}
               />
-              
-              {/*<BarChart width={600} height={300} data={props.athletes*/}
-              {/*  .sort((a, b) => {*/}
-              {/*    if (b.total_medals === a.total_medals) {*/}
-              {/*      return b.goldMedals - a.goldMedals*/}
-              {/*    }*/}
-              {/*    return b.total_medals - a.total_medals*/}
-              {/*  })*/}
-              {/*  .slice(0, 3)*/}
-              {/*  .map((athlete, index) => ({*/}
-              {/*    name: `${['🥇', '🥈', '🥉'][index]} ${athlete.user.full_name}`,*/}
-              {/*    'Emas': athlete.gold_medals,*/}
-              {/*    'Perak': athlete.silver_medals,*/}
-              {/*    'Perunggu': athlete.bronze_medals,*/}
-              {/*  }))}>*/}
-              {/*  <XAxis dataKey="name" tick={CustomTick} />*/}
-              {/*  <YAxis />*/}
-              {/*  <Bar dataKey="name" barSize={30} fill="#8884d8"*/}
-              {/*  />*/}
-              {/*</BarChart>*/}
             </Stack>
           </Grid.Col>
         </Grid>

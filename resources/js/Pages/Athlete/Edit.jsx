@@ -28,7 +28,7 @@ const Edit = (props) => {
         <Group mb={32} justify="space-between">
           <Breadcrumbs navList={[{ label: 'Atlet', route: 'athletes.index' }, { label: 'Ubah' }]} />
           
-          <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Tambah Pelatih">
+          <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label=" Ubah Atlet">
             <ActionIcon type="submit" ml="auto" h={48} w={48} color="gold.2" radius={32} display={{ base: 'block', xs: 'none' }}
                         disabled={form.hasErrors || Object.entries(form.data).some(([key, value]) => key !== 'password' && !value)}>
               <IconCornerDownLeft />
@@ -176,7 +176,7 @@ const Edit = (props) => {
               }} error={form.errors.weight} />
             </Fieldset>
             
-            <Fieldset radius={20} legend="Informasi Peran"
+            <Fieldset radius={20} legend="Informasi Atlet"
                       styles={{
                         root: { margin: 0, padding: 16, border: '1px solid #dcdcdc' },
                         legend: { borderRadius: 20, fontSize: 16, padding: 16, fontWeight: 'bold' },

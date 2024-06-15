@@ -10,13 +10,13 @@ const Edit = (props) => {
   const form = useForm({
     name: props.exercise.name,
     place: props.exercise.place,
-    athlete_id: props.exercise.athlete.id,
-    coach_id: props.exercise.coach.id,
+    athlete_id: props.exercise.athlete.user_id,
+    coach_id: props.exercise.coach.user_id,
     date: props.exercise.date,
     start_time: props.exercise.start_time,
     end_time: props.exercise.end_time,
   })
-  console.log(props)
+  
   return (
     <form onSubmit={(e) => {
       e.preventDefault()
@@ -26,7 +26,7 @@ const Edit = (props) => {
         <Group w="100%" mb={32} justify="space-between">
           <Breadcrumbs navList={[{ label: 'Latihan', route: 'exercises.index' }, { label: 'Ubah' }]} />
           
-          <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Tambah Latihan">
+          <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Ubah Latihan">
             <ActionIcon type="submit" ml="auto" h={48} w={48} color="gold.2" radius={32} display={{ base: 'block', xs: 'none' }}
                         disabled={form.hasErrors || Object.values(form.data).some(field => !field)}>
               <IconCornerDownLeft />

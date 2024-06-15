@@ -20,7 +20,7 @@ const Edit = (props) => {
           
           <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Ubah Pertandingan">
             <ActionIcon type="submit" ml="auto" h={48} w={48} color="gold.2" radius={32} display={{ base: 'block', xs: 'none' }}
-                        disabled={form.hasErrors || !form.data.name || !form.data.place || !form.data.athlete_id || !form.data.medal}>
+                        disabled={form.hasErrors || Object.values(form.data).some(field => !field)}>
               <IconCornerDownLeft />
             </ActionIcon>
           </Tooltip>
@@ -28,8 +28,8 @@ const Edit = (props) => {
           <Button w={240} display={{ base: 'none', xs: 'block' }} type="submit" fullWidth leftSection={<IconCornerDownLeft />} variant="filled" color="gold.2"
                   h={48}
                   px={16} styles={{ section: { marginRight: 12 } }} radius={32} loading={form.processing}
-                  disabled={form.hasErrors || !form.data.name || !form.data.place || !form.data.athlete_id || !form.data.medal}>
-            Ubah Latihan
+                  disabled={form.hasErrors || Object.values(form.data).some(field => !field)}>
+            Ubah Pertandingan
           </Button>
         </Group>
         

@@ -86,7 +86,7 @@ const Show = (props) => {
           
           <Fieldset
             radius={20}
-            legend="Informasi Peran"
+            legend="Informasi Atlet"
             styles={{
               root: { margin: 0, padding: 16, border: '1px solid #dcdcdc' },
               legend: { borderRadius: 20, fontSize: 16, padding: 16, fontWeight: 'bold' },

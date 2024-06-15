@@ -73,8 +73,6 @@ export const Table = (props) => {
             </Flex>
           )
       }
-    
-    
     </Box>
   )
 }

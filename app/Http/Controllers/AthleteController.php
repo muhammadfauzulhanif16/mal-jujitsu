@@ -26,7 +26,7 @@
         'athletes' => Athlete::with('user')->get()->map(function ($athlete) {
           $athlete->user->avatar = str_contains($athlete->user->avatar, 'https') ? $athlete->user->avatar : ($athlete->user->avatar ? asset('storage/' . $athlete->user->avatar) : null);
           return $athlete;
-        }),
+        })->sortBy('user.full_name')->values(),
         'meta' => session('meta'),
         'auth' => ['user' => $authedUser]
       ]);
