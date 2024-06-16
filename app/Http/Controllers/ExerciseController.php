@@ -20,13 +20,33 @@
       $authedUser = Auth::user();
       $authedUser->avatar = str_contains($authedUser->avatar, 'https') ? $authedUser->avatar : ($authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null);
       
+      $exercises = [];
+      
+      if (in_array($authedUser->role, ['Ne-Waza', 'Fighting'])) {
+        $exercises = Exercise::with(['athlete.user', 'coach.user'])
+          ->where('athlete_id', $authedUser->id)
+          ->get()
+          ->map(function ($exercise) {
+            $exercise->athlete->user->avatar = str_contains($exercise->athlete->user->avatar, 'https') ? $exercise->athlete->user->avatar : ($exercise->athlete->user->avatar ? asset('storage/' . $exercise->athlete->user->avatar) : null);
+            $exercise->coach->user->avatar = str_contains($exercise->coach->user->avatar, 'https') ? $exercise->coach->user->avatar : ($exercise->coach->user->avatar ? asset('storage/' . $exercise->coach->user->avatar) : null);
+            return $exercise;
+          })
+          ->sortBy('name')
+          ->values();
+      } else {
+        $exercises = Exercise::with(['athlete.user', 'coach.user'])
+          ->get()
+          ->map(function ($exercise) {
+            $exercise->athlete->user->avatar = str_contains($exercise->athlete->user->avatar, 'https') ? $exercise->athlete->user->avatar : ($exercise->athlete->user->avatar ? asset('storage/' . $exercise->athlete->user->avatar) : null);
+            $exercise->coach->user->avatar = str_contains($exercise->coach->user->avatar, 'https') ? $exercise->coach->user->avatar : ($exercise->coach->user->avatar ? asset('storage/' . $exercise->coach->user->avatar) : null);
+            return $exercise;
+          })
+          ->sortBy('name')
+          ->values();
+      }
+      
       return Inertia('Exercise/Index', [
-        'exercises' => Exercise::with(['athlete.user', 'coach.user'])->get()->map(function ($exercise) {
-          $exercise->athlete->user->avatar = str_contains($exercise->athlete->user->avatar, 'https') ? $exercise->athlete->user->avatar : ($exercise->athlete->user->avatar ? asset('storage/' . $exercise->athlete->user->avatar) : null);
-          
-          $exercise->coach->user->avatar = str_contains($exercise->coach->user->avatar, 'https') ? $exercise->coach->user->avatar : ($exercise->coach->user->avatar ? asset('storage/' . $exercise->coach->user->avatar) : null);
-          return $exercise;
-        })->sortBy('name')->values(),
+        'exercises' => $exercises,
         'meta' => session('meta'),
         'auth' => ['user' => $authedUser]
       ]);

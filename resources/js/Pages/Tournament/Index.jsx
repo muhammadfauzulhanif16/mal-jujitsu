@@ -8,7 +8,7 @@ import { Table } from '@/Components/Table.jsx'
 
 const Index = (props) => {
   const [tournamentSearch, setTournamentSearch] = useState('')
-  const THList = ['#', 'Nama Pertandingan', 'Tempat Pertandingan', 'Atlet', 'Medali', 'Tanggal Pertandingan', 'Aksi']
+  const THList = ['#', 'Nama', 'Tempat', 'Atlet', 'Medali', 'Tanggal', 'Aksi']
   const actionList = [
     {
       label: 'Rincian Atlet',

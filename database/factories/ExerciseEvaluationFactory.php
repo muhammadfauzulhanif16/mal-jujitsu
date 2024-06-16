@@ -18,12 +18,25 @@
      */
     public function definition(): array
     {
-      $exercise = Exercise::inRandomOrder()->first();
+      static $exercises = null;
+      
+      if ($exercises === null) {
+        $exercises = Exercise::all();
+      }
+      
+      if ($exercises->isEmpty()) {
+        return [];
+      }
+      
+      $exercise = $exercises->random();
+      $exercises = $exercises->filter(function ($e) use ($exercise) {
+        return $e->id !== $exercise->id;
+      });
       
       return [
         'athlete_id' => $exercise->athlete_id,
         'exercise_id' => $exercise->id,
-        'note' => $this->faker->sentence,
+        'note' => $this->faker->word,
       ];
     }
   }

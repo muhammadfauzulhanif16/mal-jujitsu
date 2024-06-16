@@ -14,8 +14,9 @@
         $table->uuid('id')->primary();
         $table->foreignUuid('sub_criteria_id')->constrained();
         $table->string('name');
-        $table->string('description')->nullable()->default(null);
+        $table->string('description')->nullable();
         $table->string('type');
+        $table->boolean('required')->default(true);
         $table->timestamps();
       });
     }

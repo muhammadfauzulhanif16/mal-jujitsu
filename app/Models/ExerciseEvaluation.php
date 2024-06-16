@@ -18,7 +18,7 @@
     
     public function exercise()
     {
-      return $this->belongsTo(Exercise::class);
+      return $this->belongsTo(Exercise::class, 'exercise_id', 'id');
     }
     
     public function evaluations()

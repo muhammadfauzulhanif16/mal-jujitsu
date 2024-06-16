@@ -28,6 +28,7 @@ import { Placeholder } from '@tiptap/extension-placeholder'
 import { useEffect, useState } from 'react'
 
 const Edit = (props) => {
+  console.log(props)
   const [role, setRole] = useState(props.exercise_evaluation.exercise.athlete.user.role)
   const form = useForm({
     exercise_id: props.exercise_evaluation.exercise.id,

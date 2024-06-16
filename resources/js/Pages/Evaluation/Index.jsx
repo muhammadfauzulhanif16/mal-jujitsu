@@ -9,7 +9,7 @@ import { Table } from '@/Components/Table.jsx'
 const Index = (props) => {
   console.log('evaluation', props)
   const [evaluationSearch, setExerciseEvaluationSearch] = useState('')
-  const THList = ['#', 'Nama', 'Tempat', 'Tanggal', 'Waktu Mulai', 'Waktu Selesai', 'Aksi']
+  const THList = ['#', 'Nama Latihan', 'Tempat', 'Tanggal', 'Waktu Mulai', 'Waktu Selesai', 'Aksi']
   const actionList = [
     {
       label: 'Rincian Penilaian',

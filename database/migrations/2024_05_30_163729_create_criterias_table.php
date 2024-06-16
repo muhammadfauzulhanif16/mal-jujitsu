@@ -13,6 +13,7 @@
       Schema::create('criterias', function (Blueprint $table) {
         $table->uuid('id')->primary();
         $table->string('name');
+        $table->string('type');
         $table->timestamps();
       });
     }

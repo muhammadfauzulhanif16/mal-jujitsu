@@ -16,4 +16,9 @@
     {
       return $this->belongsTo(SubCriteria::class);
     }
+    
+    public function evaluation()
+    {
+      return $this->hasOne(Evaluation::class);
+    }
   }

@@ -19,11 +19,11 @@
       'start_time',
       'end_time',
     ];
-    
-    protected $hidden = [
-      'athlete_id',
-      'coach_id',
-    ];
+
+//    protected $hidden = [
+//      'athlete_id',
+//      'coach_id',
+//    ];
     
     
     public function athlete()

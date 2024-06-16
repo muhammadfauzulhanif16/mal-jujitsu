@@ -23,6 +23,20 @@
       $authedUser = Auth::user();
       $authedUser->avatar = str_contains($authedUser->avatar, 'https') ? $authedUser->avatar : ($authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null);
       
+      $exercises = [];
+      $tournaments = [];
+      $evaluations = [];
+      
+      if (in_array($authedUser->role, ['Ne-Waza', 'Fighting'])) {
+        $exercises = Exercise::where('athlete_id', $authedUser->id)->get();
+        $tournaments = Tournament::where('athlete_id', $authedUser->id)->get();
+        $evaluations = ExerciseEvaluation::where('athlete_id', $authedUser->id)->get();
+      } else {
+        $exercises = Exercise::all();
+        $tournaments = Tournament::all();
+        $evaluations = ExerciseEvaluation::all();
+      }
+      
       return Inertia::render('Dashboard', [
         'meta' => session('meta'),
         'auth' => ['user' => $authedUser],
@@ -34,9 +48,9 @@
           $athlete->total_medals = $athlete->gold_medals + $athlete->silver_medals + $athlete->bronze_medals;
           return $athlete;
         }),
-        'exercises' => Exercise::orderBy('date', 'desc')->get(),
-        'tournaments' => Tournament::all(),
-        'evaluations' => ExerciseEvaluation::all(),
+        'exercises' => $exercises,
+        'tournaments' => $tournaments,
+        'evaluations' => $evaluations,
         'reports' => Athlete::with(['tournaments', 'evaluations'])
           ->has('evaluations')
           ->has('tournaments')

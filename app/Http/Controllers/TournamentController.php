@@ -19,11 +19,27 @@
       $authedUser = Auth::user();
       $authedUser->avatar = str_contains($authedUser->avatar, 'https') ? $authedUser->avatar : ($authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null);
       
+      $tournaments = [];
+      
+      if (in_array($authedUser->role, ['Ne-Waza', 'Fighting'])) {
+        $tournaments = Tournament::with('athlete')
+          ->where('athlete_id', $authedUser->id)
+          ->get()
+          ->map(function ($tournament) {
+            $tournament->athlete->avatar = str_contains($tournament->athlete->avatar, 'https') ? $tournament->athlete->avatar : ($tournament->athlete->avatar ? asset('storage/' . $tournament->athlete->avatar) : null);
+            return $tournament;
+          });
+      } else {
+        $tournaments = Tournament::with('athlete')
+          ->get()
+          ->map(function ($tournament) {
+            $tournament->athlete->avatar = str_contains($tournament->athlete->avatar, 'https') ? $tournament->athlete->avatar : ($tournament->athlete->avatar ? asset('storage/' . $tournament->athlete->avatar) : null);
+            return $tournament;
+          });
+      }
+      
       return Inertia('Tournament/Index', [
-        'tournaments' => Tournament::with('athlete')->get()->map(function ($tournament) {
-          $tournament->athlete->avatar = str_contains($tournament->athlete->avatar, 'https') ? $tournament->athlete->avatar : ($tournament->athlete->avatar ? asset('storage/' . $tournament->athlete->avatar) : null);
-          return $tournament;
-        }),
+        'tournaments' => $tournaments,
         'meta' => session('meta'),
         'auth' => ['user' => $authedUser]
       ]);

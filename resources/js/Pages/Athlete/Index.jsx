@@ -34,7 +34,7 @@ const Index = (props) => {
     },
   ]
   const athleteList = props.athletes
-    .filter(athlete => athlete.user.full_name.toLowerCase().includes(athleteSearch.toLowerCase()))
+    .filter(athlete => athlete.user.full_name.replace(/\s/g, '').toLowerCase().match(new RegExp(athleteSearch.replace(/\s/g, '').toLowerCase(), 'i')))
   const TDList = athleteList.map((athlete, id) => (
     <MantineTable.Tr h={64} key={id}>
       <MantineTable.Td

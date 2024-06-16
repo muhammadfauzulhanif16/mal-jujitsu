@@ -1,6 +1,6 @@
 import { AppLayout } from '@/Layouts/AppLayout.jsx'
 import { Breadcrumbs } from '@/Components/Breadcrumbs.jsx'
-import { Blockquote, Box, Grid, Group, Select, SimpleGrid, Stack, Text, Title } from '@mantine/core'
+import { Blockquote, Box, Grid, Group, Select, Stack, Text, Title } from '@mantine/core'
 import { IconCalendar, IconClipboardText, IconMedal, IconReport, IconReportAnalytics, IconUser } from '@tabler/icons-react'
 import { AreaChart, BarChart } from '@mantine/charts'
 import { useState } from 'react'
@@ -82,28 +82,28 @@ const Dashboard = (props) => {
     },
     {
       icon: <IconClipboardText />,
-      label: 'latihan',
+      label: `latihan ${['Ne-Waza', 'Fighting'].includes(props.auth.user.role) ? '(anda)' : ''}`,
       total: props.exercises.length,
       description: 'kali',
     },
     {
       icon: <IconMedal />,
-      label: 'pertandingan',
+      label: `pertandingan ${['Ne-Waza', 'Fighting'].includes(props.auth.user.role) ? '(anda)' : ''}`,
       total: props.tournaments.length,
       description: 'kali',
     },
     {
       icon: <IconReportAnalytics />,
-      label: 'penilaian',
+      label: `penilaian ${['Ne-Waza', 'Fighting'].includes(props.auth.user.role) ? '(anda)' : ''}`,
       total: props.evaluations.length,
       description: `dari ${props.exercises.length} latihan`,
     },
-    {
+    ...(!['Ne-Waza', 'Fighting'].includes(props.auth.user.role) ? [{
       icon: <IconReport />,
       label: 'laporan',
       total: props.reports.length,
       description: 'orang',
-    },
+    }] : []),
   ]
   
   return (
@@ -112,21 +112,30 @@ const Dashboard = (props) => {
         <Breadcrumbs navList={[{ label: 'Beranda' }]} />
       </Box>
       
+      {/*  cols={{*/}
+      {/*  base: 1,*/}
+      {/*  xs: 2,*/}
+      {/*  sm: 3,*/}
+      {/*  lg: statList.length,*/}
+      {/*}}*/}
+      
       <Stack gap={32}>
-        <SimpleGrid cols={{
-          base: 1,
-          xs: 2,
-          sm: 3,
-          lg: 6,
-        }} spacing={24}>
+        <Grid gutter={24} grow>
           {statList.map((stat, id, index) => (
-            <Blockquote key={id} color="#746200" radius={20} icon={stat.icon} styles={{ root: { padding: 32 } }}>
-              <Title mb={16} fz={12} c="neutral.5">{stat.label.toUpperCase()}</Title>
-              <Title fz={20}>{stat.total}</Title>
-              <Text fz={14} c="neutral.5">{stat.description}</Text>
-            </Blockquote>
+            <Grid.Col key={id} span={{
+              base: 12,
+              xs: 6,
+              sm: 4,
+              lg: 2,
+            }}>
+              <Blockquote color="#746200" radius={20} icon={stat.icon} styles={{ root: { padding: 32 } }}>
+                <Title mb={16} fz={12} c="neutral.5">{stat.label.toUpperCase()}</Title>
+                <Title fz={20}>{stat.total}</Title>
+                <Text fz={14} c="neutral.5">{stat.description}</Text>
+              </Blockquote>
+            </Grid.Col>
           ))}
-        </SimpleGrid>
+        </Grid>
         
         <Grid gutter={32}>
           <Grid.Col span={8}>
@@ -222,15 +231,18 @@ const Dashboard = (props) => {
               <BarChart
                 h="100%"
                 withLegend
-                // xAxisProps={{
-                //   padding: 100,
-                // }}
                 xAxisLabel="Atlet"
                 yAxisLabel="Total Medali"
                 data={props.athletes
                   .sort((a, b) => {
                     if (b.total_medals === a.total_medals) {
-                      return b.goldMedals - a.goldMedals
+                      if (b.gold_medals === a.gold_medals) {
+                        if (b.silver_medals === a.silver_medals) {
+                          return b.bronze_medals - a.bronze_medals
+                        }
+                        return b.silver_medals - a.silver_medals
+                      }
+                      return b.gold_medals - a.gold_medals
                     }
                     return b.total_medals - a.total_medals
                   })
@@ -240,7 +252,8 @@ const Dashboard = (props) => {
                     'Emas': athlete.gold_medals,
                     'Perak': athlete.silver_medals,
                     'Perunggu': athlete.bronze_medals,
-                  }))}
+                  }))
+                }
                 tickLine="xy"
                 gridAxis="xy"
                 dataKey="name"

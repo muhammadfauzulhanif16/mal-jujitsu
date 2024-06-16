@@ -23,6 +23,21 @@
       $authedUser = Auth::user();
       $authedUser->avatar = str_contains($authedUser->avatar, 'https') ? $authedUser->avatar : ($authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null);
       
+      $evaluations = [];
+      
+      if (in_array($authedUser->role, ['Ne-Waza', 'Fighting'])) {
+        $evaluations = ExerciseEvaluation::with('exercise.athlete')
+          ->where('athlete_id', $authedUser->id)
+          ->get()
+          ->sortBy('exercise.name')
+          ->values();
+      } else {
+        $evaluations = ExerciseEvaluation::with('exercise.athlete')
+          ->get()
+          ->sortBy('exercise.name')
+          ->values();
+      }
+      
       return Inertia('Evaluation/Index', [
 //        'athletes' => ExerciseEvaluation::with('exercise.athlete')
 //          ->get()
@@ -32,7 +47,7 @@
 //          })
 //          ->unique('id')
 //          ->values(),
-        'evaluations' => ExerciseEvaluation::with('exercise.athlete')->get()->sortBy('exercise.name')->values(),
+        'evaluations' => $evaluations,
         'meta' => session('meta'),
         'auth' => ['user' => $authedUser]
       ]);

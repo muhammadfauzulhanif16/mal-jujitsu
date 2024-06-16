@@ -24,7 +24,7 @@
     public function definition()
     {
       $gender = $this->faker->randomElement(['male', 'female']);
-      $full_name = $this->faker->name($gender);
+      $full_name = $this->faker->firstName($gender) . ' ' . $this->faker->lastName;
       $gender = $gender === 'male' ? 'Laki-laki' : 'Perempuan';
       
       return [

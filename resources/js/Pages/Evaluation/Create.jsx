@@ -81,7 +81,7 @@ const Create = (props) => {
           
           <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Tambah Penilaian">
             <ActionIcon type="submit" ml="auto" h={48} w={48} color="gold.2" radius={32} display={{ base: 'block', xs: 'none' }}
-              // disabled={form.hasErrors || !form.data.name || !form.data.place || !form.data.athlete_id || !form.data.medal}
+                        disabled={form.hasErrors || !form.data.exercise_id}
             >
               <IconCornerDownLeft />
             </ActionIcon>
@@ -89,7 +89,7 @@ const Create = (props) => {
           
           <Button display={{ base: 'none', xs: 'block' }} type="submit" w={240} leftSection={<IconCornerDownLeft />} variant="filled" color="gold.2" h={48}
                   px={16} styles={{ section: { marginRight: 12 } }} radius={32} loading={form.processing}
-            // disabled={form.hasErrors || !form.data.name || !form.data.place || !form.data.athlete_id || !form.data.medal}
+                  disabled={form.hasErrors || !form.data.exercise_id}
           >
             Tambah Penilaian
           </Button>
@@ -145,7 +145,7 @@ const Create = (props) => {
                   }}
                   data={props.exercises.map((exercise) => ({
                     value: exercise.id,
-                    label: `${exercise.name} ~ ${exercise.date} (${exercise.athlete.user.full_name} ~ ${exercise.athlete.user.role})`,
+                    label: `${exercise.name} ~ ${new Date(exercise.date).toLocaleDateString('id').split('/').join('-')} | ${exercise.athlete.user.full_name} ~ ${exercise.athlete.user.role}`,
                   }))}
                   error={form.errors.exercise_id}
                 />
@@ -162,7 +162,8 @@ const Create = (props) => {
                                   styles={{ root: { margin: 0, padding: 16 }, legend: { borderRadius: 20, fontSize: 16, padding: 16, fontWeight: 'bold' } }}>
                           <Stack>
                             {sub_criteria.sub_sub_criterias.map((sub_sub_criteria, sub_sub_criteria_id) => sub_sub_criteria.type === 'radio' ? (
-                                <Radio.Group key={sub_sub_criteria.id} description={sub_sub_criteria.description} label={sub_sub_criteria.name} withAsterisk
+                                <Radio.Group key={sub_sub_criteria.id} description={sub_sub_criteria.description} label={sub_sub_criteria.name}
+                                             withAsterisk={Boolean(sub_sub_criteria.required)}
                                              styles={{
                                                label: { marginBottom: 8 }, description: { marginBottom: 8 }, error: { marginTop: 8 },
                                              }} onChange={(value) => {
@@ -190,7 +191,7 @@ const Create = (props) => {
                                 </Radio.Group>
                               ) : sub_sub_criteria.type === 'number' ? (
                                 <NumberInput hideControls description={sub_sub_criteria.description} key={sub_sub_criteria.id} label={sub_sub_criteria.name}
-                                             withAsterisk variant="filled"
+                                             withAsterisk={Boolean(sub_sub_criteria.required)} variant="filled"
                                              styles={{
                                                label: { marginBottom: 8 },
                                                description: { marginBottom: 8 },
@@ -215,7 +216,8 @@ const Create = (props) => {
                                   // }
                                 }} error={form.errors.email} />
                               ) : (
-                                <TextInput key={sub_sub_criteria.id} description={sub_sub_criteria.description} label={sub_sub_criteria.name} withAsterisk
+                                <TextInput key={sub_sub_criteria.id} description={sub_sub_criteria.description} label={sub_sub_criteria.name}
+                                           withAsterisk={Boolean(sub_sub_criteria.required)}
                                            variant="filled" styles={{
                                   description: { marginBottom: 8 },
                                   label: { marginBottom: 8 },

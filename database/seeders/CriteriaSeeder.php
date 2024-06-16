@@ -17,6 +17,7 @@
       $criterias = [
         [
           'name' => 'Etika',
+          'type' => 'radio',
           'sub-criterias' => [
             [
               'name' => 'Kedisiplinan',
@@ -52,6 +53,7 @@
         ],
         [
           'name' => 'Teknik Bertanding',
+          'type' => 'radio',
           'sub-criterias' => [
             [
               'name' => 'Ne-Waza',
@@ -131,6 +133,8 @@
         ],
         [
           'name' => 'Fisik',
+          'type' => 'text',
+          'required' => false,
           'sub-criterias' => [
             [
               'name' => 'Power',
@@ -242,14 +246,23 @@
       ];
       
       foreach ($criterias as $criteria) {
-        $criteriaModel = Criteria::create(['name' => $criteria['name']]);
+        $criteriaModel = Criteria::create([
+          'name' => $criteria['name'],
+          'type' => $criteria['type'],
+        ]);
         
         foreach ($criteria['sub-criterias'] as $subCriteria) {
           $subCriteriaData = ['name' => $subCriteria['name'], 'criteria_id' => $criteriaModel->id];
           $subCriteriaModel = SubCriteria::create($subCriteriaData);
           
           foreach ($subCriteria['sub-sub-criterias'] as $subSubCriteria) {
-            $subSubCriteriaData = ['name' => $subSubCriteria['name'], 'sub_criteria_id' => $subCriteriaModel->id, 'description' => isset($subSubCriteria['description']) ? $subSubCriteria['description'] : '', 'type' => $subSubCriteria['type']];
+            $subSubCriteriaData = [
+              'name' => $subSubCriteria['name'],
+              'sub_criteria_id' => $subCriteriaModel->id,
+              'description' => isset($subSubCriteria['description']) ? $subSubCriteria['description'] : '',
+              'type' => $subSubCriteria['type'],
+              'required' => isset($criteria['required']) ? $criteria['required'] : true,
+            ];
             SubSubCriteria::create($subSubCriteriaData);
           }
         }
