@@ -61,15 +61,17 @@
 //      $date = Carbon::parse($request->date, 'Asia/Jakarta')->format('Y-m-d');
 //      dd($date);
       try {
-        Exercise::create([
-          'name' => $request->name,
-          'place' => $request->place,
-          'athlete_id' => $request->athlete_id,
-          'coach_id' => $request->coach_id,
-          'date' => Carbon::parse($request->date)->format('Y-m-d'),
-          'start_time' => Carbon::parse($request->start_time)->format('H:i:s'),
-          'end_time' => Carbon::parse($request->end_time)->format('H:i:s'),
-        ]);
+        foreach ($request->athlete_ids as $athlete_id) {
+          Exercise::create([
+            'name' => $request->name,
+            'place' => $request->place,
+            'athlete_id' => $athlete_id,
+            'coach_id' => $request->coach_id,
+            'date' => Carbon::parse($request->date)->format('Y-m-d'),
+            'start_time' => Carbon::parse($request->start_time)->format('H:i:s'),
+            'end_time' => Carbon::parse($request->end_time)->format('H:i:s'),
+          ]);
+        }
         
         return to_route('exercises.index')->with('meta', [
           'status' => true,

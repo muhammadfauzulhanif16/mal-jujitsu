@@ -153,7 +153,7 @@ const Show = (props) => {
             />
             
             <DatePickerInput disabled mb={16} locale="id" monthsListFormat="MMMM" clearable allowDeselect firstDayOfWeek={0} variant="filled"
-                             valueFormat="dddd, D MMMM YYYY" leftSection={<IconCalendar />} label="Tanggal"
+                             valueFormat="D-M-YYYY" leftSection={<IconCalendar />} label="Tanggal"
                              placeholder="Masukkan tanggal..."
                              styles={{
                                label: { marginBottom: 8 },

@@ -59,7 +59,7 @@ const Login = (props) => {
                 variant="filled"
                 mb={24}
                 styles={{
-                  label: { marginLeft: 8, fontSize: 14 },
+                  label: { marginLeft: 16, fontSize: 14, padding: 0 },
                   input: { border: 0, backgroundColor: form.data.remember ? 'var(--mantine-color-gold-2)' : '#f1f3f5' },
                 }}
                 radius={32}

@@ -154,8 +154,8 @@ const Edit = (props) => {
                   }}
                   data={[...props.exercises, props.exercise_evaluation.exercise].map((exercise) => ({
                     value: exercise.id,
-                    label: `${exercise.name} ~ ${exercise.date} (${exercise.athlete.user.full_name} ~ ${exercise.athlete.user.role})`,
-                  })).sort()}
+                    label: `${exercise.name} (${new Date(exercise.date).toLocaleDateString('id').split('/').join('-')}) | ${exercise.athlete.user.full_name} (${exercise.athlete.user.role})`,
+                  }))}
                   error={form.errors.exercise_id}
                 />
               </Fieldset>

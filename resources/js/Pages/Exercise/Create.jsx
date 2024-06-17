@@ -1,5 +1,5 @@
 import { AppLayout } from '@/Layouts/AppLayout.jsx'
-import { ActionIcon, Avatar, Button, Fieldset, Grid, Group, Indicator, Select, SimpleGrid, TextInput, Tooltip } from '@mantine/core'
+import { ActionIcon, Avatar, Button, Fieldset, Grid, Group, Indicator, MultiSelect, Select, SimpleGrid, TextInput, Tooltip } from '@mantine/core'
 import { IconBuilding, IconCalendar, IconClipboardText, IconClockPause, IconClockPlay, IconCornerDownLeft, IconUser } from '@tabler/icons-react'
 import { Breadcrumbs } from '@/Components/Breadcrumbs.jsx'
 import { useForm } from '@inertiajs/react'
@@ -7,7 +7,7 @@ import 'dayjs/locale/id'
 import { DatePickerInput, TimeInput } from '@mantine/dates'
 
 const Create = (props) => {
-  const form = useForm({ name: '', place: '', athlete_id: '', coach_id: '', date: new Date(), start_time: '', end_time: '' })
+  const form = useForm({ name: '', place: '', athlete_ids: [], coach_id: '', date: new Date(), start_time: '', end_time: '' })
   
   return (
     <form onSubmit={(e) => {
@@ -40,14 +40,26 @@ const Create = (props) => {
               md: 1,
             }}>
               <Indicator styles={{ indicator: { padding: 16, border: '4px solid white' } }} inline color="gold.2"
-                         label={form.data.athlete_id ? props.athletes.find((athlete) => athlete.user.id === form.data.athlete_id)?.user.role : 'Atlet'}
+                         label={
+                           form.data.athlete_ids.length > 1 ? `${form.data.athlete_ids.length} Atlet` : 'Atlet'
+                         }
                          position="bottom-center" size={32} withBorder>
-                <Avatar
-                  mx="auto"
-                  src={props.athletes.find((athlete) => athlete.user.id === form.data.athlete_id)?.user.avatar}
-                  alt={props.athletes.find((athlete) => athlete.user.id === form.data.athlete_id)?.user.full_name}
-                  size={160}
-                />
+                <Avatar.Group spacing={40} style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                }}>
+                  <Avatar
+                    src={props.athletes.find((athlete) => athlete.user.id === form.data.athlete_ids[0])?.user.avatar}
+                    alt={props.athletes.find((athlete) => athlete.user.id === form.data.athlete_ids[0])?.user.full_name}
+                    size={160}
+                  />
+                  
+                  {form.data.athlete_ids.length > 1 && (
+                    <Avatar size={160}>
+                      +{form.data.athlete_ids.length - 1}
+                    </Avatar>
+                  )}
+                </Avatar.Group>
               </Indicator>
               
               <Indicator inline color="gold.2" styles={{ indicator: { padding: 16, border: '4px solid white' } }}
@@ -100,14 +112,14 @@ const Create = (props) => {
                 }
               }} error={form.errors.place} />
               
-              <Select
+              <MultiSelect
                 mb={16}
                 withAsterisk
                 variant="filled"
                 styles={{
                   label: { marginBottom: 8 },
-                  input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 16 },
-                  section: { marginLeft: 0, width: 48, height: 48 },
+                  input: { minHeight: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 16, display: 'flex' },
+                  section: { marginLeft: 0, width: 48, minHeight: 48 },
                   error: { marginTop: 8 },
                 }}
                 leftSection={<IconUser />}
@@ -115,19 +127,19 @@ const Create = (props) => {
                 clearable
                 searchable
                 nothingFoundMessage="Tidak ada atlet ditemukan"
-                placeholder="Pilih atlet..."
+                placeholder="Pilih 1 atlet atau lebih..."
                 checkIconPosition="right"
                 onChange={(value) => {
-                  form.setData('athlete_id', value)
+                  form.setData('athlete_ids', value)
                   
-                  if (!value) {
-                    form.setError({ athlete_id: 'Atlet tidak boleh kosong.' })
+                  if (value.length === 0) {
+                    form.setError({ athlete_ids: 'Atlet tidak boleh kosong.' })
                   } else {
-                    form.clearErrors('athlete_id')
+                    form.clearErrors('athlete_ids')
                   }
                 }}
                 data={props.athletes.map((athlete) => ({ value: athlete.user.id, label: `${athlete.user.full_name} (${athlete.user.role})` }))}
-                error={form.errors.athlete_id}
+                error={form.errors.athlete_ids}
               />
               
               <Select
@@ -161,7 +173,8 @@ const Create = (props) => {
               />
               
               <DatePickerInput mb={16} withAsterisk clearable allowDeselect firstDayOfWeek={0} variant="filled"
-                               leftSection={<IconCalendar />} label="Tanggal"
+                               leftSection={<IconCalendar />} label="Tanggal" locale="id"
+                               valueFormat="D-M-YYYY"
                                placeholder="Masukkan tanggal..."
                                styles={{
                                  label: { marginBottom: 8 },

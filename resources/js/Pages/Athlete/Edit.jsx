@@ -130,13 +130,19 @@ const Edit = (props) => {
                 }
               }}>
                 <Group gap={32}>
-                  <Radio size="md" value="Laki-laki" label="Laki-laki" color="gold.2" />
-                  <Radio size="md" value="Perempuan" label="Perempuan" color="gold.2" />
+                  <Radio styles={{
+                    label: { marginLeft: 16, padding: 0, fontSize: 14 },
+                    radio: { border: 0, backgroundColor: form.data.gender === 'Laki-laki' ? 'var(--mantine-color-gold-2)' : '#f1f3f5' },
+                  }} size="md" value="Laki-laki" label="Laki-laki" color="gold.2" />
+                  <Radio styles={{
+                    label: { marginLeft: 16, padding: 0, fontSize: 14 },
+                    radio: { border: 0, backgroundColor: form.data.gender === 'Perempuan' ? 'var(--mantine-color-gold-2)' : '#f1f3f5' },
+                  }} size="md" value="Perempuan" label="Perempuan" color="gold.2" />
                 </Group>
               </Radio.Group>
               
               <DatePickerInput mb={16} locale="id" monthsListFormat="MMMM" withAsterisk clearable allowDeselect firstDayOfWeek={0} variant="filled"
-                               valueFormat="dddd, D MMMM YYYY" leftSection={<IconCalendar />} label="Tanggal Lahir" placeholder="Masukkan tanggal lahir..."
+                               valueFormat="D-M-YYYY" leftSection={<IconCalendar />} label="Tanggal Lahir" placeholder="Masukkan tanggal lahir..."
                                styles={{
                                  label: { marginBottom: 8 },
                                  input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 16 },
@@ -192,8 +198,14 @@ const Edit = (props) => {
                 }
               }} error={form.errors.role} value={form.data.role}>
                 <Group gap={32}>
-                  <Radio size="md" value="Ne-Waza" label="Ne-Waza" color="gold.2" />
-                  <Radio size="md" value="Fighting" label="Fighting" color="gold.2" />
+                  <Radio styles={{
+                    label: { marginLeft: 16, padding: 0, fontSize: 14 },
+                    radio: { border: 0, backgroundColor: form.data.role === 'Ne-Waza' ? 'var(--mantine-color-gold-2)' : '#f1f3f5' },
+                  }} size="md" value="Ne-Waza" label="Ne-Waza" color="gold.2" />
+                  <Radio styles={{
+                    label: { marginLeft: 16, padding: 0, fontSize: 14 },
+                    radio: { border: 0, backgroundColor: form.data.role === 'Fighting' ? 'var(--mantine-color-gold-2)' : '#f1f3f5' },
+                  }} size="md" value="Fighting" label="Fighting" color="gold.2" />
                 </Group>
               </Radio.Group>
             </Fieldset>

@@ -51,13 +51,15 @@
     public function store(Request $request)
     {
       try {
-        Tournament::create([
-          'name' => $request->name,
-          'place' => $request->place,
-          'date' => Carbon::parse($request->date)->format('Y-m-d'),
-          'athlete_id' => $request->athlete_id,
-          'medal' => $request->medal,
-        ]);
+        foreach ($request->athlete_ids as $athlete_id) {
+          Tournament::create([
+            'name' => $request->name,
+            'place' => $request->place,
+            'date' => Carbon::parse($request->date)->format('Y-m-d'),
+            'athlete_id' => $athlete_id,
+            'medal' => $request->medal,
+          ]);
+        }
         
         return to_route('tournaments.index')->with('meta', [
           'status' => true,

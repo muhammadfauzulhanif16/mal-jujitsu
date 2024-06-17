@@ -145,7 +145,7 @@ const Create = (props) => {
                   }}
                   data={props.exercises.map((exercise) => ({
                     value: exercise.id,
-                    label: `${exercise.name} ~ ${new Date(exercise.date).toLocaleDateString('id').split('/').join('-')} | ${exercise.athlete.user.full_name} ~ ${exercise.athlete.user.role}`,
+                    label: `${exercise.name} (${new Date(exercise.date).toLocaleDateString('id').split('/').join('-')}) | ${exercise.athlete.user.full_name} (${exercise.athlete.user.role})`,
                   }))}
                   error={form.errors.exercise_id}
                 />

@@ -7,7 +7,13 @@ import 'dayjs/locale/id'
 import { DatePickerInput } from '@mantine/dates'
 
 const Edit = (props) => {
-  const form = useForm({ name: props.tournament.name, place: props.tournament.place, athlete_id: props.tournament.athlete.id, medal: props.tournament.medal })
+  const form = useForm({
+    name: props.tournament.name,
+    place: props.tournament.place,
+    athlete_id: props.tournament.athlete.id,
+    medal: props.tournament.medal,
+    date: props.tournament.date,
+  })
   
   return (
     <form onSubmit={(e) => {
@@ -114,7 +120,7 @@ const Edit = (props) => {
                 error={form.errors.athlete_id}
               />
               
-              <Radio.Group value={form.data.medal} label="Medali" withAsterisk styles={{
+              <Radio.Group mb={16} value={form.data.medal} label="Medali" withAsterisk styles={{
                 label: { marginBottom: 8 }, error: { marginTop: 8 },
               }} onChange={(value) => {
                 form.setData('medal', value)
@@ -126,14 +132,23 @@ const Edit = (props) => {
                 }
               }}>
                 <Group gap={32}>
-                  <Radio size="md" value="Emas" label="🥇 Emas" color="gold.2" />
-                  <Radio size="md" value="Perak" label="🥈 Perak" color="gold.2" />
-                  <Radio size="md" value="Perunggu" label="🥉 Perunggu" color="gold.2" />
+                  <Radio styles={{
+                    label: { marginLeft: 16, padding: 0, fontSize: 14 },
+                    radio: { border: 0, backgroundColor: form.data.medal === 'Emas' ? 'var(--mantine-color-gold-2)' : '#f1f3f5' },
+                  }} size="md" value="Emas" label="🥇 Emas" color="gold.2" />
+                  <Radio styles={{
+                    label: { marginLeft: 16, padding: 0, fontSize: 14 },
+                    radio: { border: 0, backgroundColor: form.data.medal === 'Perak' ? 'var(--mantine-color-gold-2)' : '#f1f3f5' },
+                  }} size="md" value="Perak" label="🥈 Perak" color="gold.2" />
+                  <Radio styles={{
+                    label: { marginLeft: 16, padding: 0, fontSize: 14 },
+                    radio: { border: 0, backgroundColor: form.data.medal === 'Perunggu' ? 'var(--mantine-color-gold-2)' : '#f1f3f5' },
+                  }} size="md" value="Perunggu" label="🥉 Perunggu" color="gold.2" />
                 </Group>
               </Radio.Group>
               
               <DatePickerInput mb={16} locale="id" monthsListFormat="MMMM" withAsterisk clearable allowDeselect firstDayOfWeek={0} variant="filled"
-                               valueFormat="dddd, D MMMM YYYY" leftSection={<IconCalendar />} label="Tanggal Pertandingan"
+                               valueFormat="D-M-YYYY" leftSection={<IconCalendar />} label="Tanggal Pertandingan"
                                placeholder="Masukkan tanggal..."
                                styles={{
                                  label: { marginBottom: 8 },

@@ -170,7 +170,7 @@ const Edit = (props) => {
               />
               
               <DatePickerInput mb={16} locale="id" monthsListFormat="MMMM" withAsterisk clearable allowDeselect firstDayOfWeek={0} variant="filled"
-                               valueFormat="dddd, D MMMM YYYY" leftSection={<IconCalendar />} label="Tanggal"
+                               valueFormat="D-M-YYYY" leftSection={<IconCalendar />} label="Tanggal"
                                placeholder="Masukkan tanggal..."
                                styles={{
                                  label: { marginBottom: 8 },

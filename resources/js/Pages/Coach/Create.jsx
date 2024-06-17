@@ -20,7 +20,7 @@ const Create = (props) => {
           
           <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Tambah Pelatih">
             <ActionIcon ml="auto" h={48} w={48} color="gold.2" radius={32} display={{ base: 'block', xs: 'none' }}
-                        disabled={form.hasErrors || Object.values(form.data).some(field => !field)}
+                        disabled={form.hasErrors || Object.entries(form.data).some(([key, value]) => key !== 'avatar' && !value)}
                         type="submit">
               <IconCornerDownLeft />
             </ActionIcon>
@@ -29,7 +29,7 @@ const Create = (props) => {
           <Button display={{ base: 'none', xs: 'block' }} w={240} type="submit" fullWidth leftSection={<IconCornerDownLeft />} variant="filled" color="gold.2"
                   h={48}
                   px={16} styles={{ section: { marginRight: 12 } }} radius={32} loading={form.processing}
-                  disabled={form.hasErrors || Object.values(form.data).some(field => !field)}>
+                  disabled={form.hasErrors || Object.entries(form.data).some(([key, value]) => key !== 'avatar' && !value)}>
             Tambah Pelatih
           </Button>
         </Group>
@@ -116,7 +116,7 @@ const Create = (props) => {
               
               <Radio.Group mb={16} label="Jenis Kelamin" withAsterisk styles={{
                 label: { marginBottom: 8 }, error: { marginTop: 8 },
-              }} onChange={(value) => {
+              }} checked onChange={(value) => {
                 form.setData('gender', value)
                 
                 if (!value) {
@@ -125,15 +125,20 @@ const Create = (props) => {
                   form.clearErrors('gender')
                 }
               }}>
-                
                 <Group gap={32}>
-                  <Radio size="md" value="Laki-laki" label="Laki-laki" color="gold.2" />
-                  <Radio size="md" value="Perempuan" label="Perempuan" color="gold.2" />
+                  <Radio styles={{
+                    label: { marginLeft: 16, padding: 0, fontSize: 14 },
+                    radio: { border: 0, backgroundColor: form.data.gender === 'Laki-laki' ? 'var(--mantine-color-gold-2)' : '#f1f3f5' },
+                  }} size="md" value="Laki-laki" label="Laki-laki" color="gold.2" />
+                  <Radio styles={{
+                    label: { marginLeft: 16, padding: 0, fontSize: 14 },
+                    radio: { border: 0, backgroundColor: form.data.gender === 'Perempuan' ? 'var(--mantine-color-gold-2)' : '#f1f3f5' },
+                  }} size="md" value="Perempuan" label="Perempuan" color="gold.2" />
                 </Group>
               </Radio.Group>
               
               <DatePickerInput locale="id" monthsListFormat="MMMM" withAsterisk clearable allowDeselect firstDayOfWeek={0} variant="filled"
-                               valueFormat="dddd, D MMMM YYYY" leftSection={<IconCalendar />} label="Tanggal Lahir" placeholder="Masukkan tanggal lahir..."
+                               valueFormat="D-M-YYYY" leftSection={<IconCalendar />} label="Tanggal Lahir" placeholder="Masukkan tanggal lahir..."
                                styles={{
                                  label: { marginBottom: 8 },
                                  input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 16 },
@@ -170,9 +175,18 @@ const Create = (props) => {
                 }
               }}>
                 <Group gap={32}>
-                  <Radio size="md" value="Pengelola Tim" label="Pengelola Tim" color="gold.2" />
-                  <Radio size="md" value="Pelatih Fisik" label="Pelatih Fisik" color="gold.2" />
-                  <Radio size="md" value="Pelatih Teknik" label="Pelatih Teknik" color="gold.2" />
+                  <Radio styles={{
+                    label: { marginLeft: 16, padding: 0, fontSize: 14 },
+                    radio: { border: 0, backgroundColor: form.data.role === 'Pengelola Tim' ? 'var(--mantine-color-gold-2)' : '#f1f3f5' },
+                  }} size="md" value="Pengelola Tim" label="Pengelola Tim" color="gold.2" />
+                  <Radio styles={{
+                    label: { marginLeft: 16, padding: 0, fontSize: 14 },
+                    radio: { border: 0, backgroundColor: form.data.role === 'Pelatih Fisik' ? 'var(--mantine-color-gold-2)' : '#f1f3f5' },
+                  }} size="md" value="Pelatih Fisik" label="Pelatih Fisik" color="gold.2" />
+                  <Radio styles={{
+                    label: { marginLeft: 16, padding: 0, fontSize: 14 },
+                    radio: { border: 0, backgroundColor: form.data.role === 'Pelatih Teknik' ? 'var(--mantine-color-gold-2)' : '#f1f3f5' },
+                  }} size="md" value="Pelatih Teknik" label="Pelatih Teknik" color="gold.2" />
                 </Group>
               </Radio.Group>
             </Fieldset>

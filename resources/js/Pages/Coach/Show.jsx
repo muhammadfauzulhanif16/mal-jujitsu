@@ -57,12 +57,18 @@ const Show = (props) => {
               label: { marginBottom: 8 }, error: { marginTop: 8 },
             }}>
               <Group gap={32}>
-                <Radio size="md" value="Laki-laki" label="Laki-laki" color="gold.2" disabled />
-                <Radio size="md" value="Perempuan" label="Perempuan" color="gold.2" disabled />
+                <Radio disabled styles={{
+                  label: { marginLeft: 16, padding: 0, fontSize: 14 },
+                  radio: { border: 0 },
+                }} size="md" value="Laki-laki" label="Laki-laki" color="gold.2" />
+                <Radio disabled styles={{
+                  label: { marginLeft: 16, padding: 0, fontSize: 14 },
+                  radio: { border: 0 },
+                }} size="md" value="Perempuan" label="Perempuan" color="gold.2" />
               </Group>
             </Radio.Group>
             
-            <DatePickerInput locale="id" disabled variant="filled" valueFormat="dddd, D MMMM YYYY" leftSection={<IconCalendar />} label="Tanggal Lahir"
+            <DatePickerInput locale="id" disabled variant="filled" valueFormat="D-M-YYYY" leftSection={<IconCalendar />} label="Tanggal Lahir"
                              placeholder="Masukkan tanggal lahir..." styles={{
               label: { marginBottom: 8 },
               input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 16 },
@@ -83,9 +89,18 @@ const Show = (props) => {
             }}>
             <Radio.Group label="Peran" styles={{ label: { marginBottom: 8 }, error: { marginTop: 8 } }} value={form.data.role}>
               <Group gap={32}>
-                <Radio value="Pengelola Tim" label="Pengelola Tim" color="gold.2" size="md" disabled />
-                <Radio value="Pelatih Fisik" label="Pelatih Fisik" color="gold.2" size="md" disabled />
-                <Radio value="Pelatih Teknik" label="Pelatih Teknik" color="gold.2" size="md" disabled />
+                <Radio disabled styles={{
+                  label: { marginLeft: 16, padding: 0, fontSize: 14 },
+                  radio: { border: 0 },
+                }} size="md" value="Pengelola Tim" label="Pengelola Tim" color="gold.2" />
+                <Radio disabled styles={{
+                  label: { marginLeft: 16, padding: 0, fontSize: 14 },
+                  radio: { border: 0 },
+                }} size="md" value="Pelatih Fisik" label="Pelatih Fisik" color="gold.2" />
+                <Radio disabled styles={{
+                  label: { marginLeft: 16, padding: 0, fontSize: 14 },
+                  radio: { border: 0 },
+                }} size="md" value="Pelatih Teknik" label="Pelatih Teknik" color="gold.2" />
               </Group>
             </Radio.Group>
           </Fieldset>

@@ -105,73 +105,10 @@ const Edit = (props) => {
                 value={form.data.exercise_id}
                 data={[...props.exercises, props.exercise_evaluation.exercise].map((exercise) => ({
                   value: exercise.id,
-                  label: `${exercise.name} ~ ${exercise.date} (${exercise.athlete.user.full_name} ~ ${exercise.athlete.user.role})`,
-                })).sort()}
+                  label: `${exercise.name} (${new Date(exercise.date).toLocaleDateString('id').split('/').join('-')}) | ${exercise.athlete.user.full_name} (${exercise.athlete.user.role})`,
+                }))}
               />
             </Fieldset>
-            
-            {/*<Box>*/}
-            {/*  {props.criterias.map((criteria) => (*/}
-            {/*    <Box key={criteria.id}>*/}
-            {/*      <Divider mt={48} label={criteria.name.toUpperCase()} styles={{ label: { fontSize: '14px' } }} labelPosition="center" />*/}
-            {/*      */}
-            {/*      {criteria.sub_criterias.map((sub_criteria) => (*/}
-            {/*        <Fieldset key={sub_criteria.id} radius={20} legend={sub_criteria.name}*/}
-            {/*                  styles={{ root: { margin: 0, padding: 16 }, legend: { borderRadius: 20, fontSize: 16, padding: 16, fontWeight: 'bold' } }}>*/}
-            {/*          <Stack>*/}
-            {/*            {sub_criteria.sub_sub_criterias.map((sub_sub_criteria) => sub_sub_criteria.type === 'radio' ? (*/}
-            {/*                <Radio.Group key={sub_sub_criteria.id} description={sub_sub_criteria.description} label={sub_sub_criteria.name} styles={{*/}
-            {/*                  label: { marginBottom: 8 }, description: { marginBottom: 8 }, error: { marginTop: 8 },*/}
-            {/*                }} value={form.data.evaluations.find((evaluation) => evaluation.sub_sub_criteria_id === sub_sub_criteria.id)?.value}>*/}
-            {/*                  <Group gap={32}>*/}
-            {/*                    <Radio disabled size="md" value="1" label="1" color="gold.2" />*/}
-            {/*                    <Radio disabled size="md" value="2" label="2" color="gold.2" />*/}
-            {/*                    <Radio disabled size="md" value="3" label="3" color="gold.2" />*/}
-            {/*                    <Radio disabled size="md" value="4" label="4" color="gold.2" />*/}
-            {/*                    <Radio disabled size="md" value="5" label="5" color="gold.2" />*/}
-            {/*                  </Group>*/}
-            {/*                </Radio.Group>*/}
-            {/*              ) : sub_sub_criteria.type === 'number' ? (*/}
-            {/*                <NumberInput disabled hideControls description={sub_sub_criteria.description} key={sub_sub_criteria.id} label={sub_sub_criteria.name}*/}
-            {/*                             variant="filled" styles={{*/}
-            {/*                  label: { marginBottom: 8 },*/}
-            {/*                  description: { marginBottom: 8 },*/}
-            {/*                  input: { height: 48, borderRadius: 32, paddingLeft: 16, paddingRight: 16 },*/}
-            {/*                  section: { marginLeft: 0, width: 48, height: 48 },*/}
-            {/*                  error: { marginTop: 8 },*/}
-            {/*                }} value={form.data.evaluations.find((evaluation) => evaluation.sub_sub_criteria_id === sub_sub_criteria.id)?.value*/}
-            {/*                } />*/}
-            {/*              ) : (*/}
-            {/*                <TextInput key={sub_sub_criteria.id} disabled description={sub_sub_criteria.description} label={sub_sub_criteria.name}*/}
-            {/*                           variant="filled" styles={{*/}
-            {/*                  description: { marginBottom: 8 },*/}
-            {/*                  label: { marginBottom: 8 },*/}
-            {/*                  input: { height: 48, borderRadius: 32, paddingLeft: 16, paddingRight: 16 },*/}
-            {/*                  section: { marginLeft: 0, width: 48, height: 48 },*/}
-            {/*                  error: { marginTop: 8 },*/}
-            {/*                }} value={form.data.evaluations.find((evaluation) => evaluation.sub_sub_criteria_id === sub_sub_criteria.id)?.value} />*/}
-            {/*              ),*/}
-            {/*            )}*/}
-            {/*          </Stack>*/}
-            {/*        </Fieldset>*/}
-            {/*      ))}*/}
-            {/*    </Box>*/}
-            {/*  ))}*/}
-            {/*</Box>*/}
-            
-            {/*<Fieldset radius={20} legend="Informasi Tambahan"*/}
-            {/*          styles={{ root: { margin: 0, padding: 16 }, legend: { borderRadius: 20, fontSize: 16, padding: 16, fontWeight: 'bold' } }}>*/}
-            {/*  <Text mb={8} fz={14}>Catatan</Text>*/}
-            {/*  <RichTextEditor editor={editor} style={{*/}
-            {/*    borderRadius: 20,*/}
-            {/*    cursor: 'not-allowed',*/}
-            {/*    color: '#868e96',*/}
-            {/*    fontSize: 14,*/}
-            {/*  }}>*/}
-            {/*    <RichTextEditor.Content />*/}
-            {/*  </RichTextEditor>*/}
-            {/*</Fieldset>*/}
-            
             {form.data.exercise_id && (
               <Stack gap={48}>
                 {criterias.map((criteria) => (

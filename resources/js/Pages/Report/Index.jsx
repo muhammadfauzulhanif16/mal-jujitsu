@@ -90,6 +90,7 @@ const Index = (props) => {
     </MantineTable.Tr>
   ))
   
+  
   return (
     <AppLayout title="Laporan" authed={props.auth.user} meta={props.meta}>
       <Stack mb={32}>
@@ -274,27 +275,35 @@ const Index = (props) => {
                             <Grid.Col span={11}>
                               <Group style={{
                                 border: '1px solid #e1e1e1',
-                              }} px={16} h={48}>Total</Group>
+                              }} px={16} h={48}>Rata-rata</Group>
                             </Grid.Col>
                             
                             <Grid.Col span={1}>
                               <Group style={{
                                 border: '1px solid #e1e1e1',
                               }} px={16} h={48}>
-                                {
-                                  criteria.sub_criterias.reduce((total, sub_criteria) => {
-                                    return total + sub_criteria.sub_sub_criterias.reduce((subTotal, sub_sub_criteria) => {
-                                      return subTotal + Number(sub_sub_criteria.evaluation.value)
-                                    }, 0)
+                                {(() => {
+                                  let count = 0
+                                  const sum = criteria.sub_criterias.reduce((total, sub_criteria) => {
+                                    const subTotalAndCount = sub_criteria.sub_sub_criterias.reduce((accumulator, sub_sub_criteria) => {
+                                      return {
+                                        sum: accumulator.sum + Number(sub_sub_criteria.evaluation.value),
+                                        count: accumulator.count + 1,
+                                      }
+                                    }, { sum: 0, count: 0 })
+                                    
+                                    count += subTotalAndCount.count
+                                    return total + subTotalAndCount.sum
                                   }, 0)
-                                }
+                                  
+                                  return Number((sum / count).toFixed(2))
+                                })()}
                               </Group>
                             </Grid.Col>
                           </>
                         )}
                       </>
                     ))}
-                  
                   </Grid>
                 </Box>
               ))}

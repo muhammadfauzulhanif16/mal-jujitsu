@@ -14,7 +14,7 @@ export const Header = (props) => {
         alignItems: 'center', borderBottom: '1px solid #f3f3f3',
       }}>
         <Group w={240}>
-          <Image radius={16} h={48} src="https://pbjisurabaya.or.id/images/logo/pbji.png" />
+          <Image radius={32} h={48} src="https://pbjisurabaya.or.id/images/logo/pbji.png" />
         </Group>
         
         <Box display={{ base: 'none', md: 'block' }}>

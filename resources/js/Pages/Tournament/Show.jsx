@@ -1,17 +1,24 @@
 import { AppLayout } from '@/Layouts/AppLayout.jsx'
 import { Avatar, Box, Center, Fieldset, Grid, Group, Indicator, Radio, Select, TextInput } from '@mantine/core'
-import { IconBuilding, IconClipboardText, IconUser } from '@tabler/icons-react'
+import { IconBuilding, IconCalendar, IconClipboardText, IconUser } from '@tabler/icons-react'
 import { Breadcrumbs } from '@/Components/Breadcrumbs.jsx'
 import { useForm } from '@inertiajs/react'
 import 'dayjs/locale/id'
+import { DatePickerInput } from '@mantine/dates'
 
 const Edit = (props) => {
-  const form = useForm({ name: props.tournament.name, place: props.tournament.place, athlete_id: props.tournament.athlete.id, medal: props.tournament.medal })
+  const form = useForm({
+    name: props.tournament.name,
+    place: props.tournament.place,
+    athlete_id: props.tournament.athlete.id,
+    medal: props.tournament.medal,
+    date: props.tournament.date,
+  })
   
   return (
-    <AppLayout title="Turnamen" authed={props.auth.user} meta={props.meta}>
+    <AppLayout title="Pertandingan" authed={props.auth.user} meta={props.meta}>
       <Box mb={32}>
-        <Breadcrumbs navList={[{ label: 'Turnamen', route: 'tournaments.index' }, { label: 'Rincian' }]} />
+        <Breadcrumbs navList={[{ label: 'Pertandingan', route: 'tournaments.index' }, { label: 'Rincian' }]} />
       </Box>
       
       <Grid grow justify="space-between">
@@ -64,15 +71,45 @@ const Edit = (props) => {
               data={props.athletes.map((athlete) => ({ value: athlete.user.id, label: `${athlete.user.full_name} (${athlete.user.role})` }))}
             />
             
-            <Radio.Group value={form.data.medal} label="Medali" styles={{
+            <Radio.Group mb={16} value={form.data.medal} label="Medali" styles={{
               label: { marginBottom: 8 }, error: { marginTop: 8 },
             }}>
               <Group gap={32}>
-                <Radio size="md" value="Emas" label="🥇 Emas" color="gold.2" disabled />
-                <Radio size="md" value="Perak" label="🥈 Perak" color="gold.2" disabled />
-                <Radio size="md" value="Perunggu" label="🥉 Perunggu" color="gold.2" disabled />
+                <Radio disabled styles={{
+                  label: { marginLeft: 16, padding: 0, fontSize: 14 },
+                  radio: { border: 0 },
+                }} size="md" value="Emas" label="🥇 Emas" color="gold.2" />
+                <Radio disabled styles={{
+                  label: { marginLeft: 16, padding: 0, fontSize: 14 },
+                  radio: { border: 0 },
+                }} size="md" value="Perak" label="🥈 Perak" color="gold.2" />
+                <Radio disabled styles={{
+                  label: { marginLeft: 16, padding: 0, fontSize: 14 },
+                  radio: { border: 0 },
+                }} size="md" value="Perunggu" label="🥉 Perunggu" color="gold.2" />
               </Group>
             </Radio.Group>
+            
+            <DatePickerInput disabled locale="id" monthsListFormat="MMMM" withAsterisk clearable allowDeselect firstDayOfWeek={0} variant="filled"
+                             valueFormat="D-M-YYYY" leftSection={<IconCalendar />} label="Tanggal Pertandingan"
+                             placeholder="Masukkan tanggal..."
+                             styles={{
+                               label: { marginBottom: 8 },
+                               input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 16 },
+                               section: { marginLeft: 0, width: 48, height: 48 },
+                               error: { marginTop: 8 },
+                               calendarHeader: { height: 48 },
+                               calendarHeaderControl: { height: 48, width: 48, borderRadius: 32 },
+                             }} onChange={(value) => {
+              form.setData('date', value.toLocaleString())
+              
+              if (!value) {
+                form.setError({ date: 'Tanggal tidak boleh kosong.' })
+              } else {
+                form.clearErrors('date')
+              }
+            }} error={form.errors.date} value={new Date(form.data.date)}
+            />
           </Fieldset>
         </Grid.Col>
       </Grid>
