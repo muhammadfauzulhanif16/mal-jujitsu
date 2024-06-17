@@ -109,6 +109,7 @@ const Edit = (props) => {
                 }))}
               />
             </Fieldset>
+            
             {form.data.exercise_id && (
               <Stack gap={48}>
                 {criterias.map((criteria) => (
@@ -121,7 +122,8 @@ const Edit = (props) => {
                         <Stack>
                           {sub_criteria.sub_sub_criterias.map((sub_sub_criteria, sub_sub_criteria_id) => sub_sub_criteria.type === 'radio' ? (
                               <Radio.Group value={form.data.evaluations.find((evaluation) => evaluation.sub_sub_criteria_id === sub_sub_criteria.id)?.value}
-                                           key={sub_sub_criteria.id} description={sub_sub_criteria.description} label={sub_sub_criteria.name} withAsterisk
+                                           key={sub_sub_criteria.id} description={sub_sub_criteria.description} label={sub_sub_criteria.name}
+                                           withAsterisk={Boolean(sub_sub_criteria.required)}
                                            styles={{
                                              label: { marginBottom: 8 }, description: { marginBottom: 8 }, error: { marginTop: 8 },
                                            }} onChange={(value) => {
@@ -151,7 +153,7 @@ const Edit = (props) => {
                               <NumberInput disabled
                                            value={form.data.evaluations.find((evaluation) => evaluation.sub_sub_criteria_id === sub_sub_criteria.id)?.value}
                                            hideControls description={sub_sub_criteria.description} key={sub_sub_criteria.id} label={sub_sub_criteria.name}
-                                           withAsterisk variant="filled"
+                                           withAsterisk={Boolean(sub_sub_criteria.required)} variant="filled"
                                            styles={{
                                              label: { marginBottom: 8 },
                                              description: { marginBottom: 8 },
@@ -178,7 +180,8 @@ const Edit = (props) => {
                             ) : (
                               <TextInput disabled
                                          value={form.data.evaluations.find((evaluation) => evaluation.sub_sub_criteria_id === sub_sub_criteria.id)?.value}
-                                         key={sub_sub_criteria.id} description={sub_sub_criteria.description} label={sub_sub_criteria.name} withAsterisk
+                                         key={sub_sub_criteria.id} description={sub_sub_criteria.description} label={sub_sub_criteria.name}
+                                         withAsterisk={Boolean(sub_sub_criteria.required)}
                                          variant="filled" styles={{
                                 description: { marginBottom: 8 },
                                 label: { marginBottom: 8 },
