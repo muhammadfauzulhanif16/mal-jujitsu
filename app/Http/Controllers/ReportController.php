@@ -10,6 +10,7 @@
   use App\Models\Report;
   use App\Models\SubCriteria;
   use App\Models\SubSubCriteria;
+  use App\Models\Tournament;
   use App\Models\User;
   use Illuminate\Support\Facades\Auth;
   
@@ -25,8 +26,8 @@
       
       return Inertia('Report/Index', [
         'reports' => in_array($authedUser->role, ['Ne-Waza', 'Fighting']) ? null : Athlete::with(['user', 'tournaments', 'evaluations'])
-          ->has('evaluations')
-          ->has('tournaments')
+          ->whereHas('evaluations')
+          ->orWhereHas('tournaments')
           ->get(),
         'auth' => ['user' => $authedUser],
         'exerciseEvaluations' => ExerciseEvaluation::where('athlete_id', $authedUser->id)
@@ -71,7 +72,7 @@
               })->sortBy('name')->values()
             ];
           })->sortBy('exercise.date')->values(),
-        'tournaments' => [],
+        'tournaments' => Tournament::where('athlete_id', $authedUser->id)->get(),
       ]);
     }
     
@@ -146,7 +147,7 @@
               })->sortBy('name')->values()
             ];
           })->sortBy('exercise.date')->values(),
-        'tournaments' => [],
+        'tournaments' => Tournament::where('athlete_id', $user->id)->get(),
       ]);
     }
     

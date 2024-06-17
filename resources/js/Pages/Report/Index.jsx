@@ -63,7 +63,7 @@ const Index = (props) => {
       </MantineTable.Td>
       <MantineTable.Td
         px={16} py={0}
-        style={{ whiteSpace: 'nowrap' }}>{report.user.full_name} ({report.evaluations.length}) ({report.tournaments.length})</MantineTable.Td>
+        style={{ whiteSpace: 'nowrap' }}>{report.user.full_name}</MantineTable.Td>
       <MantineTable.Td
         px={16} py={0}
         style={{ whiteSpace: 'nowrap' }}>{report.user.role}</MantineTable.Td>
