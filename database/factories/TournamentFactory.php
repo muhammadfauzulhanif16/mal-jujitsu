@@ -20,12 +20,21 @@
     {
       $athleteIds = Athlete::all()->pluck('user_id')->toArray();
       
+      $medals = [
+        'Emas' => 3,
+        'Perak' => 2,
+        'Perunggu' => 1,
+      ];
+      
+      $medal = array_rand($medals);
+      
       return [
         'athlete_id' => $this->faker->randomElement($athleteIds),
         'name' => $this->faker->word(),
         'place' => $this->faker->address,
         'date' => $this->faker->dateTimeThisYear(),
-        'medal' => $this->faker->randomElement(['Emas', 'Perak', 'Perunggu']),
+        'medal' => $medal,
+        'point' => $medals[$medal],
       ];
     }
   }

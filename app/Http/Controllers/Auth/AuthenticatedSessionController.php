@@ -2,6 +2,7 @@
   
   namespace App\Http\Controllers\Auth;
   
+  use App\Events\UserLoggedIn;
   use App\Http\Controllers\Controller;
   use App\Http\Requests\Auth\LoginRequest;
   use Exception;
@@ -28,8 +29,6 @@
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-//      dd($request->all());
-//      Log::info('Remember Me status: ' . ($request->has('remember') ? 'Yes' : 'No'));
       try {
         $request->authenticate();
         

@@ -36,7 +36,7 @@ export const Header = (props) => {
           </Menu.Target>
           
           <Menu.Dropdown>
-            <Menu.Item leftSection={<IconBell />} px={16} py={0} color="netral" onClick={() => router.get(route('profile.edit'))}>Notifikasi</Menu.Item>
+            <Menu.Item leftSection={<IconBell />} px={16} py={0} color="netral" onClick={() => router.get(route('histories.index'))}>Notifikasi</Menu.Item>
             <Menu.Item leftSection={<IconUser />} px={16} py={0} color="netral" onClick={() => router.get(route('profile.edit'))}>Profil Saya</Menu.Item>
             <Menu.Item leftSection={<IconLogout />} color="red" px={16} py={0} onClick={() => router.post(route('logout'))}>Keluar Akun</Menu.Item>
           </Menu.Dropdown>
@@ -70,13 +70,16 @@ export const Header = (props) => {
         <NavBar title={props.title} />
         
         <Stack gap={0}>
-          <Button px={16} styles={{ section: { marginRight: 16 } }} justify="start" h={48} fw={400} variant="subtle" color="netral" radius={32}
+          <Button px={16} onClick={() => router.get(route('histories.index'))} styles={{ section: { marginRight: 16 } }} justify="start" h={48} fw={400}
+                  variant="subtle" color="netral" radius={32}
                   leftSection={<IconBell />}
                   p={16}>Notifikasi</Button>
-          <Button px={16} styles={{ section: { marginRight: 16 } }} justify="start" h={48} fw={400} variant="subtle" color="netral" radius={32}
+          <Button px={16} onClick={() => router.get(route('profile.edit'))} styles={{ section: { marginRight: 16 } }} justify="start" h={48} fw={400}
+                  variant="subtle" color="netral" radius={32}
                   leftSection={<IconUser />}
                   p={16}>Profil Saya</Button>
-          <Button px={16} styles={{ section: { marginRight: 16 } }} justify="start" h={48} fw={400} variant="subtle" color="red" radius={32}
+          <Button px={16} onClick={() => router.post(route('logout'))} styles={{ section: { marginRight: 16 } }} justify="start" h={48} fw={400}
+                  variant="subtle" color="red" radius={32}
                   leftSection={<IconLogout />}
                   p={16}>Keluar Akun</Button>
         </Stack>

@@ -27,6 +27,7 @@
         ExerciseSeeder::class,
         ExerciseEvaluationSeeder::class,
         TournamentSeeder::class,
+        HistorySeeder::class,
       ]);
     }
   }

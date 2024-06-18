@@ -137,8 +137,11 @@ const Dashboard = (props) => {
           ))}
         </Grid>
         
-        <Grid gutter={32}>
-          <Grid.Col span={8}>
+        <Grid gutter={32} grow>
+          <Grid.Col span={{
+            base: 12,
+            lg: 8,
+          }}>
             <Stack gap={32}>
               <Stack p={32} gap={32} style={{
                 borderRadius: 20,
@@ -221,7 +224,9 @@ const Dashboard = (props) => {
             </Stack>
           </Grid.Col>
           
-          <Grid.Col span={4}>
+          <Grid.Col span={{
+            base: 12, lg: 4,
+          }}>
             <Stack p={32} h="100%" gap={32} style={{
               borderRadius: 20,
               border: '1px solid #dcdcdc',
@@ -229,7 +234,10 @@ const Dashboard = (props) => {
               <Title fz={20} c="neutral.2">Peringkat</Title>
               
               <BarChart
-                h="100%"
+                h={{
+                  base: 320,
+                  lg: '100%',
+                }}
                 withLegend
                 xAxisLabel="Atlet"
                 yAxisLabel="Total Medali"
@@ -258,7 +266,7 @@ const Dashboard = (props) => {
                 gridAxis="xy"
                 dataKey="name"
                 withBarValueLabel
-                barProps={{ radius: 20 }}
+                barProps={{ radius: 160 }}
                 series={[{
                   name: 'Emas', color: '#ffd700',
                 }, {

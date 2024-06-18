@@ -10,14 +10,10 @@
      */
     public function up(): void
     {
-      Schema::create('tournaments', function (Blueprint $table) {
+      Schema::create('histories', function (Blueprint $table) {
         $table->uuid('id')->primary();
-        $table->string('name');
-        $table->string('place');
-        $table->date('date');
-        $table->foreignUuid('athlete_id')->constrained('users')->cascadeOnUpdate()->cascadeOnDelete();
-        $table->string('medal');
-        $table->integer('point');
+        $table->foreignUuid('user_id')->constrained();
+        $table->text('content');
         $table->timestamps();
       });
     }
@@ -27,6 +23,6 @@
      */
     public function down(): void
     {
-      Schema::dropIfExists('tournaments');
+      Schema::dropIfExists('histories');
     }
   };

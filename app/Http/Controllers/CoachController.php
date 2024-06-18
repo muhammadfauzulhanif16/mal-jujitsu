@@ -3,6 +3,7 @@
   namespace App\Http\Controllers;
   
   use App\Models\Coach;
+  use App\Models\History;
   use App\Models\User;
   use Exception;
   use Illuminate\Http\Request;
@@ -54,6 +55,11 @@
         
         $user->coach()->create([
           'user_id' => $user->id,
+        ]);
+        
+        History::create([
+          'user_id' => Auth::id(),
+          'content' => "Menambahkan pelatih '{$user->full_name}'"
         ]);
         
         return to_route('coaches.index')->with('meta', [
@@ -108,6 +114,11 @@
             'avatar' => $request->file('avatar')->store('avatars', 'public'),
           ]);
         }
+        
+        History::create([
+          'user_id' => Auth::id(),
+          'content' => "Memperbarui pelatih '{$user->full_name}'"
+        ]);
         
         return redirect()->route('coaches.index')->with('meta', [
           'status' => true,
@@ -165,6 +176,11 @@
         }
         
         $user->delete();
+        
+        History::create([
+          'user_id' => Auth::id(),
+          'content' => "Menghapus pelatih '{$user->full_name}'"
+        ]);
         
         return to_route('coaches.index')->with('meta', [
           'status' => true,

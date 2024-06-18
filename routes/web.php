@@ -4,6 +4,7 @@
   use App\Http\Controllers\CoachController;
   use App\Http\Controllers\EvaluationController;
   use App\Http\Controllers\ExerciseController;
+  use App\Http\Controllers\HistoryController;
   use App\Http\Controllers\ProfileController;
   use App\Http\Controllers\ReportController;
   use App\Http\Controllers\TournamentController;
@@ -118,9 +119,15 @@
 //      Route::delete('{exerciseEvaluation}', [EvaluationController::class, 'destroy'])->name('evaluations.destroy');
     });
     
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::group(['prefix' => 'profile'], function () {
+      Route::get('', [ProfileController::class, 'edit'])->name('profile.edit');
+      Route::put('', [ProfileController::class, 'update'])->name('profile.update');
+      Route::delete('', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    });
+    
+    Route::group(['prefix' => 'histories'], function () {
+      Route::get('', [HistoryController::class, 'index'])->name('histories.index');
+    });
   });
   
   

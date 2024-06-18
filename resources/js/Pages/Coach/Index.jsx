@@ -5,9 +5,12 @@ import { router } from '@inertiajs/core'
 import { Table } from '@/Components/Table.jsx'
 import { useState } from 'react'
 import { Breadcrumbs } from '@/Components/Breadcrumbs.jsx'
+// import Pusher from 'pusher-js'
+//
+// window.Pusher = Pusher
 
 const Index = (props) => {
-  console.log(props)
+  // console.log(import.meta.env.VITE_PUSHER_APP_KEY)
   const [coachSearch, setCoachSearch] = useState('')
   const THList = ['#', 'Foto', 'Nama Lengkap', 'Peran', 'Aksi']
   const actionList = [{
@@ -50,6 +53,24 @@ const Index = (props) => {
       </MantineTable.Td>
     </MantineTable.Tr>
   ))
+  //
+  // useEffect(() => {
+  //   var pusher = new Pusher('986a466c9f5c50cf5ed9', {
+  //     cluster: 'ap1',
+  //     encrypted: true, // Use encrypted connection
+  //     forceTLS: true,
+  //   })
+  //
+  //   var channel = pusher.subscribe('coach-created')
+  //   channel.bind('App\\Events\\CoachCreated', function(data) {
+  //     alert(JSON.stringify(data))
+  //   })
+  //
+  //   return () => {
+  //     channel.unbind('App\\Events\\CoachCreated')
+  //     pusher.unsubscribe('coach-created')
+  //   }
+  // }, [])
   
   return (
     <AppLayout title="Pelatih" authed={props.auth.user} meta={props.meta}>

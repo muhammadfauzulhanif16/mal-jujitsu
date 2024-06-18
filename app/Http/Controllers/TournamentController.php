@@ -3,6 +3,7 @@
   namespace App\Http\Controllers;
   
   use App\Models\Athlete;
+  use App\Models\History;
   use App\Models\Tournament;
   use Exception;
   use Illuminate\Http\Request;
@@ -18,8 +19,6 @@
     {
       $authedUser = Auth::user();
       $authedUser->avatar = str_contains($authedUser->avatar, 'https') ? $authedUser->avatar : ($authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null);
-      
-      $tournaments = [];
       
       if (in_array($authedUser->role, ['Ne-Waza', 'Fighting'])) {
         $tournaments = Tournament::with('athlete')
@@ -58,8 +57,14 @@
             'date' => Carbon::parse($request->date)->format('Y-m-d'),
             'athlete_id' => $athlete_id,
             'medal' => $request->medal,
+            'point' => $request->medal === 'Emas' ? 3 : ($request->medal === 'Perak' ? 2 : 1),
           ]);
         }
+        
+        History::create([
+          'user_id' => Auth::id(),
+          'content' => "Menambahkan pertandingan '{$request->name}'"
+        ]);
         
         return to_route('tournaments.index')->with('meta', [
           'status' => true,
@@ -143,6 +148,11 @@
           'medal' => $request->medal,
         ]);
         
+        History::create([
+          'user_id' => Auth::id(),
+          'content' => "Memperbarui pertandingan '{$request->name}'"
+        ]);
+        
         return to_route('tournaments.index')->with('meta', [
           'status' => true,
           'title' => 'Berhasil memperbarui turnamen',
@@ -164,6 +174,11 @@
     {
       try {
         $tournament->delete();
+        
+        History::create([
+          'user_id' => Auth::id(),
+          'content' => "Menghapus pertandingan '{$tournament->name}'"
+        ]);
         
         return to_route('tournaments.index')->with('meta', [
           'status' => true,

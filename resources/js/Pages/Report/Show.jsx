@@ -21,8 +21,12 @@ const Index = (props) => {
     return new Date(tournament.date).toLocaleDateString('id').split('/').join('-').includes(time)
   })
   
-  const totalMedals = tournamentList.reduce((total, tournament) => {
-    if (['Emas', 'Perak', 'Perunggu'].includes(tournament.medal)) {
+  const totalPoints = tournamentList.reduce((total, tournament) => {
+    if (tournament.medal === 'Emas') {
+      return total + 3
+    } else if (tournament.medal === 'Perak') {
+      return total + 2
+    } else if (tournament.medal === 'Perunggu') {
       return total + 1
     }
     return total
@@ -249,64 +253,64 @@ const Index = (props) => {
             <Divider mb={32} label="Daftar Pertandingan" labelPosition="center" styles={{ label: { fontSize: 14 } }} />
             
             <Grid gutter={0}>
-              <Grid.Col span={9}>
+              <Grid.Col span={6}>
                 <Group style={{
                   border: '1px solid #e1e1e1',
                 }} px={16} h={48} fw={600}>Nama Pertandingan</Group>
               </Grid.Col>
               
-              <Grid.Col span={3}>
+              <Grid.Col span={6}>
                 <Center style={{
                   border: '1px solid #e1e1e1',
-                }} px={16} h={48} fw={600}>Medali</Center>
+                }} px={16} h={48} fw={600}>Medali (Poin)</Center>
               </Grid.Col>
               
-              <Grid.Col span={9}>
+              <Grid.Col span={6}>
                 <Group style={{
                   border: '1px solid #e1e1e1',
                 }} px={16} h={48} fw={600}></Group>
               </Grid.Col>
               
-              <Grid.Col span={1}>
+              <Grid.Col span={2}>
                 <Center style={{
                   border: '1px solid #e1e1e1',
-                }} px={16} h={48} fw={600}>Emas</Center>
+                }} px={16} h={48} fw={600}>Emas (3)</Center>
               </Grid.Col>
               
-              <Grid.Col span={1}>
+              <Grid.Col span={2}>
                 <Center style={{
                   border: '1px solid #e1e1e1',
-                }} px={16} h={48} fw={600}>Perak</Center>
+                }} px={16} h={48} fw={600}>Perak (2)</Center>
               </Grid.Col>
               
-              <Grid.Col span={1}>
+              <Grid.Col span={2}>
                 <Center style={{
                   border: '1px solid #e1e1e1',
-                }} px={16} h={48} fw={600}>Perunggu</Center>
+                }} px={16} h={48} fw={600}>Perunggu (1)</Center>
               </Grid.Col>
               
               
               {tournamentList.map((tournament, tournamentId) => (
                 <>
-                  <Grid.Col span={9}>
+                  <Grid.Col span={6}>
                     <Group style={{
                       border: '1px solid #e1e1e1',
                     }} px={16} h={48}>{tournament.name}</Group>
                   </Grid.Col>
                   
-                  <Grid.Col span={1}>
+                  <Grid.Col span={2}>
                     <Center style={{
                       border: '1px solid #e1e1e1',
                     }} px={16} h={48}>{tournament.medal === 'Emas' ? 1 : '-'}</Center>
                   </Grid.Col>
                   
-                  <Grid.Col span={1}>
+                  <Grid.Col span={2}>
                     <Center style={{
                       border: '1px solid #e1e1e1',
                     }} px={16} h={48}>{tournament.medal === 'Perak' ? 1 : '-'}</Center>
                   </Grid.Col>
                   
-                  <Grid.Col span={1}>
+                  <Grid.Col span={2}>
                     <Center style={{
                       border: '1px solid #e1e1e1',
                     }} px={16} h={48}>{tournament.medal === 'Perunggu' ? 1 : '-'}</Center>
@@ -314,16 +318,16 @@ const Index = (props) => {
                 </>
               ))}
               
-              <Grid.Col span={9}>
+              <Grid.Col span={6}>
                 <Group style={{
                   border: '1px solid #e1e1e1',
                 }} px={16} h={48}>Total</Group>
               </Grid.Col>
               
-              <Grid.Col span={3}>
+              <Grid.Col span={6}>
                 <Center style={{
                   border: '1px solid #e1e1e1',
-                }} px={16} h={48}>{totalMedals}</Center>
+                }} px={16} h={48}>{totalPoints}</Center>
               </Grid.Col>
             </Grid>
           </Box>

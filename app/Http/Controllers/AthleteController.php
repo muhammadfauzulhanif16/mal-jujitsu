@@ -3,7 +3,7 @@
   namespace App\Http\Controllers;
   
   use App\Models\Athlete;
-  use App\Models\ExerciseEvaluation;
+  use App\Models\History;
   use App\Models\User;
   use Exception;
   use Illuminate\Http\Request;
@@ -27,22 +27,6 @@
           $athlete->user->avatar = str_contains($athlete->user->avatar, 'https') ? $athlete->user->avatar : ($athlete->user->avatar ? asset('storage/' . $athlete->user->avatar) : null);
           return $athlete;
         })->sortBy('user.full_name')->values(),
-        'meta' => session('meta'),
-        'auth' => ['user' => $authedUser]
-      ]);
-    }
-    
-    public function evaluation_index(User $user)
-    {
-      $authedUser = Auth::user();
-      $authedUser->avatar = str_contains($authedUser->avatar, 'https') ? $authedUser->avatar : ($authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null);
-      
-      return Inertia('Athlete/Evaluation/Index', [
-        'evaluations' => ExerciseEvaluation::with(['exercise.athlete', 'exercise.coach'])
-          ->whereHas('exercise.athlete', function ($query) use ($user) {
-            $query->where('id', $user->id);
-          })
-          ->get(),
         'meta' => session('meta'),
         'auth' => ['user' => $authedUser]
       ]);
@@ -72,6 +56,11 @@
         $user->athlete()->create([
           'user_id' => $user->id,
           'weight' => $request->weight,
+        ]);
+        
+        History::create([
+          'user_id' => Auth::id(),
+          'content' => "Menambahkan atlet '{$user->full_name}'"
         ]);
         
         return to_route('athletes.index')->with('meta', [
@@ -131,6 +120,11 @@
           'weight' => $request->weight,
         ]);
         
+        History::create([
+          'user_id' => Auth::id(),
+          'content' => "Memperbarui atlet '{$user->full_name}'"
+        ]);
+        
         return redirect()->route('athletes.index')->with('meta', [
           'status' => true,
           'title' => 'Berhasil memperbarui atlet',
@@ -187,6 +181,11 @@
         }
         
         $user->delete();
+        
+        History::create([
+          'user_id' => Auth::id(),
+          'content' => "Menghapus atlet '{$user->full_name}'"
+        ]);
         
         return to_route('athletes.index')->with('meta', [
           'status' => true,

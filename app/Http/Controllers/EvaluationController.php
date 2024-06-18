@@ -6,6 +6,7 @@
   use App\Models\Evaluation;
   use App\Models\Exercise;
   use App\Models\ExerciseEvaluation;
+  use App\Models\History;
   use Exception;
   use Illuminate\Http\Request;
   use Illuminate\Support\Facades\Auth;
@@ -39,14 +40,6 @@
       }
       
       return Inertia('Evaluation/Index', [
-//        'athletes' => ExerciseEvaluation::with('exercise.athlete')
-//          ->get()
-//          ->map(function ($exerciseEvaluation) {
-//            $exerciseEvaluation->exercise->athlete->avatar = str_contains($exerciseEvaluation->exercise->athlete->avatar, 'https') ? $exerciseEvaluation->exercise->athlete->avatar : ($exerciseEvaluation->exercise->athlete->avatar ? asset('storage/' . $exerciseEvaluation->exercise->athlete->avatar) : null);
-//            return $exerciseEvaluation->exercise->athlete;
-//          })
-//          ->unique('id')
-//          ->values(),
         'evaluations' => $evaluations,
         'meta' => session('meta'),
         'auth' => ['user' => $authedUser]
@@ -63,6 +56,11 @@
           'athlete_id' => Exercise::where('id', $request->exercise_id)->first()->athlete_id,
           'exercise_id' => $request->exercise_id,
           'note' => $request->note,
+        ]);
+        
+        History::create([
+          'user_id' => Auth::id(),
+          'content' => "Menambahkan penilaian latihan '{$exercise_evaluation->exercise->name}'",
         ]);
         
         foreach ($request->evaluations as $evaluation) {
@@ -186,6 +184,11 @@
           ]);
         }
         
+        History::create([
+          'user_id' => Auth::id(),
+          'content' => "Mengubah penilaian latihan '{$exerciseEvaluation->exercise->name}'",
+        ]);
+        
         return to_route('evaluations.index')->with('meta', [
           'status' => true,
           'title' => 'Berhasil mengubah penilaian',
@@ -208,6 +211,11 @@
     {
       try {
         $exerciseEvaluation->delete();
+        
+        History::create([
+          'user_id' => Auth::id(),
+          'content' => "Menghapus penilaian latihan '{$exerciseEvaluation->exercise->name}'",
+        ]);
         
         return to_route('evaluations.index')->with('meta', [
           'status' => true,

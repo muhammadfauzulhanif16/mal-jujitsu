@@ -5,6 +5,7 @@
   use App\Models\Athlete;
   use App\Models\Coach;
   use App\Models\Exercise;
+  use App\Models\History;
   use Exception;
   use Illuminate\Http\Request;
   use Illuminate\Support\Carbon;
@@ -57,9 +58,6 @@
      */
     public function store(Request $request)
     {
-//      dd($request->all());
-//      $date = Carbon::parse($request->date, 'Asia/Jakarta')->format('Y-m-d');
-//      dd($date);
       try {
         foreach ($request->athlete_ids as $athlete_id) {
           Exercise::create([
@@ -72,6 +70,12 @@
             'end_time' => Carbon::parse($request->end_time)->format('H:i:s'),
           ]);
         }
+        
+        
+        History::create([
+          'user_id' => Auth::id(),
+          'content' => "Menambahkan latihan '{$request->name}'"
+        ]);
         
         return to_route('exercises.index')->with('meta', [
           'status' => true,
@@ -141,15 +145,6 @@
       $authedUser->avatar = str_contains($authedUser->avatar, 'https') ? $authedUser->avatar : ($authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null);
       
       return Inertia('Exercise/Edit', [
-//        'exercise' => $exercise->load(['athlete.user' => function ($query) {
-//          $query->get()->each(function ($user) {
-//            $user->avatar = str_contains($user->avatar, 'https') ? $user->avatar : ($user->avatar ? asset('storage/' . $user->avatar) : null);
-//          });
-//        }, 'coach.user' => function ($query) {
-//          $query->get()->each(function ($user) {
-//            $user->avatar = str_contains($user->avatar, 'https') ? $user->avatar : ($user->avatar ? asset('storage/' . $user->avatar) : null);
-//          });
-//        }]),
         'exercise' => $exercise->load(['athlete', 'coach']),
         'meta' => session('meta'),
         'auth' => ['user' => $authedUser],
@@ -180,6 +175,11 @@
           'end_time' => Carbon::parse($request->end_time)->format('H:i:s'),
         ]);
         
+        History::create([
+          'user_id' => Auth::id(),
+          'content' => "Mengubah latihan '{$request->name}'"
+        ]);
+        
         return to_route('exercises.index')->with('meta', [
           'status' => true,
           'title' => 'Berhasil mengubah latihan',
@@ -201,6 +201,11 @@
     {
       try {
         $exercise->delete();
+        
+        History::create([
+          'user_id' => Auth::id(),
+          'content' => "Menghapus latihan '{$exercise->name}'"
+        ]);
         
         return to_route('exercises.index')->with('meta', [
           'status' => true,
