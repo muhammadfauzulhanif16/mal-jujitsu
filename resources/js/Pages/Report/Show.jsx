@@ -1,5 +1,5 @@
 import { AppLayout } from '@/Layouts/AppLayout.jsx'
-import { ActionIcon, Avatar, Box, Button, Center, Divider, Grid, Group, SimpleGrid, Stack, Text, Tooltip } from '@mantine/core'
+import { ActionIcon, Avatar, Box, Button, Center, Divider, Grid, Group, SimpleGrid, Stack, Text, Title, Tooltip } from '@mantine/core'
 import { IconCalendar, IconPrinter } from '@tabler/icons-react'
 import { Breadcrumbs } from '@/Components/Breadcrumbs.jsx'
 import { useState } from 'react'
@@ -7,6 +7,7 @@ import { MonthPickerInput } from '@mantine/dates'
 
 const Index = (props) => {
   const [time, setTime] = useState(null)
+  const [isPrint, setIsPrint] = useState(false)
   
   const evaluationList = props.exerciseEvaluations?.filter((evaluation) => {
     if (time === null) {
@@ -32,9 +33,18 @@ const Index = (props) => {
     return total
   }, 0)
   
+  window.onbeforeprint = function() {
+    console.log('Print dialog opened!')
+  }
+  
+  window.onafterprint = function() {
+    console.log('Print dialog closed!')
+  }
+  
   return (
-    <AppLayout title={`Laporan "${props.athlete.full_name}"`} authed={props.auth.user} meta={props.meta}>
-      <Stack mb={32}>
+    <AppLayout title={`Laporan "${props.athlete.full_name}"`} authed={props.auth.user} meta={props.meta} isPrint={isPrint}>
+      
+      {!isPrint ? (<Stack mb={32}>
         <Group w="100%" justify="space-between">
           <Breadcrumbs navList={[{ label: 'Laporan', route: 'reports.index' }, { label: 'Rincian' }]} />
           
@@ -65,19 +75,28 @@ const Index = (props) => {
               }}
             />
             
-            <>
-              <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Cetak">
-                <ActionIcon ml="auto" h={48} w={48} color="gold.2" radius={32} display={{ base: 'block', sm: 'none' }}
-                            onClick={() => window.print()}>
-                  <IconPrinter />
-                </ActionIcon>
-              </Tooltip>
-              
-              <Button display={{ base: 'none', sm: 'block' }} w={240} leftSection={<IconPrinter />} variant="filled" color="gold.2" h={48} radius={32} px={16}
-                      styles={{ section: { marginRight: 12 } }} onClick={() => window.print()}>
-                Cetak
-              </Button>
-            </>
+            {props.auth.user.role.includes('Pelatih') && (
+              <>
+                <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Cetak">
+                  <ActionIcon ml="auto" h={48} w={48} color="gold.2" radius={32} display={{ base: 'block', sm: 'none' }}
+                              onClick={() => window.print()}>
+                    <IconPrinter />
+                  </ActionIcon>
+                </Tooltip>
+                
+                <Button display={{ base: 'none', sm: 'block' }} w={240} leftSection={<IconPrinter />} variant="filled" color="gold.2" h={48} radius={32} px={16}
+                        styles={{ section: { marginRight: 12 } }} onClick={() => {
+                  setIsPrint(true)
+                  
+                  setTimeout(() => {
+                    window.print()
+                    setIsPrint(false)
+                  }, 1000)
+                }}>
+                  Cetak
+                </Button>
+              </>
+            )}
           </Group>
         </Group>
         
@@ -101,14 +120,25 @@ const Index = (props) => {
             calendarHeaderControl: { height: 48, width: 48, borderRadius: 32 },
           }}
         />
-      </Stack>
+      </Stack>) : <Title size={34} align="center" mb={32}>Laporan</Title>}
       
       <Stack gap={80}>
-        <Grid align="center">
-          <Grid.Col span={4}>
-            <Avatar src={props.athlete.avatar}
-                    alt={props.athlete.full_name}
-                    size={160} />
+        <Grid align="center" grow>
+          <Grid.Col span={{
+            base: 12,
+            sm: 4,
+          }} mb={{
+            base: 32,
+            sm: 0,
+          }}>
+            <Avatar
+              mx={{
+                base: 'auto',
+                sm: 0,
+              }}
+              src={props.athlete.avatar}
+              alt={props.athlete.full_name}
+              size={160} />
           </Grid.Col>
           
           <Grid.Col span={8}>
@@ -158,13 +188,13 @@ const Index = (props) => {
                     mb={16}>{evaluationId + 1}. {evaluation.exercise.name} di {evaluation.exercise.place} pada {new Date(evaluation.exercise.date).toLocaleDateString('id').split('/').join('-')}</Text>
                   
                   <Grid gutter={0}>
-                    <Grid.Col span={11}>
+                    <Grid.Col span={10}>
                       <Group style={{
                         border: '1px solid #e1e1e1',
                       }} px={16} h={48} fw={600}>Kriteria</Group>
                     </Grid.Col>
                     
-                    <Grid.Col span={1}>
+                    <Grid.Col span={2}>
                       <Center style={{
                         border: '1px solid #e1e1e1',
                       }} px={16} h={48} fw={600}>Nilai</Center>
@@ -190,13 +220,13 @@ const Index = (props) => {
                               
                               {sub_criteria.sub_sub_criterias.map((sub_sub_criteria, subSubCriteriaId) => (
                                 <>
-                                  <Grid.Col span={11} key={subSubCriteriaId}>
+                                  <Grid.Col span={10} key={subSubCriteriaId}>
                                     <Group style={{
                                       border: '1px solid #e1e1e1',
                                     }} px={16} h={48}>{subSubCriteriaId + 1}. {sub_sub_criteria.name}</Group>
                                   </Grid.Col>
                                   
-                                  <Grid.Col span={1}>
+                                  <Grid.Col span={2}>
                                     <Group style={{
                                       border: '1px solid #e1e1e1',
                                     }} px={16} h={48}>{sub_sub_criteria.evaluation.value}</Group>
@@ -209,13 +239,13 @@ const Index = (props) => {
                         
                         {criteria.type === 'radio' && (
                           <>
-                            <Grid.Col span={11}>
+                            <Grid.Col span={10}>
                               <Group style={{
                                 border: '1px solid #e1e1e1',
                               }} px={16} h={48}>Rata-rata</Group>
                             </Grid.Col>
                             
-                            <Grid.Col span={1}>
+                            <Grid.Col span={2}>
                               <Group style={{
                                 border: '1px solid #e1e1e1',
                               }} px={16} h={48}>

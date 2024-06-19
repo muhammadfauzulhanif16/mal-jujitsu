@@ -40,7 +40,7 @@
           return to_route('dashboard')->with('meta', [
             'status' => true,
             'title' => 'Berhasil masuk akun',
-            'message' => 'Selamat datang kembali, ' . $user->full_name . '!'
+            'message' => 'Selamat datang, ' . $user->full_name . '!'
           ]);
         } else {
           throw new Exception('Alamat surel / kata sandi salah.');
@@ -59,12 +59,22 @@
      */
     public function destroy(Request $request): RedirectResponse
     {
-      Auth::guard('web')->logout();
-      
-      $request->session()->invalidate();
-      
-      $request->session()->regenerateToken();
-      
-      return redirect('/');
+      try {
+//        Auth::guard('web')->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        
+        return to_route('login')->with('meta', [
+          'status' => true,
+          'title' => 'Berhasil keluar akun',
+          'message' => 'Selamat tinggal! ' . Auth::user()->full_name . '!'
+        ]);
+      } catch (Exception $e) {
+        return redirect()->back()->with('meta', [
+          'status' => false,
+          'title' => 'Gagal keluar akun',
+          'message' => $e->getMessage()
+        ]);
+      }
     }
   }

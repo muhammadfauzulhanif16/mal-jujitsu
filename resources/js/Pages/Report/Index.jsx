@@ -142,19 +142,22 @@ const Index = (props) => {
                 }}
               />
               
-              <>
-                <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Cetak">
-                  <ActionIcon ml="auto" h={48} w={48} color="gold.2" radius={32} display={{ base: 'block', sm: 'none' }}
-                              onClick={() => window.print()}>
-                    <IconPrinter />
-                  </ActionIcon>
-                </Tooltip>
-                
-                <Button display={{ base: 'none', sm: 'block' }} w={240} leftSection={<IconPrinter />} variant="filled" color="gold.2" h={48} radius={32} px={16}
-                        styles={{ section: { marginRight: 12 } }} onClick={() => window.print()}>
-                  Cetak
-                </Button>
-              </>
+              {props.auth.user.role.includes('Pelatih') && (
+                <>
+                  <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Cetak">
+                    <ActionIcon ml="auto" h={48} w={48} color="gold.2" radius={32} display={{ base: 'block', sm: 'none' }}
+                                onClick={() => window.print()}>
+                      <IconPrinter />
+                    </ActionIcon>
+                  </Tooltip>
+                  
+                  <Button display={{ base: 'none', sm: 'block' }} w={240} leftSection={<IconPrinter />} variant="filled" color="gold.2" h={48} radius={32}
+                          px={16}
+                          styles={{ section: { marginRight: 12 } }} onClick={() => window.print()}>
+                    Cetak
+                  </Button>
+                </>
+              )}
             </Group>
           )}
         </Group>

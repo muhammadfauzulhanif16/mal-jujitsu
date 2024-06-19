@@ -2,6 +2,7 @@
   
   namespace App\Http\Controllers;
   
+  use App\Models\History;
   use Exception;
   use Illuminate\Http\RedirectResponse;
   use Illuminate\Http\Request;
@@ -51,6 +52,11 @@
           'email' => $request->email,
         ]);
         
+        History::create([
+          'user_id' => Auth::id(),
+          'content' => 'Mengubah profil',
+        ]);
+        
         return Redirect::to('/profile')->with('meta', [
           'status' => true,
           'title' => 'Berhasil memperbarui profil',
@@ -60,7 +66,7 @@
         return Redirect::back()->with('meta', [
           'status' => false,
           'title' => 'Gagal memperbarui profil',
-          'message' => 'Terjadi kesalahan saat memperbarui profil Anda!'
+          'message' => $e->getMessage()
         ]);
         
       }
