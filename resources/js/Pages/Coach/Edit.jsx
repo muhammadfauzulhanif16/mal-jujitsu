@@ -6,7 +6,7 @@ import { useForm } from '@inertiajs/react'
 import { DatePickerInput } from '@mantine/dates'
 import 'dayjs/locale/id'
 
-const Show = (props) => {
+const Edit = (props) => {
   const form = useForm({
     _method: 'put',
     avatar: props.user.avatar,
@@ -183,8 +183,8 @@ const Show = (props) => {
                 <Group gap={32}>
                   <Radio styles={{
                     label: { marginLeft: 16, padding: 0, fontSize: 14 },
-                    radio: { border: 0, backgroundColor: form.data.role === 'Pengelola Tim' ? 'var(--mantine-color-gold-2)' : '#f1f3f5' },
-                  }} size="md" value="Pengelola Tim" label="Pengelola Tim" color="gold.2" />
+                    radio: { border: 0, backgroundColor: form.data.role === 'Manajer Tim' ? 'var(--mantine-color-gold-2)' : '#f1f3f5' },
+                  }} size="md" value="Manajer Tim" label="Manajer Tim" color="gold.2" />
                   <Radio styles={{
                     label: { marginLeft: 16, padding: 0, fontSize: 14 },
                     radio: { border: 0, backgroundColor: form.data.role === 'Pelatih Fisik' ? 'var(--mantine-color-gold-2)' : '#f1f3f5' },
@@ -203,4 +203,4 @@ const Show = (props) => {
   )
 }
 
-export default Show
+export default Edit

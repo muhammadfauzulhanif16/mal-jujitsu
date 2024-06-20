@@ -28,13 +28,14 @@ import { useForm } from '@inertiajs/react'
 import { useEffect, useState } from 'react'
 
 const Create = (props) => {
+  console.log(props)
   const [role, setRole] = useState('')
   const form = useForm({
     exercise_id: '',
     note: '',
     evaluations: [],
   })
-  
+  console.log(role)
   const criterias = props.criterias.map((criteria) => {
     return {
       ...criteria,

@@ -97,7 +97,7 @@
         'meta' => session('meta'),
         'auth' => ['user' => $authedUser],
         'exercises' => Exercise::with('athlete.user')->doesntHave('exerciseEvaluation')->get()->map(function ($exercise) {
-          $exercise->athlete->user->avatar = str_contains($exercise->athlete->user->avatar, 'https') ? $exercise->athlete->user->avatar : ($exercise->athlete->user->avatar ? asset('storage/' . $exercise->athlete->user->avatar) : null);
+          $exercise->athlete->user->avatar = str_contains($exercise->athlete->user->avatar, 'https') ? $exercise->athlete->user->avatar : (str_contains($exercise->athlete->user->avatar, 'storage/') ? $exercise->athlete->user->avatar : ($exercise->athlete->user->avatar ? asset('storage/' . $exercise->athlete->user->avatar) : null));
           return $exercise;
         })->sortBy('name')->values(),
         'criterias' => Criteria::with(['subCriterias.subSubCriterias'])->get()

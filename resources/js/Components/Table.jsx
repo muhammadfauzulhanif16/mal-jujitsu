@@ -1,10 +1,11 @@
 import { Box, Button, Flex, Table as MantineTable, Text } from '@mantine/core'
-import { IconUser } from '@tabler/icons-react'
+import { IconPlus } from '@tabler/icons-react'
+import { router } from '@inertiajs/core'
 
 export const Table = (props) => {
   return (
     <Box
-      p={props.tdList.length ? 0 : 32}
+      p={props.tdList.length ? 0 : 64}
       style={{
         borderRadius: 20,
         border: props.tdList.length && '1px solid #E0E0E0',
@@ -49,27 +50,26 @@ export const Table = (props) => {
             </MantineTable>
           </MantineTable.ScrollContainer>
           : (
-            <Flex justify="center" align="center" direction="column">
-              <IconUser
-                size={48}
-                style={{
-                  color: 'var(--mantine-color-netral-5)',
-                  marginBottom: 8,
-                }}
-              />
+            <Flex justify="center" align="center" direction="column" c="neutral.5">
+              {props.icon}
               
-              <Text mb={16} fw="bold">Tidak ada pelatih</Text>
+              <Text mt={8} mb={16} fw="bold">Tidak ada {props.title}</Text>
               
-              <Button
-                variant="subtle"
-                color="gold.1"
-                radius={32}
-                h={48}
-                p={16}
-                fw="bold"
-              >
-                Tambah Atlet
-              </Button>
+              {props.route && (
+                <Button
+                  px={16} styles={{ section: { marginRight: 16 } }}
+                  leftSection={<IconPlus />}
+                  variant="light"
+                  color="gold.1"
+                  radius={32}
+                  h={48}
+                  p={16}
+                  fw="bold"
+                  onClick={() => router.get(route(props.route))}
+                >
+                  Tambah {props.title}
+                </Button>
+              )}
             </Flex>
           )
       }

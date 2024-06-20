@@ -1,6 +1,6 @@
 import { AppLayout } from '@/Layouts/AppLayout.jsx'
 import { ActionIcon, Avatar, Button, Flex, Group, Stack, Table as MantineTable, TextInput, Tooltip } from '@mantine/core'
-import { IconEye, IconPencil, IconPlus, IconSearch, IconTrash } from '@tabler/icons-react'
+import { IconClipboardText, IconEye, IconPencil, IconPlus, IconSearch, IconTrash } from '@tabler/icons-react'
 import { Breadcrumbs } from '@/Components/Breadcrumbs.jsx'
 import { router } from '@inertiajs/core'
 import { useState } from 'react'
@@ -34,7 +34,7 @@ const Index = (props) => {
     },
   ]
   const exerciseList = props.exercises.filter((exercise) => {
-    return exercise.name.toLowerCase().includes(exerciseSearch.toLowerCase())
+    return exercise.exercise.name.toLowerCase().includes(exerciseSearch.toLowerCase())
   })
   const TDList = exerciseList.map((exercise, id) => (
     <MantineTable.Tr h={64} key={id}>
@@ -44,43 +44,44 @@ const Index = (props) => {
       <MantineTable.Td
         px={16} py={0}
         style={{ whiteSpace: 'nowrap' }}>
-        {exercise.name}
+        {exercise.exercise.name}
       </MantineTable.Td>
       <MantineTable.Td
         px={16} py={0}
-        style={{ whiteSpace: 'nowrap' }}>{exercise.place}</MantineTable.Td>
+        style={{ whiteSpace: 'nowrap' }}>{exercise.exercise.place}</MantineTable.Td>
       <MantineTable.Td
         px={16} py={0}
         style={{ whiteSpace: 'nowrap' }}>
         <Flex gap={16} align="center">
-          <Avatar size={48} src={exercise.athlete.user.avatar} />
+          <Avatar size={48} src={exercise.athlete.avatar} />
           
-          {exercise.athlete.user.full_name}
+          {exercise.athlete.full_name}
         </Flex>
       </MantineTable.Td>
       <MantineTable.Td
         px={16} py={0}
         style={{ whiteSpace: 'nowrap' }}>
         <Flex gap={16} align="center">
-          <Avatar size={48} src={exercise.coach.user.avatar} />
+          <Avatar size={48} src={exercise.coach.avatar} />
           
-          {exercise.coach.user.full_name}
+          {exercise.coach.full_name}
         </Flex>
       </MantineTable.Td>
       <MantineTable.Td
         px={16} py={0}
-        style={{ whiteSpace: 'nowrap' }}>{new Date(exercise.date).toLocaleDateString('id').split('/').join('-')}</MantineTable.Td>
+        style={{ whiteSpace: 'nowrap' }}>{new Date(exercise.exercise.date).toLocaleDateString('id').split('/').join('-')}</MantineTable.Td>
       <MantineTable.Td
         px={16} py={0}
-        style={{ whiteSpace: 'nowrap' }}>{exercise.start_time.split(':').join('.')}</MantineTable.Td>
+        style={{ whiteSpace: 'nowrap' }}>{exercise.exercise.start_time.split(':').join('.')}</MantineTable.Td>
       <MantineTable.Td
         px={16} py={0}
-        style={{ whiteSpace: 'nowrap' }}>{exercise.end_time.split(':').join('.')}</MantineTable.Td>
+        style={{ whiteSpace: 'nowrap' }}>{exercise.exercise.end_time.split(':').join('.')}</MantineTable.Td>
       <MantineTable.Td px={16} py={0} style={{ whiteSpace: 'nowrap' }}>
         <Flex gap={8} style={{ whiteSpace: 'nowrap' }}>
           {actionList.map((action, id) => (
             <Tooltip label={action.label} key={id} style={{ borderRadius: 32, padding: '.5rem 1rem' }}>
-              <ActionIcon size={48} radius={32} variant="subtle" aria-label={action.label} color={action.color} onClick={() => action.onClick(exercise)}
+              <ActionIcon size={48} radius={32} variant="subtle" aria-label={action.label} color={action.color}
+                          onClick={() => action.onClick(exercise.exercise)}
                           disabled={action.disabled}>
                 {action.icon}
               </ActionIcon>
@@ -130,7 +131,7 @@ const Index = (props) => {
                    placeholder="Cari atlet..." onChange={(e) => setExerciseSearch(e.target.value)} />
       </Stack>
       
-      <Table thList={THList} tdList={TDList} />
+      <Table thList={THList} tdList={TDList} icon={<IconClipboardText size={48} />} title="Latihan" route="exercises.create" />
     </AppLayout>
   )
 }

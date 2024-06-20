@@ -1,6 +1,6 @@
 import { AppLayout } from '@/Layouts/AppLayout.jsx'
 import { ActionIcon, Avatar, Button, Flex, Group, Stack, Table as MantineTable, TextInput, Tooltip } from '@mantine/core'
-import { IconEye, IconPencil, IconPlus, IconSearch, IconTrash } from '@tabler/icons-react'
+import { IconEye, IconPencil, IconPlus, IconSearch, IconTrash, IconUser } from '@tabler/icons-react'
 import { Breadcrumbs } from '@/Components/Breadcrumbs.jsx'
 import { Table } from '@/Components/Table.jsx'
 import { useState } from 'react'
@@ -112,7 +112,7 @@ const Index = (props) => {
                    color="gold.2" placeholder="Cari atlet..." onChange={(e) => setAthleteSearch(e.target.value)} />
       </Stack>
       
-      <Table thList={THList} tdList={TDList} />
+      <Table thList={THList} tdList={TDList} icon={<IconUser size={48} />} title="Atlet" route="athletes.create" />
     </AppLayout>
   )
 }

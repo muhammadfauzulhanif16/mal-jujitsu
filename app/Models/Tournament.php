@@ -16,6 +16,7 @@
       'date',
       'athlete_id',
       'medal',
+      'point',
     ];
     
     

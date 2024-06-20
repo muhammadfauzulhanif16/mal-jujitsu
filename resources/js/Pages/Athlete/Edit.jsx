@@ -30,14 +30,14 @@ const Edit = (props) => {
           
           <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label=" Ubah Atlet">
             <ActionIcon type="submit" ml="auto" h={48} w={48} color="gold.2" radius={32} display={{ base: 'block', xs: 'none' }}
-                        disabled={form.hasErrors || Object.entries(form.data).some(([key, value]) => key !== 'password' && !value)}>
+                        disabled={form.hasErrors || Object.entries(form.data).some(([key, value]) => key !== 'avatar' && key !== 'password' && !value)}>
               <IconCornerDownLeft />
             </ActionIcon>
           </Tooltip>
           
           <Button display={{ base: 'none', xs: 'block' }} type="submit" w={240} leftSection={<IconCornerDownLeft />} variant="filled" color="gold.2" h={48}
                   px={16} styles={{ section: { marginRight: 12 } }} radius={32} loading={form.processing}
-                  disabled={form.hasErrors || Object.entries(form.data).some(([key, value]) => key !== 'password' && !value)}>
+                  disabled={form.hasErrors || Object.entries(form.data).some(([key, value]) => key !== 'avatar' && key !== 'password' && !value)}>
             Ubah Atlet
           </Button>
         </Group>

@@ -114,6 +114,7 @@ const Create = (props) => {
               
               <MultiSelect
                 mb={16}
+                hidePickedOptions
                 withAsterisk
                 variant="filled"
                 styles={{

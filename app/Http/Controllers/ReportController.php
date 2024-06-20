@@ -28,7 +28,11 @@
         'reports' => in_array($authedUser->role, ['Ne-Waza', 'Fighting']) ? null : Athlete::with(['user', 'tournaments', 'evaluations'])
           ->whereHas('evaluations')
           ->orWhereHas('tournaments')
-          ->get(),
+          ->get()
+          ->map(function ($athlete) {
+            $athlete->user->avatar = str_contains($athlete->user->avatar, 'https') ? $athlete->user->avatar : (str_contains($athlete->user->avatar, 'storage/') ? $athlete->user->avatar : ($athlete->user->avatar ? asset('storage/' . $athlete->user->avatar) : null));
+            return $athlete;
+          }),
         'auth' => ['user' => $authedUser],
         'exerciseEvaluations' => ExerciseEvaluation::where('athlete_id', $authedUser->id)
           ->with(['exercise', 'evaluations.subSubCriteria.subCriteria.criteria'])
@@ -103,6 +107,7 @@
       return Inertia('Report/Show', [
         'athlete' => tap($user->load('athlete')->toArray(), function (&$athlete) {
           $athlete['weight'] = $athlete['athlete']['weight'];
+          $athlete['avatar'] = str_contains($athlete['avatar'], 'https') ? $athlete['avatar'] : (str_contains($athlete['avatar'], 'storage/') ? $athlete['avatar'] : ($athlete['avatar'] ? asset('storage/' . $athlete['avatar']) : null));
         }),
         'auth' => ['user' => $authedUser],
         'exerciseEvaluations' => ExerciseEvaluation::where('athlete_id', $user->id)

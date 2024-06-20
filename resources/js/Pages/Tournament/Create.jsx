@@ -95,6 +95,7 @@ const Create = (props) => {
               }} error={form.errors.place} />
               
               <MultiSelect
+                hidePickedOptions
                 mb={16}
                 withAsterisk
                 variant="filled"

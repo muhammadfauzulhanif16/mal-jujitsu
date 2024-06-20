@@ -8,6 +8,7 @@
   use Illuminate\Http\Request;
   use Illuminate\Support\Facades\Auth;
   use Illuminate\Support\Facades\Redirect;
+  use Illuminate\Support\Facades\Storage;
   use Inertia\Inertia;
   use Inertia\Response;
   
@@ -39,8 +40,13 @@
       try {
         $user = $request->user();
         
+        
         if ($request->hasFile('avatar')) {
           $avatar = $request->file('avatar');
+          
+          if ($user->avatar) {
+            Storage::disk('public')->delete($user->avatar);
+          }
           
           $user->update([
             'avatar' => $avatar->store('avatars', 'public'),

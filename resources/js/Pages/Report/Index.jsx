@@ -1,6 +1,6 @@
 import { AppLayout } from '@/Layouts/AppLayout.jsx'
 import { ActionIcon, Avatar, Box, Button, Center, Divider, Flex, Grid, Group, SimpleGrid, Stack, Table as MantineTable, Text, Tooltip } from '@mantine/core'
-import { IconCalendar, IconEye, IconPrinter } from '@tabler/icons-react'
+import { IconCalendar, IconEye, IconPrinter, IconReport } from '@tabler/icons-react'
 import { Breadcrumbs } from '@/Components/Breadcrumbs.jsx'
 import { router } from '@inertiajs/core'
 import { useState } from 'react'
@@ -186,7 +186,8 @@ const Index = (props) => {
         )}
       </Stack>
       
-      {!['Ne-Waza', 'Fighting'].includes(props.auth.user.role) ? (<Table thList={THList} tdList={TDList} />) : (
+      {!['Ne-Waza', 'Fighting'].includes(props.auth.user.role) ? (
+        <Table thList={THList} tdList={TDList} icon={<IconReport size={48} />} title="Laporan" />) : (
         <Stack gap={80}>
           <Grid align="center">
             <Grid.Col span={4}>

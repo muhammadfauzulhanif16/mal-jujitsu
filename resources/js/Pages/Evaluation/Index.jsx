@@ -1,6 +1,6 @@
 import { AppLayout } from '@/Layouts/AppLayout.jsx'
 import { ActionIcon, Button, Flex, Group, Stack, Table as MantineTable, TextInput, Tooltip } from '@mantine/core'
-import { IconEye, IconPencil, IconPlus, IconSearch, IconTrash } from '@tabler/icons-react'
+import { IconEye, IconPencil, IconPlus, IconReportAnalytics, IconSearch, IconTrash } from '@tabler/icons-react'
 import { Breadcrumbs } from '@/Components/Breadcrumbs.jsx'
 import { router } from '@inertiajs/core'
 import { useState } from 'react'
@@ -118,7 +118,7 @@ const Index = (props) => {
                    placeholder="Cari atlet..." onChange={(e) => evaluationSearch(e.target.value)} />
       </Stack>
       
-      <Table thList={THList} tdList={TDList} />
+      <Table thList={THList} tdList={TDList} icon={<IconReportAnalytics size={48} />} title="Penilaian" route="evaluations.create" />
     </AppLayout>
   )
 }

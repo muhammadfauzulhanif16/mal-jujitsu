@@ -1,6 +1,6 @@
 import { AppLayout } from '@/Layouts/AppLayout.jsx'
 import { ActionIcon, Avatar, Button, Flex, Group, Stack, Table as MantineTable, TextInput, Tooltip } from '@mantine/core'
-import { IconEye, IconPencil, IconPlus, IconSearch, IconTrash } from '@tabler/icons-react'
+import { IconEye, IconMedal, IconPencil, IconPlus, IconSearch, IconTrash } from '@tabler/icons-react'
 import { Breadcrumbs } from '@/Components/Breadcrumbs.jsx'
 import { router } from '@inertiajs/core'
 import { useState } from 'react'
@@ -117,7 +117,7 @@ const Index = (props) => {
                    placeholder="Cari atlet..." onChange={(e) => setTournamentSearch(e.target.value)} />
       </Stack>
       
-      <Table thList={THList} tdList={TDList} />
+      <Table thList={THList} tdList={TDList} icon={<IconMedal size={48} />} title="Pertandingan" route="tournaments.create" />
     </AppLayout>
   )
 }

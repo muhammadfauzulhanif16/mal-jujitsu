@@ -30,20 +30,35 @@
           ->map(function ($exercise) {
             $exercise->athlete->user->avatar = str_contains($exercise->athlete->user->avatar, 'https') ? $exercise->athlete->user->avatar : ($exercise->athlete->user->avatar ? asset('storage/' . $exercise->athlete->user->avatar) : null);
             $exercise->coach->user->avatar = str_contains($exercise->coach->user->avatar, 'https') ? $exercise->coach->user->avatar : ($exercise->coach->user->avatar ? asset('storage/' . $exercise->coach->user->avatar) : null);
-            return $exercise;
+            $exercise->athlete = $exercise->athlete->user;
+            $exercise->coach = $exercise->coach->user;
+            
+            return array_merge((array)$exercise->athlete->toArray(), (array)$exercise->coach->toArray(), (array)$exercise->toArray());
           })
           ->sortBy('name')
           ->values();
       } else {
-        $exercises = Exercise::with(['athlete.user', 'coach.user'])
+        $exercises = Exercise::with(['coach.user', 'athlete.user'])
           ->get()
           ->map(function ($exercise) {
-            $exercise->athlete->user->avatar = str_contains($exercise->athlete->user->avatar, 'https') ? $exercise->athlete->user->avatar : ($exercise->athlete->user->avatar ? asset('storage/' . $exercise->athlete->user->avatar) : null);
-            $exercise->coach->user->avatar = str_contains($exercise->coach->user->avatar, 'https') ? $exercise->coach->user->avatar : ($exercise->coach->user->avatar ? asset('storage/' . $exercise->coach->user->avatar) : null);
-            return $exercise;
-          })
-          ->sortBy('name')
-          ->values();
+            $athlete = $exercise->athlete->user;
+            $athlete->avatar = str_contains($athlete->avatar, 'https') ? $athlete->avatar : (str_contains($athlete->avatar, 'storage/') ? $athlete->avatar : ($athlete->avatar ? asset('storage/' . $athlete->avatar) : null));
+            
+            $coach = $exercise->coach->user;
+            $coach->avatar = str_contains($coach->avatar, 'https') ? $coach->avatar : (str_contains($coach->avatar, 'storage/') ? $coach->avatar : ($coach->avatar ? asset('storage/' . $coach->avatar) : null));
+            
+            return [
+              'athlete' => [
+                'avatar' => $athlete->avatar,
+                'full_name' => $athlete->full_name,
+              ],
+              'coach' => [
+                'avatar' => $coach->avatar,
+                'full_name' => $coach->full_name,
+              ],
+              'exercise' => $exercise->toArray(),
+            ];
+          })->sortBy('exercise.name')->values();
       }
       
       return Inertia('Exercise/Index', [
