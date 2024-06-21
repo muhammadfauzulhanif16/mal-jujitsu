@@ -1,17 +1,17 @@
 <?php
-  
-  namespace Database\Seeders;
-  
-  use App\Models\Exercise;
-  use Illuminate\Database\Seeder;
-  
-  class ExerciseSeeder extends Seeder
+
+namespace Database\Seeders;
+
+use App\Models\Exercise;
+use Illuminate\Database\Seeder;
+
+class ExerciseSeeder extends Seeder
+{
+  /**
+   * Run the database seeds.
+   */
+  public function run(): void
   {
-    /**
-     * Run the database seeds.
-     */
-    public function run(): void
-    {
-      Exercise::factory(random_int(1, 160))->create();
-    }
+    Exercise::factory(random_int(1, 16))->create();
   }
+}

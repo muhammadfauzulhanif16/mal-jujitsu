@@ -43,34 +43,37 @@ export const Table = (props) => {
                   ))}
                 </MantineTable.Tr>
               </MantineTable.Thead>
-              
+
               <MantineTable.Tbody>
                 {props.tdList}
               </MantineTable.Tbody>
             </MantineTable>
           </MantineTable.ScrollContainer>
           : (
-            <Flex justify="center" align="center" direction="column" c="neutral.5">
-              {props.icon}
-              
-              <Text mt={8} mb={16} fw="bold">Tidak ada {props.title}</Text>
-              
-              {props.route && (
-                <Button
-                  px={16} styles={{ section: { marginRight: 16 } }}
-                  leftSection={<IconPlus />}
-                  variant="light"
-                  color="gold.1"
-                  radius={32}
-                  h={48}
-                  p={16}
-                  fw="bold"
-                  onClick={() => router.get(route(props.route))}
-                >
-                  Tambah {props.title}
-                </Button>
-              )}
-            </Flex>
+            <>
+
+              <Flex justify="center" align="center" direction="column" c="neutral.5">
+                {props.icon}
+
+                <Text mt={8} mb={16} fw="bold">Tidak ada {props.title}</Text>
+
+                {props.authed.role.includes('Pelatih') && props.route && (
+                  <Button
+                    px={16} styles={{ section: { marginRight: 16 } }}
+                    leftSection={<IconPlus />}
+                    variant="light"
+                    color="gold.1"
+                    radius={32}
+                    h={48}
+                    p={16}
+                    fw="bold"
+                    onClick={() => router.get(route(props.route))}
+                  >
+                    Tambah {props.title}
+                  </Button>
+                )}
+              </Flex>
+            </>
           )
       }
     </Box>
