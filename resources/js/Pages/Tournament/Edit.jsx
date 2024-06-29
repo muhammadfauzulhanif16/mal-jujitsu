@@ -20,7 +20,7 @@ const Edit = (props) => {
       e.preventDefault()
       form.put(route('tournaments.update', props.tournament.id))
     }}>
-      <AppLayout title="Pertandingan" authed={props.auth.user} meta={props.meta}>
+      <AppLayout title="Pertandingan" authed={props.auth.user} meta={props.meta} unreadHistories={props.unread_histories.length}>
         <Group w="100%" mb={32} justify="space-between">
           <Breadcrumbs navList={[{ label: 'Pertandingan', route: 'tournaments.index' }, { label: 'Ubah' }]} />
           

@@ -14,7 +14,6 @@ export const Breadcrumbs = (props) => {
       
       <MantineBreadcrumbs>
         {props.navList.map((nav, id) => (
-          
           <Group key={id} onClick={() => router.get(route(nav.route, nav.data))}>
             <Anchor underline="hover" c="neutral.0">
               <Title style={{ cursor: 'pointer' }} order={id === 0 ? 1 : 4}>
@@ -24,7 +23,6 @@ export const Breadcrumbs = (props) => {
             
             {nav.totalData && <Badge variant="light" color="gold.2" size={34} w={48} fz={16} circle>{nav.totalData}</Badge>}
           </Group>
-        
         ))}
       </MantineBreadcrumbs>
     </Group>

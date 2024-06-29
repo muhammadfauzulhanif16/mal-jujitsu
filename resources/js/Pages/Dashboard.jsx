@@ -6,6 +6,7 @@ import { AreaChart, BarChart } from '@mantine/charts'
 import { useState } from 'react'
 
 const Dashboard = (props) => {
+  console.log(props)
   const [exerciseTime, setExerciseTime] = useState(`Tahunan (${new Date().getFullYear()})`)
   const [tournamentTime, setTournamentTime] = useState(`Tahunan (${new Date().getFullYear()})`)
   
@@ -107,7 +108,7 @@ const Dashboard = (props) => {
   ]
   
   return (
-    <AppLayout title="Beranda" authed={props.auth.user} meta={props.meta}>
+    <AppLayout title="Beranda" authed={props.auth.user} meta={props.meta} unreadHistories={props.unread_histories.length}>
       <Box pb={54}>
         <Breadcrumbs navList={[{ label: 'Beranda' }]} />
       </Box>

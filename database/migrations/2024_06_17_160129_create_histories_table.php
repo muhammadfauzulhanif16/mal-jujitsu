@@ -14,6 +14,7 @@
         $table->uuid('id')->primary();
         $table->foreignUuid('user_id')->constrained();
         $table->text('content');
+        $table->boolean('is_read')->default(false);
         $table->timestamps();
       });
     }

@@ -85,7 +85,7 @@ const Edit = (props) => {
     }}>
       <AppLayout
         title={`Penilaian Latihan ${form.data.exercise_id ? `'${[...props.exercises, props.exercise_evaluation.exercise].find((exercise) => exercise.id === form.data.exercise_id)?.name}'` : ''}`}
-        authed={props.auth.user} meta={props.meta}>
+        authed={props.auth.user} meta={props.meta} unreadHistories={props.unread_histories.length}>
         <Group w="100%" justify="space-between" mb={32}>
           <Breadcrumbs navList={[{ label: 'Penilaian', route: 'evaluations.index' }, { label: 'Ubah' }]} />
           

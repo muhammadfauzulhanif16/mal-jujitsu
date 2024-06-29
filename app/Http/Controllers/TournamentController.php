@@ -40,7 +40,8 @@
       return Inertia('Tournament/Index', [
         'tournaments' => $tournaments,
         'meta' => session('meta'),
-        'auth' => ['user' => $authedUser]
+        'auth' => ['user' => $authedUser],
+        'unread_histories' => History::where('is_read', false)->get(),
       ]);
     }
     
@@ -95,6 +96,7 @@
           $athlete->user->avatar = str_contains($athlete->user->avatar, 'https') ? $athlete->user->avatar : ($athlete->user->avatar ? asset('storage/' . $athlete->user->avatar) : null);
           return $athlete;
         })->values(),
+        'unread_histories' => History::where('is_read', false)->get(),
       ]);
     }
     
@@ -113,6 +115,7 @@
         'athletes' => Athlete::with('user')->get()->sortBy(function ($athlete) {
           return $athlete->user->full_name;
         })->values(),
+        'unread_histories' => History::where('is_read', false)->get(),
       ]);
     }
     
@@ -131,6 +134,7 @@
         'athletes' => Athlete::with('user')->get()->sortBy(function ($athlete) {
           return $athlete->user->full_name;
         })->values(),
+        'unread_histories' => History::where('is_read', false)->get(),
       ]);
     }
     

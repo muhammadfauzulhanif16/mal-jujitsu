@@ -3,6 +3,7 @@ import { Avatar, Center, Text, Timeline } from '@mantine/core'
 import { formatDistanceToNow } from 'date-fns'
 import { id } from 'date-fns/locale'
 import { useEffect, useState } from 'react'
+import { router } from '@inertiajs/core'
 
 const Index = (props) => {
   const [now, setNow] = useState(new Date())
@@ -15,11 +16,17 @@ const Index = (props) => {
   }, [])
   
   return (
-    <AppLayout title="Riwayat" authed={props.auth.user} meta={props.meta}>
+    <AppLayout title="Riwayat" authed={props.auth.user} meta={props.meta} unreadHistories={props.unread_histories.length}>
       <Center>
         <Timeline color="gold.2" active={props.histories.length} bulletSize={48} lineWidth={4}>
           {props.histories.map((history) => (
             <Timeline.Item
+              bg={history.is_read ? undefined : 'gold.10'}
+              onMouseEnter={() => {
+                if (!history.is_read) {
+                  router.put(route('histories.update', history.id))
+                }
+              }}
               pl={22}
               styles={{
                 itemTitle: {

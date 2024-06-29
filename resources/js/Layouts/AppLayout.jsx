@@ -35,7 +35,7 @@ export const AppLayout = (props) => {
     >
       <Head title={props.title} />
       
-      {!props.isPrint && props.authed && <Header authed={props.authed} title={props.title} />}
+      {!props.isPrint && props.authed && <Header authed={props.authed} title={props.title} unreadHistories={props.unreadHistories} />}
       
       
       <Box

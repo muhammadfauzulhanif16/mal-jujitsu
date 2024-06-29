@@ -28,7 +28,8 @@
           return $athlete;
         })->sortBy('user.full_name')->values(),
         'meta' => session('meta'),
-        'auth' => ['user' => $authedUser]
+        'auth' => ['user' => $authedUser],
+        'unread_histories' => History::where('is_read', false)->get(),
       ]);
     }
     
@@ -87,7 +88,8 @@
       
       return Inertia('Athlete/Create', [
         'users' => User::all(),
-        'auth' => ['user' => $authedUser]
+        'auth' => ['user' => $authedUser],
+        'unread_histories' => History::where('is_read', false)->get(),
       ]);
     }
     
@@ -150,7 +152,8 @@
       
       return Inertia('Athlete/Show', [
         'user' => $user->load('athlete'),
-        'auth' => ['user' => $authedUser]
+        'auth' => ['user' => $authedUser],
+        'unread_histories' => History::where('is_read', false)->get(),
       ]);
     }
     
@@ -166,7 +169,8 @@
       return Inertia('Athlete/Edit', [
         'user' => $user->load('athlete'),
         'users' => User::all(),
-        'auth' => ['user' => $authedUser]
+        'auth' => ['user' => $authedUser],
+        'unread_histories' => History::where('is_read', false)->get(),
       ]);
     }
     

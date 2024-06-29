@@ -73,13 +73,13 @@ const Index = (props) => {
       </MantineTable.Td>
     </MantineTable.Tr>
   ))
-
+  
   return (
-    <AppLayout title="Atlet" authed={props.auth.user} meta={props.meta}>
+    <AppLayout title="Atlet" authed={props.auth.user} meta={props.meta} unreadHistories={props.unread_histories.length}>
       <Stack mb={32}>
         <Group w="100%" justify="space-between">
           <Breadcrumbs navList={[{ label: 'Atlet', totalData: props.athletes.length }]} />
-
+          
           <Group>
             <TextInput display={{ base: 'none', xs: 'block' }} w={240} variant="filled" leftSection={<IconSearch />}
                        styles={{
@@ -88,7 +88,7 @@ const Index = (props) => {
                        }}
                        color="gold.2"
                        placeholder="Cari atlet..." onChange={(e) => setAthleteSearch(e.target.value)} />
-
+            
             {props.auth.user.role.includes('Pelatih') && (
               <>
                 <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Tambah Atlet">
@@ -97,7 +97,7 @@ const Index = (props) => {
                     <IconPlus />
                   </ActionIcon>
                 </Tooltip>
-
+                
                 <Button display={{ base: 'none', sm: 'block' }} w={240} leftSection={<IconPlus />} variant="filled" color="gold.2" h={48} radius={32} px={16}
                         styles={{ section: { marginRight: 12 } }} onClick={() => router.get(route('athletes.create'))}>
                   Tambah Atlet
@@ -106,12 +106,12 @@ const Index = (props) => {
             )}
           </Group>
         </Group>
-
+        
         <TextInput w="100%" display={{ base: 'block', xs: 'none' }} variant="filled" leftSection={<IconSearch />}
                    styles={{ input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 14 }, section: { marginLeft: 0, width: 48, height: 48 } }}
                    color="gold.2" placeholder="Cari atlet..." onChange={(e) => setAthleteSearch(e.target.value)} />
       </Stack>
-
+      
       <Table thList={THList} tdList={TDList} icon={<IconUser size={48} />} title="Atlet" route="athletes.create" authed={props.auth.user} />
     </AppLayout>
   )

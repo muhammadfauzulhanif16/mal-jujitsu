@@ -42,7 +42,8 @@ const Index = (props) => {
   }
   
   return (
-    <AppLayout title={`Laporan "${props.athlete.full_name}"`} authed={props.auth.user} meta={props.meta} isPrint={isPrint}>
+    <AppLayout title={`Laporan "${props.athlete.full_name}"`} authed={props.auth.user} meta={props.meta} isPrint={isPrint}
+               unreadHistories={props.unread_histories.length}>
       
       {!isPrint ? (<Stack mb={32}>
         <Group w="100%" justify="space-between">

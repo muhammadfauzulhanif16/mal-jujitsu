@@ -16,7 +16,7 @@ const Edit = (props) => {
   })
   
   return (
-    <AppLayout title="Pertandingan" authed={props.auth.user} meta={props.meta}>
+    <AppLayout title="Pertandingan" authed={props.auth.user} meta={props.meta} unreadHistories={props.unread_histories.length}>
       <Box mb={32}>
         <Breadcrumbs navList={[{ label: 'Pertandingan', route: 'tournaments.index' }, { label: 'Rincian' }]} />
       </Box>

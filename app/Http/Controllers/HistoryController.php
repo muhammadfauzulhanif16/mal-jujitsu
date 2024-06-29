@@ -18,7 +18,16 @@
           return $history;
         }),
         'meta' => session('meta'),
-        'auth' => ['user' => $authedUser]
+        'auth' => ['user' => $authedUser],
+        'unread_histories' => History::where('is_read', false)->get(),
       ]);
+    }
+    
+    public function update($id)
+    {
+      $history = History::find($id);
+      $history->update(['is_read' => true]);
+      
+      return redirect()->route('histories.index');
     }
   }

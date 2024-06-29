@@ -14,7 +14,7 @@ const Create = (props) => {
       e.preventDefault()
       form.post(route('athletes.store'))
     }}>
-      <AppLayout title="Atlet" authed={props.auth.user} meta={props.meta}>
+      <AppLayout title="Atlet" authed={props.auth.user} meta={props.meta} unreadHistories={props.unread_histories.length}>
         <Group justify="space-between" mb={32}>
           <Breadcrumbs navList={[{ label: 'Atlet', route: 'athletes.index' }, { label: 'Tambah' }]} />
           

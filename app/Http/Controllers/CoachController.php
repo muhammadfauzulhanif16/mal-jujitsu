@@ -28,7 +28,8 @@
           return $coach;
         })->sortBy('user.full_name')->values(),
         'meta' => session('meta'),
-        'auth' => ['user' => $authedUser]
+        'auth' => ['user' => $authedUser],
+        'unread_histories' => History::where('is_read', false)->get(),
       ]);
     }
     
@@ -86,7 +87,8 @@
       
       return Inertia('Coach/Create', [
         'users' => User::all(),
-        'auth' => ['user' => $authedUser]
+        'auth' => ['user' => $authedUser],
+        'unread_histories' => History::where('is_read', false)->get(),
       ]);
     }
     
@@ -145,7 +147,8 @@
       
       return Inertia('Coach/Show', [
         'user' => $user,
-        'auth' => ['user' => $authedUser]
+        'auth' => ['user' => $authedUser],
+        'unread_histories' => History::where('is_read', false)->get(),
       ]);
     }
     
@@ -161,7 +164,8 @@
       return Inertia('Coach/Edit', [
         'user' => $user->load('coach'),
         'users' => User::all(),
-        'auth' => ['user' => $authedUser]
+        'auth' => ['user' => $authedUser],
+        'unread_histories' => History::where('is_read', false)->get(),
       ]);
     }
     

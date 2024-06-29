@@ -49,7 +49,7 @@ const Create = (props) => {
         }),
     }
   })
-
+  
   useEffect(() => {
     if (role) {
       form.setData('evaluations', criterias.flatMap(criteria =>
@@ -62,7 +62,7 @@ const Create = (props) => {
       ))
     }
   }, [role])
-
+  
   const editor = useEditor({
     extensions: [StarterKit, Link, Placeholder.configure({ placeholder: 'Masukkan catatan' })],
     content: form.data.note,
@@ -70,16 +70,16 @@ const Create = (props) => {
       form.setData('note', editor.getHTML())
     },
   })
-
+  
   return (
     <form onSubmit={(e) => {
       e.preventDefault()
       form.post(route('evaluations.store'))
     }}>
-      <AppLayout title="Penilaian" authed={props.auth.user} meta={props.meta}>
+      <AppLayout title="Penilaian" authed={props.auth.user} meta={props.meta} unreadHistories={props.unread_histories.length}>
         <Group w="100%" justify="space-between">
           <Breadcrumbs navList={[{ label: 'Penilaian', route: 'evaluations.index' }, { label: 'Tambah' }]} />
-
+          
           <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Tambah Penilaian">
             <ActionIcon type="submit" ml="auto" h={48} w={48} color="gold.2" radius={32} display={{ base: 'block', xs: 'none' }}
                         disabled={form.hasErrors || !form.data.exercise_id}
@@ -87,7 +87,7 @@ const Create = (props) => {
               <IconCornerDownLeft />
             </ActionIcon>
           </Tooltip>
-
+          
           <Button display={{ base: 'none', xs: 'block' }} type="submit" w={240} leftSection={<IconCornerDownLeft />} variant="filled" color="gold.2" h={48}
                   px={16} styles={{ section: { marginRight: 12 } }} radius={32} loading={form.processing}
                   disabled={form.hasErrors || !form.data.exercise_id}
@@ -95,9 +95,9 @@ const Create = (props) => {
             Tambah Penilaian
           </Button>
         </Group>
-
+        
         <Divider my={32} />
-
+        
         <Grid grow justify="space-between">
           <Grid.Col span={{ base: 12, md: 4 }}>
             <Center>
@@ -113,7 +113,7 @@ const Create = (props) => {
               </Indicator>
             </Center>
           </Grid.Col>
-
+          
           <Grid.Col span={{ base: 12, md: 8 }}>
             <Stack gap={48}>
               <Fieldset radius={20} legend="Informasi Latihan"
@@ -137,7 +137,7 @@ const Create = (props) => {
                   onChange={(value) => {
                     form.setData('exercise_id', value)
                     setRole(props.exercises.find((exercise) => exercise.id === value)?.athlete.user.role)
-
+                    
                     if (!value) {
                       form.setError({ exercise_id: 'Latihan tidak boleh kosong.' })
                     } else {
@@ -151,13 +151,13 @@ const Create = (props) => {
                   error={form.errors.exercise_id}
                 />
               </Fieldset>
-
+              
               {form.data.exercise_id && (
                 <Stack gap={48}>
                   {criterias.map((criteria) => (
                     <Stack key={criteria.id} gap={0}>
                       <Divider label={criteria?.name.toUpperCase()} styles={{ label: { fontSize: '14px' } }} labelPosition="center" />
-
+                      
                       {criteria.sub_criterias.map((sub_criteria) => (
                         <Fieldset key={sub_criteria.id} radius={20} legend={sub_criteria.name}
                                   styles={{ root: { margin: 0, padding: 16 }, legend: { borderRadius: 20, fontSize: 16, padding: 16, fontWeight: 'bold' } }}>
@@ -173,9 +173,9 @@ const Create = (props) => {
                                       evaluation.value = value
                                     }
                                   })
-
+                                  
                                   form.setData('evaluations', form.data.evaluations)
-
+                                  
                                   // if (!value) {
                                   //   form.setError({ role: 'Peran tidak boleh kosong.' })
                                   // } else {
@@ -205,9 +205,9 @@ const Create = (props) => {
                                       evaluation.value = value
                                     }
                                   })
-
+                                  
                                   form.setData('evaluations', form.data.evaluations)
-
+                                  
                                   // if (!email) {
                                   //   form.setError({ email: 'Alamat surel tidak boleh kosong.' })
                                   // } else if (!/\S+@\S+\.\S+/.test(email)) {
@@ -231,9 +231,9 @@ const Create = (props) => {
                                       evaluation.value = e.target.value
                                     }
                                   })
-
+                                  
                                   form.setData('evaluations', form.data.evaluations)
-
+                                  
                                   // if (!e.target.value) {
                                   //   form.setError(`evaluations.${sub_sub_criteria_id}.value`, 'Nilai tidak boleh kosong.')
                                   // } else {
@@ -247,7 +247,7 @@ const Create = (props) => {
                       ))}
                     </Stack>
                   ))}
-
+                  
                   <Fieldset radius={20} legend="Informasi Tambahan"
                             styles={{ root: { margin: 0, padding: 16 }, legend: { borderRadius: 20, fontSize: 16, padding: 16, fontWeight: 'bold' } }}>
                     <Text fz={14}>Catatan</Text>
@@ -265,14 +265,14 @@ const Create = (props) => {
                           <RichTextEditor.Highlight />
                           <RichTextEditor.Code />
                         </RichTextEditor.ControlsGroup>
-
+                        
                         <RichTextEditor.ControlsGroup>
                           <RichTextEditor.H1 />
                           <RichTextEditor.H2 />
                           <RichTextEditor.H3 />
                           <RichTextEditor.H4 />
                         </RichTextEditor.ControlsGroup>
-
+                        
                         <RichTextEditor.ControlsGroup>
                           <RichTextEditor.Blockquote />
                           <RichTextEditor.Hr />
@@ -281,32 +281,32 @@ const Create = (props) => {
                           <RichTextEditor.Subscript />
                           <RichTextEditor.Superscript />
                         </RichTextEditor.ControlsGroup>
-
+                        
                         <RichTextEditor.ControlsGroup>
                           <RichTextEditor.Link />
                           <RichTextEditor.Unlink />
                         </RichTextEditor.ControlsGroup>
-
+                        
                         <RichTextEditor.ControlsGroup>
                           <RichTextEditor.AlignLeft />
                           <RichTextEditor.AlignCenter />
                           <RichTextEditor.AlignJustify />
                           <RichTextEditor.AlignRight />
                         </RichTextEditor.ControlsGroup>
-
+                        
                         <RichTextEditor.ControlsGroup>
                           <RichTextEditor.Undo />
                           <RichTextEditor.Redo />
                         </RichTextEditor.ControlsGroup>
                       </RichTextEditor.Toolbar>
-
+                      
                       <RichTextEditor.Content />
                     </RichTextEditor>
                   </Fieldset>
                 </Stack>
               )}
-
-
+            
+            
             </Stack>
           </Grid.Col>
         </Grid>

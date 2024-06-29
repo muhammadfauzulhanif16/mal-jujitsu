@@ -24,7 +24,7 @@ const Edit = (props) => {
       e.preventDefault()
       form.post(route('profile.update', props.auth.user.id))
     }}>
-      <AppLayout title="Profil" authed={props.auth.user} meta={props.meta}>
+      <AppLayout title="Profil" authed={props.auth.user} meta={props.meta} unreadHistories={props.unread_histories.length}>
         <Group justify="space-between">
           <Breadcrumbs navList={[{ label: 'Profil', route: 'dashboard' }]} />
           

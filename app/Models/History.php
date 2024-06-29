@@ -10,7 +10,7 @@
   {
     use HasFactory, HasUuids;
     
-    protected $fillable = ['user_id', 'content'];
+    protected $fillable = ['user_id', 'content','is_read'];
     
     public function user()
     {

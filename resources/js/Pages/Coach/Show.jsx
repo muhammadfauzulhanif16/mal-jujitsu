@@ -17,7 +17,7 @@ const Show = (props) => {
   })
   
   return (
-    <AppLayout title={`Pelatih '${props.user.full_name}'`} authed={props.auth.user} meta={props.meta}>
+    <AppLayout title={`Pelatih '${props.user.full_name}'`} authed={props.auth.user} meta={props.meta} unreadHistories={props.unread_histories.length}>
       <Box mb={32}>
         <Breadcrumbs navList={[{ label: 'Pelatih', route: 'coaches.index' }, { label: 'Rincian' }]} />
       </Box>

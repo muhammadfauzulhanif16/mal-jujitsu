@@ -53,7 +53,7 @@ const Index = (props) => {
         style={{ whiteSpace: 'nowrap' }}>
         <Flex gap={16} align="center">
           <Avatar size={48} src={tournament.athlete.avatar} />
-
+          
           {tournament.athlete.full_name}
         </Flex>
       </MantineTable.Td>
@@ -77,13 +77,13 @@ const Index = (props) => {
       </MantineTable.Td>
     </MantineTable.Tr>
   ))
-
+  
   return (
-    <AppLayout title="Pertandingan" authed={props.auth.user} meta={props.meta}>
+    <AppLayout title="Pertandingan" authed={props.auth.user} meta={props.meta} unreadHistories={props.unread_histories.length}>
       <Stack mb={32}>
         <Group w="100%" justify="space-between">
           <Breadcrumbs navList={[{ label: 'Pertandingan', totalData: props.tournaments.length }]} />
-
+          
           <Group>
             <TextInput display={{ base: 'none', xs: 'block' }} w={240} variant="filled" leftSection={<IconSearch />}
                        styles={{
@@ -92,7 +92,7 @@ const Index = (props) => {
                        }}
                        color="gold.2"
                        placeholder="Cari pertandingan..." onChange={(e) => setTournamentSearch(e.target.value)} />
-
+            
             {props.auth.user.role.includes('Pelatih') && (
               <>
                 <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Tambah Pertandingan">
@@ -101,7 +101,7 @@ const Index = (props) => {
                     <IconPlus />
                   </ActionIcon>
                 </Tooltip>
-
+                
                 <Button display={{ base: 'none', sm: 'block' }} w={240} leftSection={<IconPlus />} variant="filled" color="gold.2" h={48} radius={32} px={16}
                         styles={{ section: { marginRight: 12 } }} onClick={() => router.get(route('tournaments.create'))}>
                   Tambah Pertandingan
@@ -110,13 +110,13 @@ const Index = (props) => {
             )}
           </Group>
         </Group>
-
+        
         <TextInput w="100%" display={{ base: 'block', xs: 'none' }} variant="filled" leftSection={<IconSearch />}
                    styles={{ input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 14 }, section: { marginLeft: 0, width: 48, height: 48 } }}
                    color="gold.2"
                    placeholder="Cari atlet..." onChange={(e) => setTournamentSearch(e.target.value)} />
       </Stack>
-
+      
       <Table thList={THList} tdList={TDList} icon={<IconMedal size={48} />} title="Pertandingan" route="tournaments.create" authed={props.auth.user} />
     </AppLayout>
   )

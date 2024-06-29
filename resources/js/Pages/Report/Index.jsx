@@ -109,7 +109,7 @@ const Index = (props) => {
   
   
   return (
-    <AppLayout title="Laporan" authed={props.auth.user} meta={props.meta}>
+    <AppLayout title="Laporan" authed={props.auth.user} meta={props.meta} unreadHistories={props.unread_histories.length}>
       <Stack mb={32}>
         <Group w="100%" justify="space-between">
           <Breadcrumbs navList={[{ label: 'Laporan' }]} />
