@@ -1,5 +1,5 @@
 import { AppLayout } from '@/Layouts/AppLayout.jsx'
-import { ActionIcon, Avatar, Box, Button, Center, Divider, Grid, Group, SimpleGrid, Stack, Text, Title, Tooltip } from '@mantine/core'
+import { ActionIcon, Avatar, Box, Button, Center, Divider, Grid, Group, SimpleGrid, Stack, Text, Title, Tooltip, TypographyStylesProvider } from '@mantine/core'
 import { IconCalendar, IconPrinter } from '@tabler/icons-react'
 import { Breadcrumbs } from '@/Components/Breadcrumbs.jsx'
 import { useState } from 'react'
@@ -8,7 +8,7 @@ import { MonthPickerInput } from '@mantine/dates'
 const Index = (props) => {
   const [time, setTime] = useState(null)
   const [isPrint, setIsPrint] = useState(false)
-  
+  console.log(props)
   const evaluationList = props.exerciseEvaluations?.filter((evaluation) => {
     if (time === null) {
       return true
@@ -43,7 +43,7 @@ const Index = (props) => {
   
   return (
     <AppLayout title={`Laporan "${props.athlete.full_name}"`} authed={props.auth.user} meta={props.meta} isPrint={isPrint}
-               unreadHistories={props.unread_histories.length}>
+               unreadHistories={props.total_unread_histories}>
       
       {!isPrint ? (<Stack mb={32}>
         <Group w="100%" justify="space-between">
@@ -272,6 +272,18 @@ const Index = (props) => {
                         )}
                       </>
                     ))}
+                    
+                    <Grid.Col span={12}>
+                      <Group style={{
+                        border: '1px solid #e1e1e1',
+                      }} px={16} py={11}>
+                        <Text fw={600}>Catatan : </Text>
+                        
+                        <TypographyStylesProvider>
+                          <div style={{ wordBreak: 'break-all' }} dangerouslySetInnerHTML={{ __html: evaluation.note }} />
+                        </TypographyStylesProvider>
+                      </Group>
+                    </Grid.Col>
                   </Grid>
                 </Box>
               ))}

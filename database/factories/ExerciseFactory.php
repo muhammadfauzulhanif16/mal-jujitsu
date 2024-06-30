@@ -24,7 +24,7 @@
       $coachIds = Coach::all()->pluck('user_id')->toArray();
       
       return [
-        'athlete_id' => $this->faker->randomElement($athleteIds),
+//        'athlete_id' => $this->faker->randomElement($athleteIds),
         'coach_id' => $this->faker->randomElement($coachIds),
         'name' => $this->faker->word(),
         'place' => $this->faker->address,

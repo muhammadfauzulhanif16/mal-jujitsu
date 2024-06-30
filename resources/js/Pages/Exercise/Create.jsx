@@ -8,13 +8,13 @@ import { DatePickerInput, TimeInput } from '@mantine/dates'
 
 const Create = (props) => {
   const form = useForm({ name: '', place: '', athlete_ids: [], coach_id: '', date: new Date(), start_time: '', end_time: '' })
-  
+  console.log(props)
   return (
     <form onSubmit={(e) => {
       e.preventDefault()
       form.post(route('exercises.store'))
     }}>
-      <AppLayout title="Latihan" authed={props.auth.user} meta={props.meta} unreadHistories={props.unread_histories.length}>
+      <AppLayout title="Latihan" authed={props.auth.user} meta={props.meta} unreadHistories={props.total_unread_histories}>
         <Group mb={32} w="100%" justify="space-between">
           <Breadcrumbs navList={[{ label: 'Latihan', route: 'exercises.index' }, { label: 'Tambah' }]} />
           
@@ -49,8 +49,8 @@ const Create = (props) => {
                   justifyContent: 'center',
                 }}>
                   <Avatar
-                    src={props.athletes.find((athlete) => athlete.user.id === form.data.athlete_ids[0])?.user.avatar}
-                    alt={props.athletes.find((athlete) => athlete.user.id === form.data.athlete_ids[0])?.user.full_name}
+                    src={props.athletes.find((athlete) => athlete.id === form.data.athlete_ids[0])?.avatar}
+                    alt={props.athletes.find((athlete) => athlete.id === form.data.athlete_ids[0])?.full_name}
                     size={160}
                   />
                   
@@ -63,12 +63,12 @@ const Create = (props) => {
               </Indicator>
               
               <Indicator inline color="gold.2" styles={{ indicator: { padding: 16, border: '4px solid white' } }}
-                         label={form.data.coach_id ? props.coaches.find((coach) => coach.user.id === form.data.coach_id)?.user.role : 'Pelatih'}
+                         label={form.data.coach_id ? props.coaches.find((coach) => coach.id === form.data.coach_id)?.role : 'Pelatih'}
                          position="bottom-center" size={32} withBorder>
                 <Avatar
                   mx="auto"
-                  src={props.coaches.find((coach) => coach.user.id === form.data.coach_id)?.user.avatar}
-                  alt={props.coaches.find((coach) => coach.user.id === form.data.coach_id)?.user.full_name}
+                  src={props.coaches.find((coach) => coach.id === form.data.coach_id)?.avatar}
+                  alt={props.coaches.find((coach) => coach.id === form.data.coach_id)?.full_name}
                   size={160}
                 />
               </Indicator>
@@ -139,7 +139,7 @@ const Create = (props) => {
                     form.clearErrors('athlete_ids')
                   }
                 }}
-                data={props.athletes.map((athlete) => ({ value: athlete.user.id, label: `${athlete.user.full_name} (${athlete.user.role})` }))}
+                data={props.athletes.map((athlete) => ({ value: athlete.id, label: `${athlete.full_name} (${athlete.role})` }))}
                 error={form.errors.athlete_ids}
               />
               
@@ -169,7 +169,7 @@ const Create = (props) => {
                     form.clearErrors('coach_id')
                   }
                 }}
-                data={props.coaches.map((coach) => ({ value: coach.user.id, label: `${coach.user.full_name} (${coach.user.role})` }))}
+                data={props.coaches.map((coach) => ({ value: coach.id, label: `${coach.full_name} (${coach.role})` }))}
                 error={form.errors.coach_id}
               />
               

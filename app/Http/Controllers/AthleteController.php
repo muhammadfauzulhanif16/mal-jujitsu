@@ -24,12 +24,16 @@
       
       return Inertia('Athlete/Index', [
         'athletes' => Athlete::with('user')->get()->map(function ($athlete) {
-          $athlete->user->avatar = str_contains($athlete->user->avatar, 'https') ? $athlete->user->avatar : ($athlete->user->avatar ? asset('storage/' . $athlete->user->avatar) : null);
-          return $athlete;
-        })->sortBy('user.full_name')->values(),
+          return [
+            'id' => $athlete->user_id,
+            'avatar' => str_contains($athlete->user->avatar, 'https') ? $athlete->user->avatar : ($athlete->user->avatar ? asset('storage/' . $athlete->user->avatar) : null),
+            'full_name' => $athlete->user->full_name,
+            'role' => $athlete->user->role,
+          ];
+        })->sortBy('full_name')->values(),
         'meta' => session('meta'),
         'auth' => ['user' => $authedUser],
-        'unread_histories' => History::where('is_read', false)->get(),
+        'total_unread_histories' => History::where('is_read', false)->count(),
       ]);
     }
     
@@ -87,9 +91,9 @@
       $authedUser->avatar = str_contains($authedUser->avatar, 'https') ? $authedUser->avatar : ($authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null);
       
       return Inertia('Athlete/Create', [
-        'users' => User::all(),
+        'existing_emails' => User::pluck('email'),
         'auth' => ['user' => $authedUser],
-        'unread_histories' => History::where('is_read', false)->get(),
+        'total_unread_histories' => History::where('is_read', false)->count(),
       ]);
     }
     
@@ -151,9 +155,18 @@
       $user->avatar = str_contains($user->avatar, 'https') ? $user->avatar : ($user->avatar ? asset('storage/' . $user->avatar) : null);
       
       return Inertia('Athlete/Show', [
-        'user' => $user->load('athlete'),
+        'athlete' => [
+          'id' => $user->id,
+          'avatar' => $user->avatar,
+          'full_name' => $user->full_name,
+          'role' => $user->role,
+          'gender' => $user->gender,
+          'birth_date' => $user->birth_date,
+          'email' => $user->email,
+          'weight' => $user->athlete->weight,
+        ],
         'auth' => ['user' => $authedUser],
-        'unread_histories' => History::where('is_read', false)->get(),
+        'total_unread_histories' => History::where('is_read', false)->count(),
       ]);
     }
     
@@ -167,10 +180,19 @@
       $user->avatar = str_contains($user->avatar, 'https') ? $user->avatar : ($user->avatar ? asset('storage/' . $user->avatar) : null);
       
       return Inertia('Athlete/Edit', [
-        'user' => $user->load('athlete'),
-        'users' => User::all(),
+        'athlete' => [
+          'id' => $user->id,
+          'avatar' => $user->avatar,
+          'full_name' => $user->full_name,
+          'role' => $user->role,
+          'gender' => $user->gender,
+          'birth_date' => $user->birth_date,
+          'email' => $user->email,
+          'weight' => $user->athlete->weight,
+        ],
+        'existing_emails' => User::pluck('email'),
         'auth' => ['user' => $authedUser],
-        'unread_histories' => History::where('is_read', false)->get(),
+        'total_unread_histories' => History::where('is_read', false)->count(),
       ]);
     }
     

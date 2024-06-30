@@ -21,8 +21,8 @@ export const Header = (props) => {
           <NavBar title={props.title} />
         </Box>
         
-        <Menu shadow="md"
-              styles={{ dropdown: { padding: 8, borderRadius: 20, width: 240 }, item: { height: 48, borderRadius: 32 }, itemSection: { marginRight: 16 } }}>
+        <Menu shadow="xl"
+              styles={{ dropdown: { padding: 8, borderRadius: 32, width: 240 }, item: { height: 48, borderRadius: 32 }, itemSection: { marginRight: 16 } }}>
           <Menu.Target>
             <Group display={{ base: 'none', md: 'flex' }} variant="subtle" style={{ cursor: 'pointer' }} gap={16} w={240} justify="end">
               <Box align="end" gap={0} w={120}>
@@ -59,17 +59,17 @@ export const Header = (props) => {
       </Flex>
       
       <Drawer title={
-        <Group>
+        <Flex gap={16}>
           <Avatar src={props.authed.avatar} alt={props.authed.full_name} size={48}
                   color="gold.2" />
           
-          <Stack gap={0} w={160}>
+          <Stack gap={0} w={160} justify="space-between">
             <Text truncate="end">{props.authed.full_name}</Text>
             <Badge variant="transparent" px={0} py={0} color="gold.2" size={12} radius={0}>{props.authed.role}</Badge>
           </Stack>
-        </Group>
+        </Flex>
       } styles={{
-        header: { height: 80, padding: 16, gap: 0 }, content: { display: 'flex', flexDirection: 'column' }, body: {
+        header: { height: 87, padding: 16, gap: 0 }, content: { display: 'flex', flexDirection: 'column' }, body: {
           zIndex: 203,
           display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%',
         },

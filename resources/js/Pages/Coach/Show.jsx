@@ -8,16 +8,16 @@ import { Breadcrumbs } from '@/Components/Breadcrumbs.jsx'
 
 const Show = (props) => {
   const form = useForm({
-    avatar: props.user.avatar,
-    email: props.user.email,
-    full_name: props.user.full_name,
-    gender: props.user.gender,
-    birth_date: props.user.birth_date,
-    role: props.user.role,
+    avatar: props.coach.avatar,
+    email: props.coach.email,
+    full_name: props.coach.full_name,
+    gender: props.coach.gender,
+    birth_date: props.coach.birth_date,
+    role: props.coach.role,
   })
-  
+  console.log(props)
   return (
-    <AppLayout title={`Pelatih '${props.user.full_name}'`} authed={props.auth.user} meta={props.meta} unreadHistories={props.unread_histories.length}>
+    <AppLayout title={`Pelatih '${props.coach.full_name}'`} authed={props.auth.user} meta={props.meta} unreadHistories={props.total_unread_histories}>
       <Box mb={32}>
         <Breadcrumbs navList={[{ label: 'Pelatih', route: 'coaches.index' }, { label: 'Rincian' }]} />
       </Box>

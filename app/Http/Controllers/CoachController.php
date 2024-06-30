@@ -24,12 +24,16 @@
       
       return Inertia('Coach/Index', [
         'coaches' => Coach::with('user')->get()->map(function ($coach) {
-          $coach->user->avatar = str_contains($coach->user->avatar, 'https') ? $coach->user->avatar : ($coach->user->avatar ? asset('storage/' . $coach->user->avatar) : null);
-          return $coach;
-        })->sortBy('user.full_name')->values(),
+          return [
+            'id' => $coach->user_id,
+            'avatar' => str_contains($coach->user->avatar, 'https') ? $coach->user->avatar : ($coach->user->avatar ? asset('storage/' . $coach->user->avatar) : null),
+            'full_name' => $coach->user->full_name,
+            'role' => $coach->user->role,
+          ];
+        })->sortBy('full_name')->values(),
         'meta' => session('meta'),
         'auth' => ['user' => $authedUser],
-        'unread_histories' => History::where('is_read', false)->get(),
+        'total_unread_histories' => History::where('is_read', false)->count(),
       ]);
     }
     
@@ -86,9 +90,9 @@
       $authedUser->avatar = str_contains($authedUser->avatar, 'https') ? $authedUser->avatar : ($authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null);
       
       return Inertia('Coach/Create', [
-        'users' => User::all(),
+        'existing_emails' => User::pluck('email'),
         'auth' => ['user' => $authedUser],
-        'unread_histories' => History::where('is_read', false)->get(),
+        'total_unread_histories' => History::where('is_read', false)->count(),
       ]);
     }
     
@@ -146,9 +150,17 @@
       $user->avatar = str_contains($user->avatar, 'https') ? $user->avatar : ($user->avatar ? asset('storage/' . $user->avatar) : null);
       
       return Inertia('Coach/Show', [
-        'user' => $user,
+        'coach' => [
+          'id' => $user->id,
+          'avatar' => $user->avatar,
+          'full_name' => $user->full_name,
+          'role' => $user->role,
+          'gender' => $user->gender,
+          'birth_date' => $user->birth_date,
+          'email' => $user->email,
+        ],
         'auth' => ['user' => $authedUser],
-        'unread_histories' => History::where('is_read', false)->get(),
+        'total_unread_histories' => History::where('is_read', false)->count(),
       ]);
     }
     
@@ -162,10 +174,18 @@
       $user->avatar = str_contains($user->avatar, 'https') ? $user->avatar : ($user->avatar ? asset('storage/' . $user->avatar) : null);
       
       return Inertia('Coach/Edit', [
-        'user' => $user->load('coach'),
-        'users' => User::all(),
+        'coach' => [
+          'id' => $user->id,
+          'avatar' => $user->avatar,
+          'full_name' => $user->full_name,
+          'role' => $user->role,
+          'gender' => $user->gender,
+          'birth_date' => $user->birth_date,
+          'email' => $user->email,
+        ],
+        'existing_emails' => User::pluck('email'),
         'auth' => ['user' => $authedUser],
-        'unread_histories' => History::where('is_read', false)->get(),
+        'total_unread_histories' => History::where('is_read', false)->count(),
       ]);
     }
     

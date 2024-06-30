@@ -29,7 +29,7 @@
           CoachSeeder::class,
           AthleteSeeder::class,
           ExerciseSeeder::class,
-          ExerciseEvaluationSeeder::class,
+//          ExerciseEvaluationSeeder::class,
           TournamentSeeder::class,
           HistorySeeder::class,
         ]);

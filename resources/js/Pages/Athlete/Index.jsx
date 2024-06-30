@@ -14,27 +14,27 @@ const Index = (props) => {
     {
       label: 'Rincian Atlet',
       icon: <IconEye />,
-      onClick: (user) => router.get(route('athletes.show', user.id)),
+      onClick: (id) => router.get(route('athletes.show', id)),
       color: 'blue',
       // disabled: !['Pelatih Teknik', 'Pelatih Fisik'].includes(props.auth.user.role),
     },
     {
       label: 'Ubah Atlet',
       icon: <IconPencil />,
-      onClick: (user) => router.get(route('athletes.edit', user.id)),
+      onClick: (id) => router.get(route('athletes.edit', id)),
       color: 'yellow',
       disabled: !props.auth.user.role.includes('Pelatih'),
     },
     {
       label: 'Hapus Atlet',
       icon: <IconTrash />,
-      onClick: (user) => router.delete(route('athletes.destroy', user.id)),
+      onClick: (id) => router.delete(route('athletes.destroy', id)),
       color: 'red',
       disabled: !props.auth.user.role.includes('Pelatih'),
     },
   ]
   const athleteList = props.athletes
-    .filter(athlete => athlete.user.full_name.replace(/\s/g, '').toLowerCase().match(new RegExp(athleteSearch.replace(/\s/g, '').toLowerCase(), 'i')))
+    .filter(athlete => athlete.full_name.replace(/\s/g, '').toLowerCase().match(new RegExp(athleteSearch.replace(/\s/g, '').toLowerCase(), 'i')))
   const TDList = athleteList.map((athlete, id) => (
     <MantineTable.Tr h={64} key={id}>
       <MantineTable.Td
@@ -43,14 +43,14 @@ const Index = (props) => {
       <MantineTable.Td
         px={16} py={0}
         style={{ whiteSpace: 'nowrap' }}>
-        <Avatar src={athlete.user.avatar} alt={athlete.user.full_name} />
+        <Avatar src={athlete.avatar} alt={athlete.full_name} />
       </MantineTable.Td>
       <MantineTable.Td
         px={16} py={0}
-        style={{ whiteSpace: 'nowrap' }}>{athlete.user.full_name}</MantineTable.Td>
+        style={{ whiteSpace: 'nowrap' }}>{athlete.full_name}</MantineTable.Td>
       <MantineTable.Td
         px={16} py={0}
-        style={{ whiteSpace: 'nowrap' }}>{athlete.user.role}</MantineTable.Td>
+        style={{ whiteSpace: 'nowrap' }}>{athlete.role}</MantineTable.Td>
       <MantineTable.Td
         px={16} py={0}
         style={{ whiteSpace: 'nowrap' }}>
@@ -62,8 +62,8 @@ const Index = (props) => {
             }}>
               <ActionIcon size={48} radius={32} variant="subtle"
                           aria-label={action.label} color={action.color}
-                          onClick={() => action.onClick(athlete.user)}
-                          disabled={props.auth.user.id === athlete.user.id || action.disabled}
+                          onClick={() => action.onClick(athlete)}
+                          disabled={props.auth.user.id === athlete.id || action.disabled}
               >
                 {action.icon}
               </ActionIcon>
@@ -75,7 +75,7 @@ const Index = (props) => {
   ))
   
   return (
-    <AppLayout title="Atlet" authed={props.auth.user} meta={props.meta} unreadHistories={props.unread_histories.length}>
+    <AppLayout title="Atlet" authed={props.auth.user} meta={props.meta} unreadHistories={props.total_unread_histories}>
       <Stack mb={32}>
         <Group w="100%" justify="space-between">
           <Breadcrumbs navList={[{ label: 'Atlet', totalData: props.athletes.length }]} />

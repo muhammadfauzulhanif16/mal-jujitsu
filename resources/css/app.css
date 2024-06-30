@@ -3,6 +3,10 @@
   src: url(/fonts/Outfit/static/Outfit-Regular.ttf); /* IE9 Compat Modes */
 }
 
+* {
+  font-family: 'Outfit, sans-serif' !important;
+}
+
 input:focus {
   border-color: #746200;
 }

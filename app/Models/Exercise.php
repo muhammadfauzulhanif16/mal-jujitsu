@@ -13,7 +13,7 @@
     protected $fillable = [
       'name',
       'place',
-      'athlete_id',
+//      'athlete_id',
       'coach_id',
       'date',
       'start_time',

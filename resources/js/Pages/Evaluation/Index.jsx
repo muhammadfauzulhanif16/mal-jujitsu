@@ -1,40 +1,39 @@
 import { AppLayout } from '@/Layouts/AppLayout.jsx'
-import { ActionIcon, Button, Flex, Group, Stack, Table as MantineTable, TextInput, Tooltip } from '@mantine/core'
-import { IconEye, IconPencil, IconPlus, IconReportAnalytics, IconSearch, IconTrash } from '@tabler/icons-react'
+import { ActionIcon, Avatar, Button, Flex, Group, HoverCard, Stack, Table as MantineTable, Text, TextInput, Tooltip } from '@mantine/core'
+import { IconEye, IconPlus, IconReportAnalytics, IconSearch } from '@tabler/icons-react'
 import { Breadcrumbs } from '@/Components/Breadcrumbs.jsx'
 import { router } from '@inertiajs/core'
 import { useState } from 'react'
 import { Table } from '@/Components/Table.jsx'
 
 const Index = (props) => {
-  console.log('evaluation', props)
   const [evaluationSearch, setExerciseEvaluationSearch] = useState('')
-  const THList = ['#', 'Nama Latihan', 'Tempat', 'Tanggal', 'Waktu Mulai', 'Waktu Selesai', 'Aksi']
+  const THList = ['#', 'Nama Latihan', 'Tempat', 'Tanggal', 'Waktu Mulai', 'Waktu Selesai', 'Atlet', 'Aksi']
   const actionList = [
     {
-      label: 'Rincian Penilaian',
+      label: 'Daftar Atlet',
       icon: <IconEye />,
-      onClick: (evaluation) => router.get(route('evaluations.show', evaluation)),
+      onClick: (evaluation) => router.get(route('evaluations.users.index', evaluation)),
       color: 'blue',
       // disabled: !['Pelatih Teknik', 'Pelatih Fisik'].includes(props.auth.user.role),
     },
-    {
-      label: 'Ubah Penilaian',
-      icon: <IconPencil />,
-      onClick: (evaluation) => router.get(route('evaluations.edit', evaluation)),
-      color: 'yellow',
-      disabled: !props.auth.user.role.includes('Pelatih'),
-    },
-    {
-      label: 'Hapus Penilaian',
-      icon: <IconTrash />,
-      onClick: (evaluation) => router.delete(route('evaluations.destroy', evaluation)),
-      color: 'red',
-      disabled: !props.auth.user.role.includes('Pelatih'),
-    },
+    // {
+    //   label: 'Ubah Penilaian',
+    //   icon: <IconPencil />,
+    //   onClick: (evaluation) => router.get(route('evaluations.edit', evaluation)),
+    //   color: 'yellow',
+    //   disabled: !props.auth.user.role.includes('Pelatih'),
+    // },
+    // {
+    //   label: 'Hapus Penilaian',
+    //   icon: <IconTrash />,
+    //   onClick: (evaluation) => router.delete(route('evaluations.destroy', evaluation)),
+    //   color: 'red',
+    //   disabled: !props.auth.user.role.includes('Pelatih'),
+    // },
   ]
   const evaluationList = props.evaluations.filter((evaluation) => {
-    return evaluation.exercise.name.toLowerCase().includes(evaluationSearch.toLowerCase())
+    return evaluation.name.toLowerCase().includes(evaluationSearch.toLowerCase())
   })
   const TDList = evaluationList.map((evaluation, id) => (
     <MantineTable.Tr h={64} key={id}>
@@ -43,19 +42,47 @@ const Index = (props) => {
         style={{ whiteSpace: 'nowrap' }}>{id + 1}</MantineTable.Td>
       <MantineTable.Td
         px={16} py={0}
-        style={{ whiteSpace: 'nowrap' }}>{evaluation.exercise.name}</MantineTable.Td>
+        style={{ whiteSpace: 'nowrap' }}>{evaluation.name}</MantineTable.Td>
       <MantineTable.Td
         px={16} py={0}
-        style={{ whiteSpace: 'nowrap' }}>{evaluation.exercise.place}</MantineTable.Td>
+        style={{ whiteSpace: 'nowrap' }}>{evaluation.place}</MantineTable.Td>
       <MantineTable.Td
         px={16} py={0}
-        style={{ whiteSpace: 'nowrap' }}>{new Date(evaluation.exercise.date).toLocaleDateString('id').split('/').join('-')}</MantineTable.Td>
+        style={{ whiteSpace: 'nowrap' }}>{new Date(evaluation.date).toLocaleDateString('id').split('/').join('-')}</MantineTable.Td>
       <MantineTable.Td
         px={16} py={0}
-        style={{ whiteSpace: 'nowrap' }}>{evaluation.exercise.start_time.split(':').join('.')}</MantineTable.Td>
+        style={{ whiteSpace: 'nowrap' }}>{evaluation.start_time.split(':').join('.')}</MantineTable.Td>
       <MantineTable.Td
         px={16} py={0}
-        style={{ whiteSpace: 'nowrap' }}>{evaluation.exercise.end_time.split(':').join('.')}</MantineTable.Td>
+        style={{ whiteSpace: 'nowrap' }}>{evaluation.end_time.split(':').join('.')}</MantineTable.Td>
+      <MantineTable.Td
+        px={16} py={0}
+        style={{ whiteSpace: 'nowrap' }}>
+        <Avatar.Group spacing={24} h={48}>
+          {evaluation.athletes.map((athlete) => (
+            <HoverCard key={athlete.id} withArrow shadow="xl">
+              <HoverCard.Target>
+                <Avatar size={52} src={athlete.avatar} radius={32} />
+              </HoverCard.Target>
+              
+              <HoverCard.Dropdown style={{ borderRadius: 32 }} p={16}>
+                <Group>
+                  <Avatar size={80} src={athlete.avatar} radius={160} />
+                  <Stack gap={5}>
+                    <Text size="sm" fw={600}>
+                      {athlete.full_name}
+                    </Text>
+                    
+                    <Text size="sm" c="dimmed">
+                      {athlete.role}
+                    </Text>
+                  </Stack>
+                </Group>
+              </HoverCard.Dropdown>
+            </HoverCard>
+          ))}
+        </Avatar.Group>
+      </MantineTable.Td>
       <MantineTable.Td
         px={16} py={0}
         style={{ whiteSpace: 'nowrap' }}>
@@ -80,7 +107,7 @@ const Index = (props) => {
   ))
   
   return (
-    <AppLayout title="Penilaian" authed={props.auth.user} meta={props.meta} unreadHistories={props.unread_histories.length}>
+    <AppLayout title="Penilaian" authed={props.auth.user} meta={props.meta} unreadHistories={props.total_unread_histories}>
       <Stack mb={32}>
         <Group w="100%" justify="space-between">
           <Breadcrumbs navList={[{ label: 'Penilaian', totalData: props.evaluations.length }]} />

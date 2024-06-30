@@ -1,5 +1,5 @@
 import { AppLayout } from '@/Layouts/AppLayout.jsx'
-import { ActionIcon, Avatar, Button, Fieldset, Grid, Group, Indicator, Select, SimpleGrid, TextInput, Tooltip } from '@mantine/core'
+import { ActionIcon, Avatar, Button, Fieldset, Grid, Group, Indicator, MultiSelect, Select, SimpleGrid, TextInput, Tooltip } from '@mantine/core'
 import { IconBuilding, IconCalendar, IconClipboardText, IconClockPause, IconClockPlay, IconCornerDownLeft, IconUser } from '@tabler/icons-react'
 import { Breadcrumbs } from '@/Components/Breadcrumbs.jsx'
 import { useForm } from '@inertiajs/react'
@@ -10,19 +10,20 @@ const Edit = (props) => {
   const form = useForm({
     name: props.exercise.name,
     place: props.exercise.place,
-    athlete_id: props.exercise.athlete.user_id,
-    coach_id: props.exercise.coach.user_id,
+    athlete_ids: props.exercise.athletes.map((athlete) => athlete.id),
+    coach_id: props.exercise.coach.id,
     date: props.exercise.date,
     start_time: props.exercise.start_time,
     end_time: props.exercise.end_time,
   })
-  
+  console.log(props)
   return (
     <form onSubmit={(e) => {
       e.preventDefault()
       form.put(route('exercises.update', props.exercise.id))
     }}>
-      <AppLayout title="Latihan" authed={props.auth.user} meta={props.meta} unreadHistories={props.unread_histories.length}>
+      <AppLayout title={`Latihan ${form.data.name ? `'${form.data.name}'` : ''}`} authed={props.auth.user} meta={props.meta}
+                 unreadHistories={props.total_unread_histories}>
         <Group w="100%" mb={32} justify="space-between">
           <Breadcrumbs navList={[{ label: 'Latihan', route: 'exercises.index' }, { label: 'Ubah' }]} />
           
@@ -47,24 +48,36 @@ const Edit = (props) => {
               xs: 2,
               md: 1,
             }}>
-              <Indicator inline color="gold.2" styles={{ indicator: { padding: 16 } }}
-                         label={form.data.athlete_id ? props.athletes.find((athlete) => athlete.user.id === form.data.athlete_id)?.user.role : 'Atlet'}
+              <Indicator styles={{ indicator: { padding: 16, border: '4px solid white' } }} inline color="gold.2"
+                         label={
+                           form.data.athlete_ids.length > 1 ? `${form.data.athlete_ids.length} Atlet` : 'Atlet'
+                         }
                          position="bottom-center" size={32} withBorder>
-                <Avatar
-                  mx="auto"
-                  src={props.athletes.find((athlete) => athlete.user.id === form.data.athlete_id)?.user.avatar}
-                  alt={props.athletes.find((athlete) => athlete.user.id === form.data.athlete_id)?.user.full_name}
-                  size={160}
-                />
+                <Avatar.Group spacing={40} style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                }}>
+                  <Avatar
+                    src={props.athletes.find((athlete) => athlete.id === form.data.athlete_ids[0])?.avatar}
+                    alt={props.athletes.find((athlete) => athlete.id === form.data.athlete_ids[0])?.full_name}
+                    size={160}
+                  />
+                  
+                  {form.data.athlete_ids.length > 1 && (
+                    <Avatar size={160}>
+                      +{form.data.athlete_ids.length - 1}
+                    </Avatar>
+                  )}
+                </Avatar.Group>
               </Indicator>
               
               <Indicator inline color="gold.2" styles={{ indicator: { padding: 16 } }}
-                         label={form.data.coach_id ? props.coaches.find((coach) => coach.user.id === form.data.coach_id)?.user.role : 'Pelatih'}
+                         label={form.data.coach_id ? props.coaches.find((coach) => coach.id === form.data.coach_id)?.role : 'Pelatih'}
                          position="bottom-center" size={32} withBorder>
                 <Avatar
                   mx="auto"
-                  src={props.coaches.find((coach) => coach.user.id === form.data.coach_id)?.user.avatar}
-                  alt={props.coaches.find((coach) => coach.user.id === form.data.coach_id)?.user.full_name}
+                  src={props.coaches.find((coach) => coach.id === form.data.coach_id)?.avatar}
+                  alt={props.coaches.find((coach) => coach.id === form.data.coach_id)?.full_name}
                   size={160}
                 />
               </Indicator>
@@ -107,15 +120,16 @@ const Edit = (props) => {
                 }
               }} error={form.errors.place} value={form.data.place} />
               
-              <Select
+              <MultiSelect
                 mb={16}
-                value={form.data.athlete_id}
+                value={form.data.athlete_ids}
+                hidePickedOptions
                 withAsterisk
                 variant="filled"
                 styles={{
                   label: { marginBottom: 8 },
-                  input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 16 },
-                  section: { marginLeft: 0, width: 48, height: 48 },
+                  input: { minHeight: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 16, display: 'flex' },
+                  section: { marginLeft: 0, width: 48, minHeight: 48 },
                   error: { marginTop: 8 },
                 }}
                 leftSection={<IconUser />}
@@ -123,19 +137,19 @@ const Edit = (props) => {
                 clearable
                 searchable
                 nothingFoundMessage="Tidak ada atlet ditemukan"
-                placeholder="Pilih atlet..."
+                placeholder="Pilih 1 atlet atau lebih..."
                 checkIconPosition="right"
                 onChange={(value) => {
-                  form.setData('athlete_id', value)
+                  form.setData('athlete_ids', value)
                   
-                  if (!value) {
-                    form.setError({ athlete_id: 'Atlet tidak boleh kosong.' })
+                  if (value.length === 0) {
+                    form.setError({ athlete_ids: 'Atlet tidak boleh kosong.' })
                   } else {
-                    form.clearErrors('athlete_id')
+                    form.clearErrors('athlete_ids')
                   }
                 }}
-                data={props.athletes.map((athlete) => ({ value: athlete.user.id, label: `${athlete.user.full_name} (${athlete.user.role})` }))}
-                error={form.errors.athlete_id}
+                data={props.athletes.map((athlete) => ({ value: athlete.id, label: `${athlete.full_name} (${athlete.role})` }))}
+                error={form.errors.athlete_ids}
               />
               
               <Select
@@ -165,7 +179,7 @@ const Edit = (props) => {
                     form.clearErrors('coach_id')
                   }
                 }}
-                data={props.coaches.map((coach) => ({ value: coach.user.id, label: `${coach.user.full_name} (${coach.user.role})` }))}
+                data={props.coaches.map((coach) => ({ value: coach.id, label: `${coach.full_name} (${coach.role})` }))}
                 error={form.errors.coach_id}
               />
               

@@ -72,13 +72,13 @@ const Dashboard = (props) => {
     {
       icon: <IconUser />,
       label: 'pelatih',
-      total: props.coaches.length,
+      total: props.stats.total_coaches,
       description: 'orang',
     },
     {
       icon: <IconUser />,
       label: 'atlet',
-      total: props.athletes.length,
+      total: props.stats.total_athletes,
       description: 'orang',
     },
     {

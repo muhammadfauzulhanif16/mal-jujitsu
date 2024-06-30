@@ -5,6 +5,7 @@
   use App\Models\Athlete;
   use App\Models\Coach;
   use App\Models\Exercise;
+  use App\Models\ExerciseAthlete;
   use App\Models\History;
   use Exception;
   use Illuminate\Http\Request;
@@ -21,60 +22,23 @@
       $authedUser = Auth::user();
       $authedUser->avatar = str_contains($authedUser->avatar, 'https') ? $authedUser->avatar : ($authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null);
       
-      $exercises = [];
-      
-      if (in_array($authedUser->role, ['Ne-Waza', 'Fighting'])) {
-        $exercises = Exercise::with(['coach.user', 'athlete.user'])
-          ->where('athlete_id', $authedUser->id)
-          ->get()
-          ->map(function ($exercise) {
-            $athlete = $exercise->athlete->user;
-            $athlete->avatar = str_contains($athlete->avatar, 'https') ? $athlete->avatar : (str_contains($athlete->avatar, 'storage/') ? $athlete->avatar : ($athlete->avatar ? asset('storage/' . $athlete->avatar) : null));
-            
-            $coach = $exercise->coach->user;
-            $coach->avatar = str_contains($coach->avatar, 'https') ? $coach->avatar : (str_contains($coach->avatar, 'storage/') ? $coach->avatar : ($coach->avatar ? asset('storage/' . $coach->avatar) : null));
-            
-            return [
-              'athlete' => [
-                'avatar' => $athlete->avatar,
-                'full_name' => $athlete->full_name,
-              ],
-              'coach' => [
-                'avatar' => $coach->avatar,
-                'full_name' => $coach->full_name,
-              ],
-              'exercise' => $exercise->toArray(),
-            ];
-          })->sortBy('exercise.name')->values();
-      } else {
-        $exercises = Exercise::with(['coach.user', 'athlete.user'])
-          ->get()
-          ->map(function ($exercise) {
-            $athlete = $exercise->athlete->user;
-            $athlete->avatar = str_contains($athlete->avatar, 'https') ? $athlete->avatar : (str_contains($athlete->avatar, 'storage/') ? $athlete->avatar : ($athlete->avatar ? asset('storage/' . $athlete->avatar) : null));
-            
-            $coach = $exercise->coach->user;
-            $coach->avatar = str_contains($coach->avatar, 'https') ? $coach->avatar : (str_contains($coach->avatar, 'storage/') ? $coach->avatar : ($coach->avatar ? asset('storage/' . $coach->avatar) : null));
-            
-            return [
-              'athlete' => [
-                'avatar' => $athlete->avatar,
-                'full_name' => $athlete->full_name,
-              ],
-              'coach' => [
-                'avatar' => $coach->avatar,
-                'full_name' => $coach->full_name,
-              ],
-              'exercise' => $exercise->toArray(),
-            ];
-          })->sortBy('exercise.name')->values();
-      }
       
       return Inertia('Exercise/Index', [
-        'exercises' => $exercises,
+        'exercises' => Exercise::all()->map(function ($exercise) {
+          $exercise->coach = Coach::where('user_id', $exercise->coach_id)->first()->user;
+          $exercise->coach->avatar = str_contains($exercise->coach->avatar, 'https') ? $exercise->coach->avatar : ($exercise->coach->avatar ? asset('storage/' . $exercise->coach->avatar) : null);
+          $exercise->coach = $exercise->coach->only(['full_name', 'avatar', 'role']);
+          $exercise->athletes = ExerciseAthlete::where('exercise_id', $exercise->id)->get()->map(function ($exerciseAthlete) {
+            $athlete = Athlete::where('user_id', $exerciseAthlete->athlete_id)->first()->user;
+            $athlete->avatar = str_contains($athlete->avatar, 'https') ? $athlete->avatar : ($athlete->avatar ? asset('storage/' . $athlete->avatar) : null);
+            return $athlete->only(['id', 'full_name', 'avatar', 'role']);
+          });
+          return $exercise;
+        }),
+        
         'meta' => session('meta'),
         'auth' => ['user' => $authedUser],
-        'unread_histories' => History::where('is_read', false)->get(),
+        'total_unread_histories' => History::where('is_read', false)->count(),
       ]);
     }
     
@@ -84,18 +48,21 @@
     public function store(Request $request)
     {
       try {
+        $exercise = Exercise::create([
+          'name' => $request->name,
+          'place' => $request->place,
+          'coach_id' => $request->coach_id,
+          'date' => Carbon::parse($request->date)->format('Y-m-d'),
+          'start_time' => Carbon::parse($request->start_time)->format('H:i:s'),
+          'end_time' => Carbon::parse($request->end_time)->format('H:i:s'),
+        ]);
+        
         foreach ($request->athlete_ids as $athlete_id) {
-          Exercise::create([
-            'name' => $request->name,
-            'place' => $request->place,
-            'athlete_id' => $athlete_id,
-            'coach_id' => $request->coach_id,
-            'date' => Carbon::parse($request->date)->format('Y-m-d'),
-            'start_time' => Carbon::parse($request->start_time)->format('H:i:s'),
-            'end_time' => Carbon::parse($request->end_time)->format('H:i:s'),
+          ExerciseAthlete::create([
+            'exercise_id' => $exercise->id,
+            'athlete_id' => $athlete_id
           ]);
         }
-        
         
         History::create([
           'user_id' => Auth::id(),
@@ -127,15 +94,20 @@
       return Inertia('Exercise/Create', [
         'meta' => session('meta'),
         'auth' => ['user' => $authedUser],
-        'athletes' => Athlete::with('user')->get()->sortBy(function ($athlete) {
+        'athletes' => Athlete::all()->map(function ($athlete) {
           $athlete->user->avatar = str_contains($athlete->user->avatar, 'https') ? $athlete->user->avatar : ($athlete->user->avatar ? asset('storage/' . $athlete->user->avatar) : null);
-          return $athlete;
-        })->sortBy('user.full_name')->values(),
-        'coaches' => Coach::with('user')->get()->sortBy(function ($coach) {
+          return [
+            ...$athlete->user->only(['id', 'avatar', 'full_name', 'role']),
+          ];
+        })->sortBy('full_name')->values(),
+        
+        'coaches' => Coach::all()->map(function ($coach) {
           $coach->user->avatar = str_contains($coach->user->avatar, 'https') ? $coach->user->avatar : ($coach->user->avatar ? asset('storage/' . $coach->user->avatar) : null);
-          return $coach;
-        })->sortBy('user.full_name')->values(),
-        'unread_histories' => History::where('is_read', false)->get(),
+          return [
+            ...$coach->user->only(['id', 'avatar', 'full_name', 'role']),
+          ];
+        })->sortBy('full_name')->values(),
+        'total_unread_histories' => History::where('is_read', false)->count(),
       ]);
     }
     
@@ -148,18 +120,35 @@
       $authedUser->avatar = str_contains($authedUser->avatar, 'https') ? $authedUser->avatar : ($authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null);
       
       return Inertia('Exercise/Show', [
-        'exercise' => $exercise->load(['athlete', 'coach']),
+        'exercise' => [
+          ...$exercise->toArray(),
+          'coach' => function () use ($exercise) {
+            $coach = Coach::where('user_id', $exercise->coach_id)->first()->user;
+            $coach->avatar = str_contains($coach->avatar, 'https') ? $coach->avatar : ($coach->avatar ? asset('storage/' . $coach->avatar) : null);
+            return $coach->only(['id', 'avatar', 'full_name', 'role']);
+          },
+          'athletes' => ExerciseAthlete::where('exercise_id', $exercise->id)->get()->map(function ($exerciseAthlete) {
+            $athlete = Athlete::where('user_id', $exerciseAthlete->athlete_id)->first()->user;
+            $athlete->avatar = str_contains($athlete->avatar, 'https') ? $athlete->avatar : ($athlete->avatar ? asset('storage/' . $athlete->avatar) : null);
+            return $athlete->only(['id', 'avatar', 'full_name', 'role']);
+          }),
+        ],
         'meta' => session('meta'),
         'auth' => ['user' => $authedUser],
-        'athletes' => Athlete::with('user')->get()->map(function ($athlete) {
+        'athletes' => Athlete::all()->map(function ($athlete) {
           $athlete->user->avatar = str_contains($athlete->user->avatar, 'https') ? $athlete->user->avatar : ($athlete->user->avatar ? asset('storage/' . $athlete->user->avatar) : null);
-          return $athlete;
-        })->sortBy('user.full_name')->values(),
-        'coaches' => Coach::with('user')->get()->map(function ($coach) {
+          return [
+            ...$athlete->user->only(['id', 'avatar', 'full_name', 'role']),
+          ];
+        })->sortBy('full_name')->values(),
+        
+        'coaches' => Coach::all()->map(function ($coach) {
           $coach->user->avatar = str_contains($coach->user->avatar, 'https') ? $coach->user->avatar : ($coach->user->avatar ? asset('storage/' . $coach->user->avatar) : null);
-          return $coach;
-        })->sortBy('user.full_name')->values(),
-        'unread_histories' => History::where('is_read', false)->get(),
+          return [
+            ...$coach->user->only(['id', 'avatar', 'full_name', 'role']),
+          ];
+        })->sortBy('full_name')->values(),
+        'total_unread_histories' => History::where('is_read', false)->count(),
       ]);
     }
     
@@ -172,18 +161,35 @@
       $authedUser->avatar = str_contains($authedUser->avatar, 'https') ? $authedUser->avatar : ($authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null);
       
       return Inertia('Exercise/Edit', [
-        'exercise' => $exercise->load(['athlete', 'coach']),
+        'exercise' => [
+          ...$exercise->toArray(),
+          'coach' => function () use ($exercise) {
+            $coach = Coach::where('user_id', $exercise->coach_id)->first()->user;
+            $coach->avatar = str_contains($coach->avatar, 'https') ? $coach->avatar : ($coach->avatar ? asset('storage/' . $coach->avatar) : null);
+            return $coach->only(['id', 'avatar', 'full_name', 'role']);
+          },
+          'athletes' => ExerciseAthlete::where('exercise_id', $exercise->id)->get()->map(function ($exerciseAthlete) {
+            $athlete = Athlete::where('user_id', $exerciseAthlete->athlete_id)->first()->user;
+            $athlete->avatar = str_contains($athlete->avatar, 'https') ? $athlete->avatar : ($athlete->avatar ? asset('storage/' . $athlete->avatar) : null);
+            return $athlete->only(['id', 'avatar', 'full_name', 'role']);
+          }),
+        ],
         'meta' => session('meta'),
         'auth' => ['user' => $authedUser],
-        'athletes' => Athlete::with('user')->get()->map(function ($athlete) {
+        'athletes' => Athlete::all()->map(function ($athlete) {
           $athlete->user->avatar = str_contains($athlete->user->avatar, 'https') ? $athlete->user->avatar : ($athlete->user->avatar ? asset('storage/' . $athlete->user->avatar) : null);
-          return $athlete;
-        })->sortBy('user.full_name')->values(),
-        'coaches' => Coach::with('user')->get()->map(function ($coach) {
+          return [
+            ...$athlete->user->only(['id', 'avatar', 'full_name', 'role']),
+          ];
+        })->sortBy('full_name')->values(),
+        
+        'coaches' => Coach::all()->map(function ($coach) {
           $coach->user->avatar = str_contains($coach->user->avatar, 'https') ? $coach->user->avatar : ($coach->user->avatar ? asset('storage/' . $coach->user->avatar) : null);
-          return $coach;
-        })->sortBy('user.full_name')->values(),
-        'unread_histories' => History::where('is_read', false)->get(),
+          return [
+            ...$coach->user->only(['id', 'avatar', 'full_name', 'role']),
+          ];
+        })->sortBy('full_name')->values(),
+        'total_unread_histories' => History::where('is_read', false)->count(),
       ]);
     }
     
@@ -193,15 +199,23 @@
     public function update(Request $request, Exercise $exercise)
     {
       try {
+        ExerciseAthlete::where('exercise_id', $exercise->id)->delete();
+        
         $exercise->update([
           'name' => $request->name,
           'place' => $request->place,
-          'athlete_id' => $request->athlete_id,
           'coach_id' => $request->coach_id,
           'date' => Carbon::parse($request->date)->format('Y-m-d'),
           'start_time' => Carbon::parse($request->start_time)->format('H:i:s'),
           'end_time' => Carbon::parse($request->end_time)->format('H:i:s'),
         ]);
+        
+        foreach ($request->athlete_ids as $athlete_id) {
+          ExerciseAthlete::create([
+            'exercise_id' => $exercise->id,
+            'athlete_id' => $athlete_id
+          ]);
+        }
         
         History::create([
           'user_id' => Auth::id(),

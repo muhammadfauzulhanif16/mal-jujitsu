@@ -27,7 +27,10 @@ const Index = (props) => {
                   router.put(route('histories.update', history.id))
                 }
               }}
+              style={{ cursor: 'pointer', borderRadius: 32 }}
               pl={22}
+              pt={history.is_read ? 0 : 22}
+              pb={history.is_read ? 0 : 22}
               styles={{
                 itemTitle: {
                   margin: 0,

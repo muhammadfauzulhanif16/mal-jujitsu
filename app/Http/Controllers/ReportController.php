@@ -40,6 +40,7 @@
           ->get()
           ->map(function ($evaluation) {
             return [
+              'note' => $evaluation->note,
               'exercise' => $evaluation->exercise,
               'criterias' => $evaluation->evaluations->filter(function ($evaluation) {
                 return $evaluation->subSubCriteria->subCriteria->criteria != null;
@@ -81,7 +82,7 @@
             ];
           })->sortBy('exercise.date')->values(),
         'tournaments' => Tournament::where('athlete_id', $authedUser->id)->get(),
-        'unread_histories' => History::where('is_read', false)->get(),
+        'total_unread_histories' => History::where('is_read', false)->count(),
       ]);
     }
     
@@ -120,6 +121,7 @@
           ->get()
           ->map(function ($evaluation) {
             return [
+              'note' => $evaluation->note,
               'exercise' => $evaluation->exercise,
               'criterias' => $evaluation->evaluations->filter(function ($evaluation) {
                 return $evaluation->subSubCriteria->subCriteria->criteria != null;
@@ -161,7 +163,7 @@
             ];
           })->sortBy('exercise.date')->values(),
         'tournaments' => Tournament::where('athlete_id', $user->id)->get(),
-        'unread_histories' => History::where('is_read', false)->get(),
+        'total_unread_histories' => History::where('is_read', false)->count(),
       ]);
     }
     

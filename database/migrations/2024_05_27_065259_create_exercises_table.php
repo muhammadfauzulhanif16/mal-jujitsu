@@ -14,7 +14,7 @@
         $table->uuid('id')->primary();
         $table->string('name');
         $table->string('place');
-        $table->foreignUuid('athlete_id')->constrained('users')->cascadeOnUpdate()->cascadeOnDelete();
+//        $table->foreignUuid('athlete_id')->constrained('users')->cascadeOnUpdate()->cascadeOnDelete();
         $table->foreignUuid('coach_id')->constrained('users')->cascadeOnUpdate()->cascadeOnDelete();
         $table->date('date');
         $table->time('start_time');

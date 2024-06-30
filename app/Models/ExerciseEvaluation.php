@@ -30,4 +30,9 @@
     {
       return $this->belongsTo(Athlete::class, 'athlete_id', 'user_id');
     }
+    
+    public function athletes()
+    {
+      return $this->hasMany(Athlete::class, 'user_id', 'athlete_id');
+    }
   }

@@ -9,22 +9,23 @@ import 'dayjs/locale/id'
 const Edit = (props) => {
   const form = useForm({
     _method: 'put',
-    avatar: props.user.avatar,
-    email: props.user.email,
+    avatar: props.athlete.avatar,
+    email: props.athlete.email,
     password: '',
-    full_name: props.user.full_name,
-    gender: props.user.gender,
-    birth_date: props.user.birth_date,
-    weight: props.user.athlete.weight,
-    role: props.user.role,
+    full_name: props.athlete.full_name,
+    gender: props.athlete.gender,
+    birth_date: props.athlete.birth_date,
+    weight: props.athlete.weight,
+    role: props.athlete.role,
   })
   
   return (
     <form onSubmit={(e) => {
       e.preventDefault()
-      form.post(route('athletes.update', props.user.id))
+      form.post(route('athletes.update', props.athlete.id))
     }}>
-      <AppLayout title="Atlet" authed={props.auth.user} meta={props.meta} unreadHistories={props.unread_histories.length}>
+      <AppLayout title={`Atlet ${form.data.full_name ? `'${form.data.full_name}'` : ''}`} authed={props.auth.user} meta={props.meta}
+                 unreadHistories={props.total_unread_histories}>
         <Group mb={32} justify="space-between">
           <Breadcrumbs navList={[{ label: 'Atlet', route: 'athletes.index' }, { label: 'Ubah' }]} />
           

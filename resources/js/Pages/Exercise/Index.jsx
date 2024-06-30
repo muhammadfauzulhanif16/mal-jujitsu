@@ -1,5 +1,5 @@
 import { AppLayout } from '@/Layouts/AppLayout.jsx'
-import { ActionIcon, Avatar, Button, Flex, Group, Stack, Table as MantineTable, TextInput, Tooltip } from '@mantine/core'
+import { ActionIcon, Avatar, Button, Flex, Group, HoverCard, Stack, Table as MantineTable, Text, TextInput, Tooltip } from '@mantine/core'
 import { IconClipboardText, IconEye, IconPencil, IconPlus, IconSearch, IconTrash } from '@tabler/icons-react'
 import { Breadcrumbs } from '@/Components/Breadcrumbs.jsx'
 import { router } from '@inertiajs/core'
@@ -34,7 +34,7 @@ const Index = (props) => {
     },
   ]
   const exerciseList = props.exercises.filter((exercise) => {
-    return exercise.exercise.name.toLowerCase().includes(exerciseSearch.toLowerCase())
+    return exercise.name.toLowerCase().includes(exerciseSearch.toLowerCase())
   })
   const TDList = exerciseList.map((exercise, id) => (
     <MantineTable.Tr h={64} key={id}>
@@ -44,19 +44,38 @@ const Index = (props) => {
       <MantineTable.Td
         px={16} py={0}
         style={{ whiteSpace: 'nowrap' }}>
-        {exercise.exercise.name}
+        {exercise.name}
       </MantineTable.Td>
       <MantineTable.Td
         px={16} py={0}
-        style={{ whiteSpace: 'nowrap' }}>{exercise.exercise.place}</MantineTable.Td>
+        style={{ whiteSpace: 'nowrap' }}>{exercise.place}</MantineTable.Td>
       <MantineTable.Td
         px={16} py={0}
         style={{ whiteSpace: 'nowrap' }}>
-        <Flex gap={16} align="center">
-          <Avatar size={48} src={exercise.athlete.avatar} />
-          
-          {exercise.athlete.full_name}
-        </Flex>
+        <Avatar.Group spacing={24} h={48}>
+          {exercise.athletes.map((athlete) => (
+            <HoverCard key={athlete.id} withArrow shadow="xl">
+              <HoverCard.Target>
+                <Avatar size={52} src={athlete.avatar} radius={32} />
+              </HoverCard.Target>
+              
+              <HoverCard.Dropdown style={{ borderRadius: 32 }} p={16}>
+                <Group>
+                  <Avatar size={80} src={athlete.avatar} radius={160} />
+                  <Stack gap={5}>
+                    <Text size="sm" fw={600}>
+                      {athlete.full_name}
+                    </Text>
+                    
+                    <Text size="sm" c="dimmed">
+                      {athlete.role}
+                    </Text>
+                  </Stack>
+                </Group>
+              </HoverCard.Dropdown>
+            </HoverCard>
+          ))}
+        </Avatar.Group>
       </MantineTable.Td>
       <MantineTable.Td
         px={16} py={0}
@@ -64,24 +83,24 @@ const Index = (props) => {
         <Flex gap={16} align="center">
           <Avatar size={48} src={exercise.coach.avatar} />
           
-          {exercise.coach.full_name}
+          {exercise.coach.full_name} ({exercise.coach.role})
         </Flex>
       </MantineTable.Td>
       <MantineTable.Td
         px={16} py={0}
-        style={{ whiteSpace: 'nowrap' }}>{new Date(exercise.exercise.date).toLocaleDateString('id').split('/').join('-')}</MantineTable.Td>
+        style={{ whiteSpace: 'nowrap' }}>{new Date(exercise.date).toLocaleDateString('id').split('/').join('-')}</MantineTable.Td>
       <MantineTable.Td
         px={16} py={0}
-        style={{ whiteSpace: 'nowrap' }}>{exercise.exercise.start_time.split(':').join('.')}</MantineTable.Td>
+        style={{ whiteSpace: 'nowrap' }}>{exercise.start_time.split(':').join('.')}</MantineTable.Td>
       <MantineTable.Td
         px={16} py={0}
-        style={{ whiteSpace: 'nowrap' }}>{exercise.exercise.end_time.split(':').join('.')}</MantineTable.Td>
+        style={{ whiteSpace: 'nowrap' }}>{exercise.end_time.split(':').join('.')}</MantineTable.Td>
       <MantineTable.Td px={16} py={0} style={{ whiteSpace: 'nowrap' }}>
         <Flex gap={8} style={{ whiteSpace: 'nowrap' }}>
           {actionList.map((action, id) => (
             <Tooltip label={action.label} key={id} style={{ borderRadius: 32, padding: '.5rem 1rem' }}>
               <ActionIcon size={48} radius={32} variant="subtle" aria-label={action.label} color={action.color}
-                          onClick={() => action.onClick(exercise.exercise)}
+                          onClick={() => action.onClick(exercise)}
                           disabled={action.disabled}>
                 {action.icon}
               </ActionIcon>
@@ -93,7 +112,7 @@ const Index = (props) => {
   ))
   
   return (
-    <AppLayout title="Latihan" authed={props.auth.user} meta={props.meta} unreadHistories={props.unread_histories.length}>
+    <AppLayout title="Latihan" authed={props.auth.user} meta={props.meta} unreadHistories={props.total_unread_histories}>
       <Stack mb={32}>
         <Group w="100%" justify="space-between">
           <Breadcrumbs navList={[{ label: 'Latihan', totalData: props.exercises.length }]} />

@@ -8,13 +8,13 @@ import 'dayjs/locale/id'
 
 const Create = (props) => {
   const form = useForm({ avatar: '', email: '', password: '', full_name: '', gender: '', birth_date: '', weight: '', role: '' })
-  
+  console.log(props)
   return (
     <form onSubmit={(e) => {
       e.preventDefault()
       form.post(route('athletes.store'))
     }}>
-      <AppLayout title="Atlet" authed={props.auth.user} meta={props.meta} unreadHistories={props.unread_histories.length}>
+      <AppLayout title="Atlet" authed={props.auth.user} meta={props.meta} unreadHistories={props.total_unread_histories.length}>
         <Group justify="space-between" mb={32}>
           <Breadcrumbs navList={[{ label: 'Atlet', route: 'athletes.index' }, { label: 'Tambah' }]} />
           
@@ -68,7 +68,7 @@ const Create = (props) => {
                   form.setError({ email: 'Alamat surel tidak boleh kosong.' })
                 } else if (!/\S+@\S+\.\S+/.test(email)) {
                   form.setError({ email: 'Alamat surel tidak sah.' })
-                } else if (props.users.some(user => user.email === email)) {
+                } else if (props.existing_emails.some(existingEmail => existingEmail === email)) {
                   form.setError({ email: 'Alamat surel sudah terdaftar.' })
                 } else {
                   form.clearErrors('email')

@@ -43,7 +43,13 @@
         'unread_histories' => History::where('is_read', false)->get(),
         'meta' => session('meta'),
         'auth' => ['user' => $authedUser],
-        'coaches' => Coach::all(),
+        'stats' => [
+          'total_coaches' => Coach::count(),
+          'total_athletes' => Athlete::count(),
+          'total_exercises' => Exercise::count(),
+//          'total_tournaments' => Tournament::count(),
+//          'total_evaluations' => ExerciseEvaluation::count(),
+        ],
         'athletes' => Athlete::with(['user', 'tournaments'])->get()->map(function ($athlete) {
           $athlete->gold_medals = $athlete->tournaments->where('medal', 'Emas')->count();
           $athlete->silver_medals = $athlete->tournaments->where('medal', 'Perak')->count();
@@ -106,6 +112,7 @@
       Route::get('create', [EvaluationController::class, 'create'])->name('evaluations.create');
       Route::post('', [EvaluationController::class, 'store'])->name('evaluations.store');
       Route::get('{exerciseEvaluation}', [EvaluationController::class, 'show'])->name('evaluations.show');
+      Route::get('{exercise}/users', [EvaluationController::class, 'users_index'])->name('evaluations.users.index');
       Route::get('{exerciseEvaluation}/edit', [EvaluationController::class, 'edit'])->name('evaluations.edit');
       Route::put('{exerciseEvaluation}', [EvaluationController::class, 'update'])->name('evaluations.update');
       Route::delete('{exerciseEvaluation}', [EvaluationController::class, 'destroy'])->name('evaluations.destroy');

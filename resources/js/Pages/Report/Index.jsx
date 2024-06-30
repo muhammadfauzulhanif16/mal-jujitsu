@@ -1,5 +1,21 @@
 import { AppLayout } from '@/Layouts/AppLayout.jsx'
-import { ActionIcon, Avatar, Box, Button, Center, Divider, Flex, Grid, Group, SimpleGrid, Stack, Table as MantineTable, Text, Tooltip } from '@mantine/core'
+import {
+  ActionIcon,
+  Avatar,
+  Box,
+  Button,
+  Center,
+  Divider,
+  Flex,
+  Grid,
+  Group,
+  SimpleGrid,
+  Stack,
+  Table as MantineTable,
+  Text,
+  Tooltip,
+  TypographyStylesProvider,
+} from '@mantine/core'
 import { IconCalendar, IconEye, IconPrinter, IconReport } from '@tabler/icons-react'
 import { Breadcrumbs } from '@/Components/Breadcrumbs.jsx'
 import { router } from '@inertiajs/core'
@@ -109,7 +125,7 @@ const Index = (props) => {
   
   
   return (
-    <AppLayout title="Laporan" authed={props.auth.user} meta={props.meta} unreadHistories={props.unread_histories.length}>
+    <AppLayout title="Laporan" authed={props.auth.user} meta={props.meta} unreadHistories={props.total_unread_histories}>
       <Stack mb={32}>
         <Group w="100%" justify="space-between">
           <Breadcrumbs navList={[{ label: 'Laporan' }]} />
@@ -326,6 +342,21 @@ const Index = (props) => {
                           )}
                         </>
                       ))}
+                      
+                      <Grid.Col span={12}>
+                        <Group style={{
+                          overflow: 'auto',
+                          border: '1px solid #e1e1e1',
+                        }} px={16} py={11}>
+                          <Text fw={600}>Catatan : </Text>
+                          
+                          <TypographyStylesProvider>
+                            <div
+                              dangerouslySetInnerHTML={{ __html: evaluation.note }}
+                            />
+                          </TypographyStylesProvider>
+                        </Group>
+                      </Grid.Col>
                     </Grid>
                   </Box>
                 ))}

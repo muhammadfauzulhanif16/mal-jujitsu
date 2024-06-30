@@ -14,7 +14,7 @@ const Create = (props) => {
       e.preventDefault()
       form.post(route('coaches.store'))
     }}>
-      <AppLayout title="Pelatih" authed={props.auth.user} meta={props.meta} unreadHistories={props.unread_histories.length}>
+      <AppLayout title="Pelatih" authed={props.auth.user} meta={props.meta} unreadHistories={props.total_unread_histories}>
         <Group w="100%" mb={32} justify="space-between">
           <Breadcrumbs navList={[{ label: 'Pelatih', route: 'coaches.index' }, { label: 'Tambah' }]} />
           
@@ -69,7 +69,7 @@ const Create = (props) => {
                   form.setError({ email: 'Alamat surel tidak boleh kosong.' })
                 } else if (!/\S+@\S+\.\S+/.test(email)) {
                   form.setError({ email: 'Alamat surel tidak sah.' })
-                } else if (props.users.some(user => user.email === email)) {
+                } else if (props.existing_emails.some(existingEmail => existingEmail === email)) {
                   form.setError({ email: 'Alamat surel sudah terdaftar.' })
                 } else {
                   form.clearErrors('email')

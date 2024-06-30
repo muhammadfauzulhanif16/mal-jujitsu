@@ -29,11 +29,12 @@ import { useEffect, useState } from 'react'
 
 const Edit = (props) => {
   console.log(props)
-  const [role, setRole] = useState(props.exercise_evaluation.exercise.athlete.user.role)
+  const [role, setRole] = useState(props.exercise_evaluation.athlete.role)
   const form = useForm({
     exercise_id: props.exercise_evaluation.exercise.id,
+    athlete_id: props.exercise_evaluation.athlete.id,
     note: props.exercise_evaluation.note,
-    evaluations: props.evaluations.map((evaluation) => ({
+    evaluations: props.exercise_evaluation.evaluations.map((evaluation) => ({
       sub_sub_criteria_id: evaluation.sub_sub_criteria_id,
       value: evaluation.value,
     })),
@@ -78,6 +79,13 @@ const Edit = (props) => {
     },
   })
   
+  const athletes = [
+    ...(props.exercises.find((exercise) => exercise.id === form.data.exercise_id)?.athletes || []),
+    ...(props.exercise_evaluation.athlete ? [props.exercise_evaluation.athlete] : []),
+  ]
+  
+  const selectedAthlete = athletes.find((athlete) => athlete.id === form.data.athlete_id)
+  
   return (
     <form onSubmit={(e) => {
       e.preventDefault()
@@ -85,7 +93,7 @@ const Edit = (props) => {
     }}>
       <AppLayout
         title={`Penilaian Latihan ${form.data.exercise_id ? `'${[...props.exercises, props.exercise_evaluation.exercise].find((exercise) => exercise.id === form.data.exercise_id)?.name}'` : ''}`}
-        authed={props.auth.user} meta={props.meta} unreadHistories={props.unread_histories.length}>
+        authed={props.auth.user} meta={props.meta} unreadHistories={props.total_unread_histories}>
         <Group w="100%" justify="space-between" mb={32}>
           <Breadcrumbs navList={[{ label: 'Penilaian', route: 'evaluations.index' }, { label: 'Ubah' }]} />
           
@@ -108,13 +116,16 @@ const Edit = (props) => {
         <Grid grow justify="space-between">
           <Grid.Col span={{ base: 12, md: 4 }}>
             <Center>
-              <Indicator styles={{ indicator: { padding: 16, border: '4px solid white' } }} inline color="gold.2"
-                         label={form.data.exercise_id ? [...props.exercises, props.exercise_evaluation.exercise].find((exercise) => exercise.id === form.data.exercise_id)?.athlete.user.role : 'Atlet'}
-                         position="bottom-center" size={32} withBorder>
+              <Indicator
+                styles={{ indicator: { padding: 16, border: '4px solid white' } }}
+                inline color="gold.2"
+                label={selectedAthlete ? selectedAthlete.role : 'Atlet'}
+                position="bottom-center" size={32} withBorder
+              >
                 <Avatar
                   mx="auto"
-                  src={[...props.exercises, props.exercise_evaluation.exercise].find((exercise) => exercise.id === form.data.exercise_id)?.athlete.user.avatar}
-                  alt={[...props.exercises, props.exercise_evaluation.exercise].find((exercise) => exercise.id === form.data.exercise_id)?.athlete.user.full_name}
+                  src={selectedAthlete ? selectedAthlete.avatar : null}
+                  alt={selectedAthlete ? selectedAthlete.full_name : null}
                   size={160}
                 />
               </Indicator>
@@ -123,9 +134,10 @@ const Edit = (props) => {
           
           <Grid.Col span={{ base: 12, md: 8 }}>
             <Stack gap={48}>
-              <Fieldset radius={20} legend="Informasi Latihan"
+              <Fieldset radius={20} legend="Informasi Penilaian"
                         styles={{ root: { margin: 0, padding: 16 }, legend: { borderRadius: 20, fontSize: 16, padding: 16, fontWeight: 'bold' } }}>
                 <Select
+                  mb={16}
                   withAsterisk
                   variant="filled"
                   styles={{
@@ -144,7 +156,6 @@ const Edit = (props) => {
                   checkIconPosition="right"
                   onChange={(value) => {
                     form.setData('exercise_id', value)
-                    setRole(props.exercises.find((exercise) => exercise.id === value)?.athlete.user.role)
                     
                     if (!value) {
                       form.setError({ exercise_id: 'Latihan tidak boleh kosong.' })
@@ -152,11 +163,51 @@ const Edit = (props) => {
                       form.clearErrors('exercise_id')
                     }
                   }}
-                  data={[...props.exercises, props.exercise_evaluation.exercise].map((exercise) => ({
+                  data={props.exercises.map((exercise) => ({
                     value: exercise.id,
-                    label: `${exercise.name} (${new Date(exercise.date).toLocaleDateString('id').split('/').join('-')}) | ${exercise.athlete.user.full_name} (${exercise.athlete.user.role})`,
+                    label: `${exercise.name} (${new Date(exercise.date).toLocaleDateString('id').split('/').join('-')})`,
                   }))}
                   error={form.errors.exercise_id}
+                />
+                
+                <Select
+                  value={form.data.athlete_id}
+                  disabled={!form.data.exercise_id}
+                  withAsterisk
+                  variant="filled"
+                  styles={{
+                    label: { marginBottom: 8 },
+                    input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 16 },
+                    section: { marginLeft: 0, width: 48, height: 48 },
+                    error: { marginTop: 8 },
+                  }}
+                  leftSection={<IconUser />}
+                  label="Atlet"
+                  clearable
+                  searchable
+                  nothingFoundMessage="Tidak ada atlet ditemukan"
+                  placeholder="Pilih atlet..."
+                  checkIconPosition="right"
+                  onChange={(value) => {
+                    form.setData('athlete_id', value)
+                    setRole(props.exercises.find((exercise) => exercise.id === form.data.exercise_id)?.athletes.find((athlete) => athlete.id === value)?.role)
+                    
+                    if (!value) {
+                      form.setError({ athlete_id: 'Atlet tidak boleh kosong.' })
+                    } else {
+                      form.clearErrors('athlete_id')
+                    }
+                  }}
+                  data={
+                    [
+                      ...(props.exercises.find((exercise) => exercise.id === form.data.exercise_id)?.athletes || []),
+                      props.exercise_evaluation.athlete ? props.exercise_evaluation.athlete : [],
+                    ].map((athlete) => ({
+                      value: athlete.id,
+                      label: `${athlete.full_name} (${athlete.role})`,
+                    }))
+                  }
+                  error={form.errors.athlete_id}
                 />
               </Fieldset>
               
@@ -192,11 +243,41 @@ const Edit = (props) => {
                                   // }
                                 }}>
                                   <Group gap={32}>
-                                    <Radio size="md" value="1" label="1" color="gold.2" />
-                                    <Radio size="md" value="2" label="2" color="gold.2" />
-                                    <Radio size="md" value="3" label="3" color="gold.2" />
-                                    <Radio size="md" value="4" label="4" color="gold.2" />
-                                    <Radio size="md" value="5" label="5" color="gold.2" />
+                                    <Radio styles={{
+                                      label: { marginLeft: 16, padding: 0, fontSize: 14 },
+                                      radio: {
+                                        border: 0,
+                                        backgroundColor: form.data.evaluations.map((evaluation) => evaluation.sub_sub_criteria_id === sub_sub_criteria.id && evaluation.value).includes('1') ? 'var(--mantine-color-gold-2)' : '#f1f3f5',
+                                      },
+                                    }} size="md" value="1" label="1" color="gold.2" />
+                                    <Radio styles={{
+                                      label: { marginLeft: 16, padding: 0, fontSize: 14 },
+                                      radio: {
+                                        border: 0,
+                                        backgroundColor: form.data.evaluations.map((evaluation) => evaluation.sub_sub_criteria_id === sub_sub_criteria.id && evaluation.value).includes('2') ? 'var(--mantine-color-gold-2)' : '#f1f3f5',
+                                      },
+                                    }} size="md" value="2" label="2" color="gold.2" />
+                                    <Radio styles={{
+                                      label: { marginLeft: 16, padding: 0, fontSize: 14 },
+                                      radio: {
+                                        border: 0,
+                                        backgroundColor: form.data.evaluations.map((evaluation) => evaluation.sub_sub_criteria_id === sub_sub_criteria.id && evaluation.value).includes('3') ? 'var(--mantine-color-gold-2)' : '#f1f3f5',
+                                      },
+                                    }} size="md" value="3" label="3" color="gold.2" />
+                                    <Radio styles={{
+                                      label: { marginLeft: 16, padding: 0, fontSize: 14 },
+                                      radio: {
+                                        border: 0,
+                                        backgroundColor: form.data.evaluations.map((evaluation) => evaluation.sub_sub_criteria_id === sub_sub_criteria.id && evaluation.value).includes('4') ? 'var(--mantine-color-gold-2)' : '#f1f3f5',
+                                      },
+                                    }} size="md" value="4" label="4" color="gold.2" />
+                                    <Radio styles={{
+                                      label: { marginLeft: 16, padding: 0, fontSize: 14 },
+                                      radio: {
+                                        border: 0,
+                                        backgroundColor: form.data.evaluations.map((evaluation) => evaluation.sub_sub_criteria_id === sub_sub_criteria.id && evaluation.value).includes('5') ? 'var(--mantine-color-gold-2)' : '#f1f3f5',
+                                      },
+                                    }} size="md" value="5" label="5" color="gold.2" />
                                   </Group>
                                 </Radio.Group>
                               ) : sub_sub_criteria.type === 'number' ? (
