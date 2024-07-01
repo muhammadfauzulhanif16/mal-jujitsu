@@ -11,6 +11,7 @@
   use App\Models\Athlete;
   use App\Models\Coach;
   use App\Models\Exercise;
+  use App\Models\ExerciseAthlete;
   use App\Models\ExerciseEvaluation;
   use App\Models\History;
   use App\Models\Tournament;
@@ -30,7 +31,11 @@
       $evaluations = [];
       
       if (in_array($authedUser->role, ['Ne-Waza', 'Fighting'])) {
-        $exercises = Exercise::where('athlete_id', $authedUser->id)->get();
+        $exercises = ExerciseAthlete::where('athlete_id', $authedUser->id)->get()->map(function ($exercise) {
+          $exercise->exercise = Exercise::find($exercise->exercise_id);
+          $exercise->date = Exercise::find($exercise->exercise_id)->date;
+          return $exercise;
+        });
         $tournaments = Tournament::where('athlete_id', $authedUser->id)->get();
         $evaluations = ExerciseEvaluation::where('athlete_id', $authedUser->id)->get();
       } else {

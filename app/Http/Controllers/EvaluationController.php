@@ -24,7 +24,16 @@
       
       return Inertia('Evaluation/Index', [
         'evaluations' => ExerciseEvaluation::with('exercise', 'athlete.user')->get()->map(function ($exerciseEvaluation) {
-          $exerciseEvaluation->athlete->user->avatar = $exerciseEvaluation->athlete->user->avatar ? (str_contains($exerciseEvaluation->athlete->user->avatar, 'https') ? $exerciseEvaluation->athlete->user->avatar : asset('storage/' . $exerciseEvaluation->athlete->user->avatar)) : null;
+          $avatar = $exerciseEvaluation->athlete->user->avatar;
+          if ($avatar) {
+            if (str_contains($avatar, 'https')) {
+              $exerciseEvaluation->athlete->user->avatar = $avatar;
+            } else {
+              $exerciseEvaluation->athlete->user->avatar = str_contains($avatar, 'storage/') ? $avatar : asset('storage/' . $avatar);
+            }
+          } else {
+            $exerciseEvaluation->athlete->user->avatar = null;
+          }
           return $exerciseEvaluation;
         })->groupBy('exercise_id')->map(function ($exerciseAthletes) {
           return [
@@ -107,10 +116,22 @@
       $authedUser = Auth::user();
       $authedUser->avatar = str_contains($authedUser->avatar, 'https') ? $authedUser->avatar : ($authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null);
       
-      $evaluationAthleteIds = ExerciseEvaluation::with('exercise')->get()->pluck('athlete.user.id')->unique();
+      $evaluations = Exercise::all()->map(function ($exercise) {
+        return [
+          'exercise_id' => $exercise->id,
+          'athletes' => ExerciseEvaluation::where('exercise_id', $exercise->id)->get()->pluck('athlete_id'),
+        ];
+      });
       
       $exercises = ExerciseAthlete::with('exercise', 'athlete.user')
-        ->whereNotIn('athlete_id', $evaluationAthleteIds)
+        ->where(function ($query) use ($evaluations) {
+          foreach ($evaluations as $evaluation) {
+            $query->where(function ($query) use ($evaluation) {
+              $query->where('exercise_id', '!=', $evaluation['exercise_id'])
+                ->orWhereNotIn('athlete_id', $evaluation['athletes']);
+            });
+          }
+        })
         ->get()
         ->groupBy('exercise_id')
         ->map(function ($exerciseAthletes) {

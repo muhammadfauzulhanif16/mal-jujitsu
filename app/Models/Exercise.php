@@ -36,6 +36,7 @@
       return $this->belongsTo(Coach::class, 'coach_id', 'user_id');
     }
     
+    
     public function evaluations()
     {
       return $this->hasMany(Evaluation::class);

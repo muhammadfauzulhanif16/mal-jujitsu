@@ -166,7 +166,7 @@ const Dashboard = (props) => {
                     onChange={(value) => setExerciseTime(value)}
                     value={exerciseTime}
                     allowDeselect={false}
-                    data={[`Tahunan (${new Date().getFullYear()})`, `Bulanan (${new Date().getMonth() + 1})`, `Mingguan (${Math.ceil(new Date().getDate() / 7)})`]}
+                    data={[`Tahunan (${new Date().getFullYear()})`, `Bulanan (${new Date().getMonth() + 1})`]}
                   />
                 </Group>
                 
@@ -206,7 +206,7 @@ const Dashboard = (props) => {
                     checkIconPosition="right"
                     value={tournamentTime}
                     onChange={(value) => setTournamentTime(value)}
-                    data={[`Tahunan (${new Date().getFullYear()})`, `Bulanan (${new Date().getMonth() + 1})`, `Mingguan (${Math.ceil(new Date().getDate() / 7)})`]}
+                    data={[`Tahunan (${new Date().getFullYear()})`, `Bulanan (${new Date().getMonth() + 1})`]}
                   />
                 </Group>
                 
