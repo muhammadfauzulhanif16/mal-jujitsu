@@ -7,9 +7,12 @@ import { useState } from 'react'
 import { Table } from '@/Components/Table.jsx'
 
 const Index = (props) => {
-  console.log(props)
   const [exerciseSearch, setExerciseSearch] = useState('')
-  const THList = ['#', 'Nama', 'Tempat', 'Atlet', 'Pelatih', 'Tanggal', 'Waktu Mulai', 'Waktu Selesai', 'Aksi']
+  // const THList = ['#', 'Nama', 'Tempat', 'Atlet', 'Pelatih', 'Tanggal', 'Waktu Mulai', 'Waktu Selesai', 'Aksi']
+  const THList = [{ title: '#' }, { title: 'Nama', key: 'name' }, { title: 'Tempat', key: 'place' }, { title: 'Atlet' }, {
+    title: 'Pelatih',
+    key: 'coach.full_name',
+  }, { title: 'Tanggal', key: 'date' }, { title: 'Waktu Mulai', key: 'start_time' }, { title: 'Waktu Selesai', key: 'end_time' }, { title: 'Aksi' }]
   const actionList = [
     {
       label: 'Rincian Latihan',
@@ -36,7 +39,8 @@ const Index = (props) => {
   const exerciseList = props.exercises.filter((exercise) => {
     return exercise.name.toLowerCase().includes(exerciseSearch.toLowerCase())
   })
-  const TDList = exerciseList.map((exercise, id) => (
+  const [sortedData, setSortedData] = useState(exerciseList)
+  const TDList = sortedData.map((exercise, id) => (
     <MantineTable.Tr h={64} key={id}>
       <MantineTable.Td
         px={16} py={0}
@@ -111,6 +115,10 @@ const Index = (props) => {
     </MantineTable.Tr>
   ))
   
+  const handleSort = (sortedData) => {
+    setSortedData(sortedData)
+  }
+  
   return (
     <AppLayout title="Latihan" authed={props.auth.user} meta={props.meta} unreadHistories={props.total_unread_histories}>
       <Stack mb={32}>
@@ -150,7 +158,9 @@ const Index = (props) => {
                    placeholder="Cari atlet..." onChange={(e) => setExerciseSearch(e.target.value)} />
       </Stack>
       
-      <Table thList={THList} tdList={TDList} icon={<IconClipboardText size={48} />} title="Latihan" route="exercises.create" authed={props.auth.user} />
+      <Table thList={THList} tdList={TDList} icon={<IconClipboardText size={48} />} title="Latihan" route="exercises.create" authed={props.auth.user}
+             data={exerciseList}
+             handleSort={handleSort} />
     </AppLayout>
   )
 }

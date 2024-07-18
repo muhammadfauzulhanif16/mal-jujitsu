@@ -10,14 +10,21 @@
   use App\Http\Controllers\TournamentController;
   use App\Models\Athlete;
   use App\Models\Coach;
+  use App\Models\Evaluation;
   use App\Models\Exercise;
-  use App\Models\ExerciseAthlete;
-  use App\Models\ExerciseEvaluation;
   use App\Models\History;
   use App\Models\Tournament;
+  use App\Models\User;
   use Illuminate\Support\Facades\Auth;
   use Illuminate\Support\Facades\Route;
   use Inertia\Inertia;
+
+//  use App\Models\ExerciseAthlete;
+
+//  use App\Http\Controllers\HistoryController;
+
+//  use App\Http\Controllers\ReportController;
+//  use App\Http\Controllers\TournamentController;
   
   Route::fallback(fn() => to_route(auth()->check() ? 'dashboard' : 'login'));
   
@@ -31,17 +38,17 @@
       $evaluations = [];
       
       if (in_array($authedUser->role, ['Ne-Waza', 'Fighting'])) {
-        $exercises = ExerciseAthlete::where('athlete_id', $authedUser->id)->get()->map(function ($exercise) {
-          $exercise->exercise = Exercise::find($exercise->exercise_id);
-          $exercise->date = Exercise::find($exercise->exercise_id)->date;
-          return $exercise;
-        });
+//        $exercises = ExerciseAthlete::where('athlete_id', $authedUser->id)->get()->map(function ($exercise) {
+//          $exercise->exercise = Exercise::find($exercise->exercise_id);
+//          $exercise->date = Exercise::find($exercise->exercise_id)->date;
+//          return $exercise;
+//        });
         $tournaments = Tournament::where('athlete_id', $authedUser->id)->get();
-        $evaluations = ExerciseEvaluation::where('athlete_id', $authedUser->id)->get();
+        $evaluations = Evaluation::where('athlete_id', $authedUser->id)->get();
       } else {
         $exercises = Exercise::all();
         $tournaments = Tournament::all();
-        $evaluations = ExerciseEvaluation::all();
+        $evaluations = Evaluation::all();
       }
       
       return Inertia::render('Dashboard', [
@@ -53,7 +60,7 @@
           'total_athletes' => Athlete::count(),
           'total_exercises' => Exercise::count(),
 //          'total_tournaments' => Tournament::count(),
-//          'total_evaluations' => ExerciseEvaluation::count(),
+//          'total_evaluations' => Evaluation::count(),
         ],
         'athletes' => Athlete::with(['user', 'tournaments'])->get()->map(function ($athlete) {
           $athlete->gold_medals = $athlete->tournaments->where('medal', 'Emas')->count();
@@ -64,11 +71,17 @@
         }),
         'exercises' => $exercises,
         'tournaments' => $tournaments,
-        'evaluations' => $evaluations,
-        'reports' => Athlete::with(['tournaments', 'evaluations'])
-          ->has('evaluations')
-          ->orWhereHas('tournaments')
-          ->get()
+        'evaluations' => in_array($authedUser->role, ['Ne-Waza', 'Fighting']) ? Evaluation::where('athlete_id', auth()->id())->get() : Evaluation::distinct()->get(['athlete_id'])
+          ->pluck('athlete_id')
+          ->map(function ($athleteId) {
+            return User::where('id', $athleteId)->first(['id', 'avatar', 'full_name', 'role']);
+          })->filter()->values()->toArray(),
+        'reports' => Athlete::with(['exercises', 'tournaments', 'evaluations'])
+          ->where(function ($query) {
+            $query->has('exercises')
+              ->orWhereHas('evaluations')
+              ->orWhereHas('tournaments');
+          })->get()
       ]);
     })->name('dashboard');
     
@@ -116,22 +129,26 @@
       Route::get('', [EvaluationController::class, 'index'])->name('evaluations.index');
       Route::get('create', [EvaluationController::class, 'create'])->name('evaluations.create');
       Route::post('', [EvaluationController::class, 'store'])->name('evaluations.store');
-      Route::get('{exerciseEvaluation}', [EvaluationController::class, 'show'])->name('evaluations.show');
-      Route::get('{exercise}/users', [EvaluationController::class, 'users_index'])->name('evaluations.users.index');
-      Route::get('{exerciseEvaluation}/edit', [EvaluationController::class, 'edit'])->name('evaluations.edit');
-      Route::put('{exerciseEvaluation}', [EvaluationController::class, 'update'])->name('evaluations.update');
-      Route::delete('{exerciseEvaluation}', [EvaluationController::class, 'destroy'])->name('evaluations.destroy');
+      
     });
+    
+    Route::get('users/{user}/evaluations', [EvaluationController::class, 'users_index'])->name('evaluations.users.index');
+    Route::get('evaluations/{evaluation}', [EvaluationController::class, 'show'])->name('evaluations.show');
+    Route::get('evaluations/{evaluation}/edit', [EvaluationController::class, 'edit'])->name('evaluations.edit');
+    Route::put('evaluations/{evaluation}', [EvaluationController::class, 'update'])->name('evaluations.update');
+    Route::delete('evaluations/{evaluation}', [EvaluationController::class, 'destroy'])->name('evaluations.destroy');
+    
     
     Route::group(['prefix' => 'reports'], function () {
       Route::get('', [ReportController::class, 'index'])->name('reports.index');
 //      Route::get('create', [EvaluationController::class, 'create'])->name('evaluations.create');
 //      Route::post('', [EvaluationController::class, 'store'])->name('evaluations.store');
-      Route::get('{user}', [ReportController::class, 'show'])->name('reports.show');
+
 //      Route::get('{exerciseEvaluation}/edit', [EvaluationController::class, 'edit'])->name('evaluations.edit');
 //      Route::put('{exerciseEvaluation}', [EvaluationController::class, 'update'])->name('evaluations.update');
 //      Route::delete('{exerciseEvaluation}', [EvaluationController::class, 'destroy'])->name('evaluations.destroy');
     });
+    Route::get('users/{user}/reports', [ReportController::class, 'show'])->name('reports.show');
     
     Route::group(['prefix' => 'profile'], function () {
       Route::get('', [ProfileController::class, 'edit'])->name('profile.edit');

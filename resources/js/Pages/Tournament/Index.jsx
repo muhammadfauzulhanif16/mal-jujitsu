@@ -8,7 +8,11 @@ import { Table } from '@/Components/Table.jsx'
 
 const Index = (props) => {
   const [tournamentSearch, setTournamentSearch] = useState('')
-  const THList = ['#', 'Nama', 'Tempat', 'Atlet', 'Medali', 'Tanggal', 'Aksi']
+  // const THList = ['#', 'Nama', 'Tempat', 'Atlet', 'Medali', 'Tanggal', 'Aksi']
+  const THList = [{ title: '#' }, {
+    title: 'Nama',
+    key: 'name',
+  }, { title: 'Tempat', key: 'place' }, { title: 'Atlet' }, { title: 'Medali', key: 'medal' }, { title: 'Tanggal', key: 'date' }, { title: 'Aksi' }]
   const actionList = [
     {
       label: 'Rincian Atlet',
@@ -35,7 +39,8 @@ const Index = (props) => {
   const tournamentList = props.tournaments.filter((tournament) => {
     return tournament.name.toLowerCase().includes(tournamentSearch.toLowerCase())
   })
-  const TDList = tournamentList.map((tournament, id) => (
+  const [sortedData, setSortedData] = useState(tournamentList)
+  const TDList = sortedData.map((tournament, id) => (
     <MantineTable.Tr h={64} key={id}>
       <MantineTable.Td
         px={16} py={0}
@@ -78,6 +83,10 @@ const Index = (props) => {
     </MantineTable.Tr>
   ))
   
+  const handleSort = (sortedData) => {
+    setSortedData(sortedData)
+  }
+  
   return (
     <AppLayout title="Pertandingan" authed={props.auth.user} meta={props.meta} unreadHistories={props.unread_histories.length}>
       <Stack mb={32}>
@@ -117,7 +126,8 @@ const Index = (props) => {
                    placeholder="Cari atlet..." onChange={(e) => setTournamentSearch(e.target.value)} />
       </Stack>
       
-      <Table thList={THList} tdList={TDList} icon={<IconMedal size={48} />} title="Pertandingan" route="tournaments.create" authed={props.auth.user} />
+      <Table thList={THList} tdList={TDList} icon={<IconMedal size={48} />} title="Pertandingan" route="tournaments.create" authed={props.auth.user}
+             data={tournamentList} handleSort={handleSort} />
     </AppLayout>
   )
 }

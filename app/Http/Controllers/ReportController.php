@@ -4,9 +4,9 @@
   
   use App\Http\Requests\StoreReportRequest;
   use App\Http\Requests\UpdateReportRequest;
-  use App\Models\Athlete;
   use App\Models\Criteria;
-  use App\Models\ExerciseEvaluation;
+  use App\Models\Evaluation;
+  use App\Models\Exercise;
   use App\Models\History;
   use App\Models\Report;
   use App\Models\SubCriteria;
@@ -26,29 +26,24 @@
       $authedUser->avatar = str_contains($authedUser->avatar, 'https') ? $authedUser->avatar : ($authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null);
       
       return Inertia('Report/Index', [
-        'reports' => in_array($authedUser->role, ['Ne-Waza', 'Fighting']) ? null : Athlete::with(['user', 'tournaments', 'evaluations'])
-          ->whereHas('evaluations')
-          ->orWhereHas('tournaments')
-          ->get()
-          ->map(function ($athlete) {
-            $athlete->user->avatar = str_contains($athlete->user->avatar, 'https') ? $athlete->user->avatar : (str_contains($athlete->user->avatar, 'storage/') ? $athlete->user->avatar : ($athlete->user->avatar ? asset('storage/' . $athlete->user->avatar) : null));
-            return $athlete;
-          }),
-        'auth' => ['user' => $authedUser],
-        'exerciseEvaluations' => ExerciseEvaluation::where('athlete_id', $authedUser->id)
-          ->with(['exercise', 'evaluations.subSubCriteria.subCriteria.criteria'])
-          ->get()
-          ->map(function ($evaluation) {
-            return [
-              'note' => $evaluation->note,
-              'exercise' => $evaluation->exercise,
-              'criterias' => $evaluation->evaluations->filter(function ($evaluation) {
-                return $evaluation->subSubCriteria->subCriteria->criteria != null;
-              })->groupBy([
+        'evaluations' => in_array($authedUser->role, ['Ne-Waza', 'Fighting'])
+          ? Evaluation::with(['exercises', 'tournaments'])->where('athlete_id', $authedUser->id)
+            ->get()->map(function ($evaluation) {
+              $evaluationArray = $evaluation->toArray();
+              $evaluationArray['exercises'] = $evaluation->exercises->map(function ($exercise) {
+                $exerciseDetail = Exercise::find($exercise->exercise_id);
+                return array_merge($exercise->toArray(), $exerciseDetail ? $exerciseDetail->toArray() : []);
+              })->toArray();
+              $evaluationArray['tournaments'] = $evaluation->tournaments->map(function ($tournament) {
+                $tournamentDetail = Tournament::find($tournament->tournament_id);
+                return array_merge($tournament->toArray(), $tournamentDetail ? $tournamentDetail->toArray() : []);
+              })->toArray();
+              $evaluationArray['criterias'] = $evaluation->evaluationCriterias->groupBy([
                 function ($evaluation) {
                   return $evaluation->subSubCriteria->subCriteria->criteria->id;
                 },
                 function ($evaluation) {
+                  
                   return $evaluation->subSubCriteria->subCriteria->id;
                 },
                 function ($evaluation) {
@@ -78,10 +73,16 @@
               })->sortBy(function ($criteria) {
                 // If the criteria name is 'Fisik', return a high value to sort it at the end
                 return $criteria['name'] === 'Fisik' ? 1 : 0;
-              })->values()
-            ];
-          })->sortBy('exercise.date')->values(),
-        'tournaments' => Tournament::where('athlete_id', $authedUser->id)->get(),
+              })->values();
+              
+              return $evaluationArray;
+            })->toArray()
+          : [],
+        'athletes' => in_array($authedUser->role, ['Ne-Waza', 'Fighting']) ? null : Evaluation::distinct()->get(['athlete_id'])
+          ->pluck('athlete_id')
+          ->map(function ($athleteId) {
+            return User::where('id', $athleteId)->first(['id', 'avatar', 'full_name', 'role']);
+          })->filter()->values()->toArray(),
         'total_unread_histories' => History::where('is_read', false)->count(),
       ]);
     }
@@ -111,25 +112,24 @@
       $authedUser->avatar = str_contains($authedUser->avatar, 'https') ? $authedUser->avatar : ($authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null);
       
       return Inertia('Report/Show', [
-        'athlete' => tap($user->load('athlete')->toArray(), function (&$athlete) {
-          $athlete['weight'] = $athlete['athlete']['weight'];
-          $athlete['avatar'] = str_contains($athlete['avatar'], 'https') ? $athlete['avatar'] : (str_contains($athlete['avatar'], 'storage/') ? $athlete['avatar'] : ($athlete['avatar'] ? asset('storage/' . $athlete['avatar']) : null));
-        }),
-        'auth' => ['user' => $authedUser],
-        'exerciseEvaluations' => ExerciseEvaluation::where('athlete_id', $user->id)
-          ->with(['exercise', 'evaluations.subSubCriteria.subCriteria.criteria'])
-          ->get()
-          ->map(function ($evaluation) {
-            return [
-              'note' => $evaluation->note,
-              'exercise' => $evaluation->exercise,
-              'criterias' => $evaluation->evaluations->filter(function ($evaluation) {
-                return $evaluation->subSubCriteria->subCriteria->criteria != null;
-              })->groupBy([
+        'evaluations' => in_array($authedUser->role, ['Ne-Waza', 'Fighting'])
+          ? [] : Evaluation::with(['exercises', 'tournaments'])->where('athlete_id', $user->id)
+            ->get()->map(function ($evaluation) {
+              $evaluationArray = $evaluation->toArray();
+              $evaluationArray['exercises'] = $evaluation->exercises->map(function ($exercise) {
+                $exerciseDetail = Exercise::find($exercise->exercise_id);
+                return array_merge($exercise->toArray(), $exerciseDetail ? $exerciseDetail->toArray() : []);
+              })->toArray();
+              $evaluationArray['tournaments'] = $evaluation->tournaments->map(function ($tournament) {
+                $tournamentDetail = Tournament::find($tournament->tournament_id);
+                return array_merge($tournament->toArray(), $tournamentDetail ? $tournamentDetail->toArray() : []);
+              })->toArray();
+              $evaluationArray['criterias'] = $evaluation->evaluationCriterias->groupBy([
                 function ($evaluation) {
                   return $evaluation->subSubCriteria->subCriteria->criteria->id;
                 },
                 function ($evaluation) {
+                  
                   return $evaluation->subSubCriteria->subCriteria->id;
                 },
                 function ($evaluation) {
@@ -159,10 +159,11 @@
               })->sortBy(function ($criteria) {
                 // If the criteria name is 'Fisik', return a high value to sort it at the end
                 return $criteria['name'] === 'Fisik' ? 1 : 0;
-              })->values()
-            ];
-          })->sortBy('exercise.date')->values(),
-        'tournaments' => Tournament::where('athlete_id', $user->id)->get(),
+              })->values();
+              
+              return $evaluationArray;
+            })->toArray(),
+        'athlete' => $user,
         'total_unread_histories' => History::where('is_read', false)->count(),
       ]);
     }

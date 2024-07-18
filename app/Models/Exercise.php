@@ -41,11 +41,11 @@
     {
       return $this->hasMany(Evaluation::class);
     }
-    
-    public function exerciseEvaluation()
-    {
-      return $this->hasOne(ExerciseEvaluation::class);
-    }
+
+//    public function exerciseEvaluation()
+//    {
+//      return $this->hasOne(ExerciseEvaluation::class);
+//    }
     
     protected function casts(): array
     {

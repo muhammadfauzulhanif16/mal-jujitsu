@@ -8,6 +8,8 @@ import { DatePickerInput, TimeInput } from '@mantine/dates'
 
 const Create = (props) => {
   const form = useForm({ name: '', place: '', athlete_ids: [], coach_id: '', date: new Date(), start_time: '', end_time: '' })
+  
+  console.log(form.data.date)
   console.log(props)
   return (
     <form onSubmit={(e) => {

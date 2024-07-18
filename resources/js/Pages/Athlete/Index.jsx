@@ -7,9 +7,11 @@ import { useState } from 'react'
 import { router } from '@inertiajs/core'
 
 const Index = (props) => {
-  console.log(props)
   const [athleteSearch, setAthleteSearch] = useState('')
-  const THList = ['#', 'Foto', 'Nama Lengkap', 'Sistem Pertandingan', 'Aksi']
+  const THList = [{ title: '#' }, { title: 'Foto' }, { title: 'Nama Lengkap', key: 'full_name' }, {
+    title: 'Sistem Pertandingan',
+    key: 'role',
+  }, { title: 'Aksi' }]
   const actionList = [
     {
       label: 'Rincian Atlet',
@@ -35,7 +37,8 @@ const Index = (props) => {
   ]
   const athleteList = props.athletes
     .filter(athlete => athlete.full_name.replace(/\s/g, '').toLowerCase().match(new RegExp(athleteSearch.replace(/\s/g, '').toLowerCase(), 'i')))
-  const TDList = athleteList.map((athlete, id) => (
+  const [sortedData, setSortedData] = useState(athleteList)
+  const TDList = sortedData.map((athlete, id) => (
     <MantineTable.Tr h={64} key={id}>
       <MantineTable.Td
         px={16} py={0}
@@ -73,6 +76,10 @@ const Index = (props) => {
       </MantineTable.Td>
     </MantineTable.Tr>
   ))
+  
+  const handleSort = (sortedData) => {
+    setSortedData(sortedData)
+  }
   
   return (
     <AppLayout title="Atlet" authed={props.auth.user} meta={props.meta} unreadHistories={props.total_unread_histories}>
@@ -112,7 +119,8 @@ const Index = (props) => {
                    color="gold.2" placeholder="Cari atlet..." onChange={(e) => setAthleteSearch(e.target.value)} />
       </Stack>
       
-      <Table thList={THList} tdList={TDList} icon={<IconUser size={48} />} title="Atlet" route="athletes.create" authed={props.auth.user} />
+      <Table thList={THList} tdList={TDList} icon={<IconUser size={48} />} title="Atlet" route="athletes.create" authed={props.auth.user} data={athleteList}
+             handleSort={handleSort} />
     </AppLayout>
   )
 }

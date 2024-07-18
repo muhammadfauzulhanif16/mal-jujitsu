@@ -97,7 +97,7 @@ const Dashboard = (props) => {
       icon: <IconReportAnalytics />,
       label: `penilaian ${['Ne-Waza', 'Fighting'].includes(props.auth.user.role) ? '(anda)' : ''}`,
       total: props.evaluations.length,
-      description: `dari ${props.exercises.length} latihan`,
+      description: `orang`,
     },
     ...(!['Ne-Waza', 'Fighting'].includes(props.auth.user.role) ? [{
       icon: <IconReport />,

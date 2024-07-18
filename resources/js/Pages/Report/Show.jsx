@@ -1,28 +1,32 @@
 import { AppLayout } from '@/Layouts/AppLayout.jsx'
-import { ActionIcon, Avatar, Box, Button, Center, Divider, Grid, Group, SimpleGrid, Stack, Text, Title, Tooltip, TypographyStylesProvider } from '@mantine/core'
-import { IconCalendar, IconPrinter } from '@tabler/icons-react'
+import {
+  ActionIcon,
+  Avatar,
+  Box,
+  Button,
+  Center,
+  Divider,
+  Grid,
+  Group,
+  List,
+  Select,
+  SimpleGrid,
+  Stack,
+  Text,
+  Title,
+  Tooltip,
+  TypographyStylesProvider,
+} from '@mantine/core'
 import { Breadcrumbs } from '@/Components/Breadcrumbs.jsx'
 import { useState } from 'react'
-import { MonthPickerInput } from '@mantine/dates'
+import { IconCalendar, IconPrinter } from '@tabler/icons-react'
 
-const Index = (props) => {
-  const [time, setTime] = useState(null)
+const Show = (props) => {
   const [isPrint, setIsPrint] = useState(false)
-  console.log(props)
-  const evaluationList = props.exerciseEvaluations?.filter((evaluation) => {
-    if (time === null) {
-      return true
-    }
-    return new Date(evaluation.exercise.date).toLocaleDateString('id').split('/').join('-').includes(time)
-  })
-  const tournamentList = props.tournaments?.filter((tournament) => {
-    if (time === null) {
-      return true
-    }
-    return new Date(tournament.date).toLocaleDateString('id').split('/').join('-').includes(time)
-  })
+  const [period, setPeriod] = useState(null)
+  const evaluationList = period === null ? props.evaluations : props.evaluations.filter((evaluation) => evaluation.period === Number(period))
   
-  const totalPoints = tournamentList.reduce((total, tournament) => {
+  const totalPoints = (evaluationId) => evaluationList.find((evaluation) => evaluation.id === evaluationId)?.tournaments.reduce((total, tournament) => {
     if (tournament.medal === 'Emas') {
       return total + 3
     } else if (tournament.medal === 'Perak') {
@@ -33,46 +37,39 @@ const Index = (props) => {
     return total
   }, 0)
   
-  window.onbeforeprint = function() {
-    console.log('Print dialog opened!')
-  }
-  
-  window.onafterprint = function() {
-    console.log('Print dialog closed!')
-  }
-  
   return (
-    <AppLayout title={`Laporan "${props.athlete.full_name}"`} authed={props.auth.user} meta={props.meta} isPrint={isPrint}
-               unreadHistories={props.total_unread_histories}>
-      
+    <AppLayout title="Laporan" isPrint={isPrint} authed={props.auth.user} meta={props.meta} unreadHistories={props.total_unread_histories}>
       {!isPrint ? (<Stack mb={32}>
         <Group w="100%" justify="space-between">
           <Breadcrumbs navList={[{ label: 'Laporan', route: 'reports.index' }, { label: 'Rincian' }]} />
           
           <Group>
-            <MonthPickerInput
+            <Select
               display={{ base: 'none', xs: 'block' }} w={240}
               leftSection={<IconCalendar />}
-              placeholder="Pilih waktu..."
+              placeholder="Pilih periode..."
               variant="filled"
+              clearable
+              searchable
+              nothingFoundMessage="Tidak ada periode ditemukan"
+              checkIconPosition="right"
               onChange={(value) => {
                 if (value === null) {
-                  setTime(null)
+                  setPeriod(null)
                 } else {
-                  const month = value.getMonth() + 1
-                  const year = value.getFullYear()
-                  setTime(`${month}-${year}`)
+                  setPeriod(value)
                 }
               }}
+              data={props.evaluations.map((evaluation) => ({
+                label: `${evaluation.period}`,
+                value: `${evaluation.period}`,
+              }))}
               allowDeselect
-              locale="id"
               styles={{
                 label: { marginBottom: 8 },
                 input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 16 },
                 section: { marginLeft: 0, width: 48, height: 48 },
                 error: { marginTop: 8 },
-                calendarHeader: { height: 48 },
-                calendarHeaderControl: { height: 48, width: 48, borderRadius: 32 },
               }}
             />
             
@@ -101,45 +98,43 @@ const Index = (props) => {
           </Group>
         </Group>
         
-        <MonthPickerInput
+        <Select
           w="100%"
           clearable
+          searchable
+          allowDeselect
+          nothingFoundMessage="Tidak ada periode ditemukan"
           display={{ base: 'block', xs: 'none' }}
           leftSection={<IconCalendar />}
-          placeholder="Pilih waktu..."
+          placeholder="Pilih periode..."
           variant="filled"
+          checkIconPosition="right"
           onChange={(value) => {
-            setMonth(month === '' ? value.getMonth() + 1 : '')
+            if (value === null) {
+              setPeriod(null)
+            } else {
+              setPeriod(value)
+            }
           }}
-          locale="id"
+          data={props.evaluations.map((evaluation) => ({
+            label: `${evaluation.period}`,
+            value: `${evaluation.period}`,
+          }))}
           styles={{
             label: { marginBottom: 8 },
             input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 16 },
             section: { marginLeft: 0, width: 48, height: 48 },
             error: { marginTop: 8 },
-            calendarHeader: { height: 48 },
-            calendarHeaderControl: { height: 48, width: 48, borderRadius: 32 },
           }}
         />
       </Stack>) : <Title size={34} align="center" mb={32}>Laporan</Title>}
       
       <Stack gap={80}>
-        <Grid align="center" grow>
-          <Grid.Col span={{
-            base: 12,
-            sm: 4,
-          }} mb={{
-            base: 32,
-            sm: 0,
-          }}>
-            <Avatar
-              mx={{
-                base: 'auto',
-                sm: 0,
-              }}
-              src={props.athlete.avatar}
-              alt={props.athlete.full_name}
-              size={160} />
+        <Grid align="center">
+          <Grid.Col span={4}>
+            <Avatar src={props.athlete.avatar}
+                    alt={props.athlete.full_name}
+                    size={160} />
           </Grid.Col>
           
           <Grid.Col span={8}>
@@ -178,207 +173,219 @@ const Index = (props) => {
           </Grid.Col>
         </Grid>
         
-        {!!evaluationList.length && (
-          <Box>
-            <Divider mb={32} label="Daftar Latihan" labelPosition="center" styles={{ label: { fontSize: 14 } }} />
+        {evaluationList.map((evaluation) => (
+          <Stack gap={32} key={evaluation.id}>
+            <Divider
+              label={`Periode ${evaluation.period} (${new Date(evaluation.start_date).toLocaleDateString('id').split('/').join('-')} - ${new Date(evaluation.end_date).toLocaleDateString('id').split('/').join('-')})`}
+              labelPosition="center" styles={{ label: { fontSize: 14 } }} />
             
-            <Stack gap={32}>
-              {evaluationList.map((evaluation, evaluationId) => (
-                <Box key={evaluation.id}>
-                  <Text
-                    mb={16}>{evaluationId + 1}. {evaluation.exercise.name} di {evaluation.exercise.place} pada {new Date(evaluation.exercise.date).toLocaleDateString('id').split('/').join('-')}</Text>
-                  
-                  <Grid gutter={0}>
-                    <Grid.Col span={10}>
-                      <Group style={{
-                        border: '1px solid #e1e1e1',
-                      }} px={16} h={48} fw={600}>Kriteria</Group>
-                    </Grid.Col>
-                    
-                    <Grid.Col span={2}>
-                      <Center style={{
-                        border: '1px solid #e1e1e1',
-                      }} px={16} h={48} fw={600}>Nilai</Center>
-                    </Grid.Col>
-                    
-                    {evaluation.criterias.map((criteria, criteriaId) => (
-                      <>
-                        <Grid.Col key={criteriaId}>
-                          <Center style={{
-                            border: '1px solid #e1e1e1',
-                          }} px={16} h={48} fw={600}>{criteria.name.toUpperCase()}</Center>
-                        </Grid.Col>
-                        
-                        {criteria.sub_criterias.map((sub_criteria, subCriteriaId) => {
-                          const prefix = String.fromCharCode(65 + subCriteriaId)
-                          return (
-                            <>
-                              <Grid.Col key={subCriteriaId}>
-                                <Group style={{
-                                  border: '1px solid #e1e1e1',
-                                }} px={16} fw={600} h={48}>{prefix}. {sub_criteria.name}</Group>
-                              </Grid.Col>
-                              
-                              {sub_criteria.sub_sub_criterias.map((sub_sub_criteria, subSubCriteriaId) => (
-                                <>
-                                  <Grid.Col span={10} key={subSubCriteriaId}>
-                                    <Group style={{
-                                      border: '1px solid #e1e1e1',
-                                    }} px={16} h={48}>{subSubCriteriaId + 1}. {sub_sub_criteria.name}</Group>
-                                  </Grid.Col>
-                                  
-                                  <Grid.Col span={2}>
-                                    <Group style={{
-                                      border: '1px solid #e1e1e1',
-                                    }} px={16} h={48}>{sub_sub_criteria.evaluation.value}</Group>
-                                  </Grid.Col>
-                                </>
-                              ))}
-                            </>
-                          )
-                        })}
-                        
-                        {criteria.type === 'radio' && (
-                          <>
-                            <Grid.Col span={10}>
-                              <Group style={{
-                                border: '1px solid #e1e1e1',
-                              }} px={16} h={48}>Rata-rata</Group>
-                            </Grid.Col>
-                            
-                            <Grid.Col span={2}>
-                              <Group style={{
-                                border: '1px solid #e1e1e1',
-                              }} px={16} h={48}>
-                                {(() => {
-                                  let count = 0
-                                  const sum = criteria.sub_criterias.reduce((total, sub_criteria) => {
-                                    const subTotalAndCount = sub_criteria.sub_sub_criterias.reduce((accumulator, sub_sub_criteria) => {
-                                      return {
-                                        sum: accumulator.sum + Number(sub_sub_criteria.evaluation.value),
-                                        count: accumulator.count + 1,
-                                      }
-                                    }, { sum: 0, count: 0 })
-                                    
-                                    count += subTotalAndCount.count
-                                    return total + subTotalAndCount.sum
-                                  }, 0)
-                                  
-                                  return Number((sum / count).toFixed(2))
-                                })()}
-                              </Group>
-                            </Grid.Col>
-                          </>
-                        )}
-                      </>
-                    ))}
-                    
-                    <Grid.Col span={12}>
-                      <Group style={{
-                        border: '1px solid #e1e1e1',
-                      }} px={16} py={11}>
-                        <Text fw={600}>Catatan : </Text>
-                        
-                        <TypographyStylesProvider>
-                          <div style={{ wordBreak: 'break-all' }} dangerouslySetInnerHTML={{ __html: evaluation.note }} />
-                        </TypographyStylesProvider>
-                      </Group>
-                    </Grid.Col>
-                  </Grid>
-                </Box>
-              ))}
-            </Stack>
-          </Box>
-        )}
-        
-        {!!tournamentList.length && (
-          <Box>
-            <Divider mb={32} label="Daftar Pertandingan" labelPosition="center" styles={{ label: { fontSize: 14 } }} />
+            {evaluation.exercises.length && (
+              <Box>
+                <Title fz={26} mb={8}>Daftar Latihan</Title>
+                
+                <List type="ordered">
+                  {evaluation.exercises.map(exercise => (
+                    <List.Item key={exercise.id}>{exercise.name} di {exercise.place} pada
+                      {new Date(exercise.date).toLocaleDateString('id').split('/').join('-')}</List.Item>
+                  ))}
+                </List>
+              </Box>
+            )}
             
-            <Grid gutter={0}>
-              <Grid.Col span={6}>
-                <Group style={{
-                  border: '1px solid #e1e1e1',
-                }} px={16} h={48} fw={600}>Nama Pertandingan</Group>
-              </Grid.Col>
-              
-              <Grid.Col span={6}>
-                <Center style={{
-                  border: '1px solid #e1e1e1',
-                }} px={16} h={48} fw={600}>Medali (Poin)</Center>
-              </Grid.Col>
-              
-              <Grid.Col span={6}>
-                <Group style={{
-                  border: '1px solid #e1e1e1',
-                }} px={16} h={48} fw={600}></Group>
-              </Grid.Col>
-              
-              <Grid.Col span={2}>
-                <Center style={{
-                  border: '1px solid #e1e1e1',
-                }} px={16} h={48} fw={600}>Emas (3)</Center>
-              </Grid.Col>
-              
-              <Grid.Col span={2}>
-                <Center style={{
-                  border: '1px solid #e1e1e1',
-                }} px={16} h={48} fw={600}>Perak (2)</Center>
-              </Grid.Col>
-              
-              <Grid.Col span={2}>
-                <Center style={{
-                  border: '1px solid #e1e1e1',
-                }} px={16} h={48} fw={600}>Perunggu (1)</Center>
-              </Grid.Col>
-              
-              
-              {tournamentList.map((tournament, tournamentId) => (
-                <>
-                  <Grid.Col span={6}>
+            {evaluation.tournaments.length && (
+              <Box>
+                <Title fz={26} mb={8}>Daftar Pertandingan</Title>
+                
+                <Grid gutter={0}>
+                  <Grid.Col span={9}>
                     <Group style={{
                       border: '1px solid #e1e1e1',
-                    }} px={16} h={48}>{tournament.name}</Group>
+                    }} px={16} h={48} fw={600}>Nama Pertandingan</Group>
                   </Grid.Col>
                   
-                  <Grid.Col span={2}>
+                  <Grid.Col span={3}>
                     <Center style={{
                       border: '1px solid #e1e1e1',
-                    }} px={16} h={48}>{tournament.medal === 'Emas' ? 1 : '-'}</Center>
+                    }} px={16} h={48} fw={600}>Medali (Poin)</Center>
                   </Grid.Col>
                   
-                  <Grid.Col span={2}>
-                    <Center style={{
+                  <Grid.Col span={9}>
+                    <Group style={{
                       border: '1px solid #e1e1e1',
-                    }} px={16} h={48}>{tournament.medal === 'Perak' ? 1 : '-'}</Center>
+                    }} px={16} h={48} fw={600}></Group>
                   </Grid.Col>
                   
-                  <Grid.Col span={2}>
+                  <Grid.Col span={1}>
                     <Center style={{
                       border: '1px solid #e1e1e1',
-                    }} px={16} h={48}>{tournament.medal === 'Perunggu' ? 1 : '-'}</Center>
+                    }} px={16} h={48} fw={600}>Emas (3)</Center>
                   </Grid.Col>
-                </>
-              ))}
+                  
+                  <Grid.Col span={1}>
+                    <Center style={{
+                      border: '1px solid #e1e1e1',
+                    }} px={16} h={48} fw={600}>Perak (2)</Center>
+                  </Grid.Col>
+                  
+                  <Grid.Col span={1}>
+                    <Center style={{
+                      border: '1px solid #e1e1e1',
+                    }} px={16} h={48} fw={600}>Perunggu (1)</Center>
+                  </Grid.Col>
+                  
+                  
+                  {evaluation.tournaments.map((tournament) => (
+                    <>
+                      <Grid.Col span={9}>
+                        <Group style={{
+                          border: '1px solid #e1e1e1',
+                        }} px={16} h={48}>{tournament.name}</Group>
+                      </Grid.Col>
+                      
+                      <Grid.Col span={1}>
+                        <Center style={{
+                          border: '1px solid #e1e1e1',
+                        }} px={16} h={48}>{tournament.medal === 'Emas' ? 1 : '-'}</Center>
+                      </Grid.Col>
+                      
+                      <Grid.Col span={1}>
+                        <Center style={{
+                          border: '1px solid #e1e1e1',
+                        }} px={16} h={48}>{tournament.medal === 'Perak' ? 1 : '-'}</Center>
+                      </Grid.Col>
+                      
+                      <Grid.Col span={1}>
+                        <Center style={{
+                          border: '1px solid #e1e1e1',
+                        }} px={16} h={48}>{tournament.medal === 'Perunggu' ? 1 : '-'}</Center>
+                      </Grid.Col>
+                    </>
+                  ))}
+                  
+                  <Grid.Col span={9}>
+                    <Group style={{
+                      border: '1px solid #e1e1e1',
+                    }} px={16} h={48}>Total</Group>
+                  </Grid.Col>
+                  
+                  <Grid.Col span={3}>
+                    <Center style={{
+                      border: '1px solid #e1e1e1',
+                    }} px={16} h={48}>{totalPoints(evaluation.id)}</Center>
+                  </Grid.Col>
+                </Grid>
+              </Box>
+            )}
+            
+            <Box>
+              <Title fz={26} mb={8}>Daftar Penilaian</Title>
               
-              <Grid.Col span={6}>
-                <Group style={{
-                  border: '1px solid #e1e1e1',
-                }} px={16} h={48}>Total</Group>
-              </Grid.Col>
-              
-              <Grid.Col span={6}>
-                <Center style={{
-                  border: '1px solid #e1e1e1',
-                }} px={16} h={48}>{totalPoints}</Center>
-              </Grid.Col>
-            </Grid>
-          </Box>
-        )}
+              <Grid gutter={0}>
+                <Grid.Col span={11}>
+                  <Group style={{
+                    border: '1px solid #e1e1e1',
+                  }} px={16} h={48} fw={600}>Kriteria</Group>
+                </Grid.Col>
+                
+                <Grid.Col span={1}>
+                  <Center style={{
+                    border: '1px solid #e1e1e1',
+                  }} px={16} h={48} fw={600}>Nilai</Center>
+                </Grid.Col>
+                
+                {evaluation.criterias.map((criteria, criteriaId) => (
+                  <>
+                    <Grid.Col key={criteriaId}>
+                      <Center style={{
+                        border: '1px solid #e1e1e1',
+                      }} px={16} h={48} fw={600}>{criteria.name.toUpperCase()}</Center>
+                    </Grid.Col>
+                    
+                    {criteria.sub_criterias.map((sub_criteria, subCriteriaId) => {
+                      const prefix = String.fromCharCode(65 + subCriteriaId)
+                      return (
+                        <>
+                          <Grid.Col key={subCriteriaId}>
+                            <Group style={{
+                              border: '1px solid #e1e1e1',
+                            }} px={16} fw={600} h={48}>{prefix}. {sub_criteria.name}</Group>
+                          </Grid.Col>
+                          
+                          {sub_criteria.sub_sub_criterias.map((sub_sub_criteria, subSubCriteriaId) => (
+                            <>
+                              <Grid.Col span={11} key={subSubCriteriaId}>
+                                <Group style={{
+                                  border: '1px solid #e1e1e1',
+                                }} px={16} h={48}>{subSubCriteriaId + 1}. {sub_sub_criteria.name}</Group>
+                              </Grid.Col>
+                              
+                              <Grid.Col span={1}>
+                                <Group style={{
+                                  border: '1px solid #e1e1e1',
+                                }} px={16} h={48}>{sub_sub_criteria.evaluation.value}</Group>
+                              </Grid.Col>
+                            </>
+                          ))}
+                        </>
+                      )
+                    })}
+                    
+                    {criteria.type === 'radio' && (
+                      <>
+                        <Grid.Col span={11}>
+                          <Group style={{
+                            border: '1px solid #e1e1e1',
+                          }} px={16} h={48}>Rata-rata</Group>
+                        </Grid.Col>
+                        
+                        <Grid.Col span={1}>
+                          <Group style={{
+                            border: '1px solid #e1e1e1',
+                          }} px={16} h={48}>
+                            {(() => {
+                              let count = 0
+                              const sum = criteria.sub_criterias.reduce((total, sub_criteria) => {
+                                const subTotalAndCount = sub_criteria.sub_sub_criterias.reduce((accumulator, sub_sub_criteria) => {
+                                  return {
+                                    sum: accumulator.sum + Number(sub_sub_criteria.evaluation.value),
+                                    count: accumulator.count + 1,
+                                  }
+                                }, { sum: 0, count: 0 })
+                                
+                                count += subTotalAndCount.count
+                                return total + subTotalAndCount.sum
+                              }, 0)
+                              
+                              return Number((sum / count).toFixed(2))
+                            })()}
+                          </Group>
+                        </Grid.Col>
+                      </>
+                    )}
+                  </>
+                ))}
+                
+                <Grid.Col span={12}>
+                  <Group style={{
+                    overflow: 'auto',
+                    border: '1px solid #e1e1e1',
+                  }} px={16} py={11}>
+                    <Text fw={600}>Catatan : </Text>
+                    
+                    <TypographyStylesProvider>
+                      <div
+                        dangerouslySetInnerHTML={{ __html: evaluation.note }}
+                      />
+                    </TypographyStylesProvider>
+                  </Group>
+                </Grid.Col>
+              </Grid>
+            </Box>
+          </Stack>
+        ))}
       </Stack>
-    
     </AppLayout>
   )
 }
 
-export default Index
+export default Show

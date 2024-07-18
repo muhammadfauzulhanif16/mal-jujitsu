@@ -1,20 +1,23 @@
 import { AppLayout } from '@/Layouts/AppLayout.jsx'
-import { ActionIcon, Avatar, Button, Flex, Group, HoverCard, Stack, Table as MantineTable, Text, TextInput, Tooltip } from '@mantine/core'
-import { IconEye, IconPlus, IconReportAnalytics, IconSearch } from '@tabler/icons-react'
+import { ActionIcon, Avatar, Button, Flex, Group, Stack, Table as MantineTable, TextInput, Tooltip } from '@mantine/core'
+import { IconEye, IconPlus, IconReportAnalytics, IconSearch, IconPencil, IconTrash } from '@tabler/icons-react'
 import { Breadcrumbs } from '@/Components/Breadcrumbs.jsx'
 import { router } from '@inertiajs/core'
 import { useState } from 'react'
 import { Table } from '@/Components/Table.jsx'
 
 const Index = (props) => {
-  // console.log(props)
-  const [evaluationSearch, setExerciseEvaluationSearch] = useState('')
-  const THList = ['#', 'Nama Latihan', 'Tempat', 'Tanggal', 'Waktu Mulai', 'Waktu Selesai', 'Atlet', 'Aksi']
+  console.log(props)
+  const [athleteSearch, setAthleteSearch] = useState('')
+  const THList = [{ title: '#' }, { title: 'Foto' }, { title: 'Nama Lengkap', key: 'full_name' }, {
+    title: 'Sistem Pertandingan',
+    key: 'role',
+  }, { title: 'Aksi' }]
   const actionList = [
     {
-      label: 'Daftar Atlet',
+      label: 'Daftar Penilaian',
       icon: <IconEye />,
-      onClick: (evaluation) => router.get(route('evaluations.users.index', evaluation)),
+      onClick: (athlete) => router.get(route('evaluations.users.index', athlete)),
       color: 'blue',
       // disabled: !['Pelatih Teknik', 'Pelatih Fisik'].includes(props.auth.user.role),
     },
@@ -33,57 +36,25 @@ const Index = (props) => {
     //   disabled: !props.auth.user.role.includes('Pelatih'),
     // },
   ]
-  const evaluationList = props.evaluations.filter((evaluation) => {
-    return evaluation.name.toLowerCase().includes(evaluationSearch.toLowerCase())
-  })
-  const TDList = evaluationList.map((evaluation, id) => (
+  const athleteList = props.athletes
+    .filter(athlete => athlete.full_name.replace(/\s/g, '').toLowerCase().match(new RegExp(athleteSearch.replace(/\s/g, '').toLowerCase(), 'i')))
+  const [sortedData, setSortedData] = useState(athleteList)
+  const TDList = sortedData.map((athlete, id) => (
     <MantineTable.Tr h={64} key={id}>
       <MantineTable.Td
         px={16} py={0}
         style={{ whiteSpace: 'nowrap' }}>{id + 1}</MantineTable.Td>
       <MantineTable.Td
         px={16} py={0}
-        style={{ whiteSpace: 'nowrap' }}>{evaluation.name}</MantineTable.Td>
-      <MantineTable.Td
-        px={16} py={0}
-        style={{ whiteSpace: 'nowrap' }}>{evaluation.place}</MantineTable.Td>
-      <MantineTable.Td
-        px={16} py={0}
-        style={{ whiteSpace: 'nowrap' }}>{new Date(evaluation.date).toLocaleDateString('id').split('/').join('-')}</MantineTable.Td>
-      <MantineTable.Td
-        px={16} py={0}
-        style={{ whiteSpace: 'nowrap' }}>{evaluation.start_time.split(':').join('.')}</MantineTable.Td>
-      <MantineTable.Td
-        px={16} py={0}
-        style={{ whiteSpace: 'nowrap' }}>{evaluation.end_time.split(':').join('.')}</MantineTable.Td>
-      <MantineTable.Td
-        px={16} py={0}
         style={{ whiteSpace: 'nowrap' }}>
-        <Avatar.Group spacing={24} h={48}>
-          {evaluation.athletes.map((athlete) => (
-            <HoverCard key={athlete.id} withArrow shadow="xl">
-              <HoverCard.Target>
-                <Avatar size={52} src={athlete.avatar} radius={32} />
-              </HoverCard.Target>
-              
-              <HoverCard.Dropdown style={{ borderRadius: 32 }} p={16}>
-                <Group>
-                  <Avatar size={80} src={athlete.avatar} radius={160} />
-                  <Stack gap={5}>
-                    <Text size="sm" fw={600}>
-                      {athlete.full_name}
-                    </Text>
-                    
-                    <Text size="sm" c="dimmed">
-                      {athlete.role}
-                    </Text>
-                  </Stack>
-                </Group>
-              </HoverCard.Dropdown>
-            </HoverCard>
-          ))}
-        </Avatar.Group>
+        <Avatar src={athlete.avatar} alt={athlete.full_name} />
       </MantineTable.Td>
+      <MantineTable.Td
+        px={16} py={0}
+        style={{ whiteSpace: 'nowrap' }}>{athlete.full_name}</MantineTable.Td>
+      <MantineTable.Td
+        px={16} py={0}
+        style={{ whiteSpace: 'nowrap' }}>{athlete.role}</MantineTable.Td>
       <MantineTable.Td
         px={16} py={0}
         style={{ whiteSpace: 'nowrap' }}>
@@ -95,8 +66,8 @@ const Index = (props) => {
             }}>
               <ActionIcon size={48} radius={32} variant="subtle"
                           aria-label={action.label} color={action.color}
-                          onClick={() => action.onClick(evaluation)}
-                          disabled={action.disabled}
+                          onClick={() => action.onClick(athlete)}
+                          disabled={props.auth.user.id === athlete.id || action.disabled}
               >
                 {action.icon}
               </ActionIcon>
@@ -107,11 +78,15 @@ const Index = (props) => {
     </MantineTable.Tr>
   ))
   
+  const handleSort = (sortedData) => {
+    setSortedData(sortedData)
+  }
+  
   return (
     <AppLayout title="Penilaian" authed={props.auth.user} meta={props.meta} unreadHistories={props.total_unread_histories}>
       <Stack mb={32}>
         <Group w="100%" justify="space-between">
-          <Breadcrumbs navList={[{ label: 'Penilaian', totalData: props.evaluations.length }]} />
+          <Breadcrumbs navList={[{ label: 'Penilaian', totalData: props.athletes.length }]} />
           
           <Group>
             <TextInput display={{ base: 'none', xs: 'block' }} w={240} variant="filled" leftSection={<IconSearch />}
@@ -120,7 +95,7 @@ const Index = (props) => {
                          section: { marginLeft: 0, width: 48, height: 48 },
                        }}
                        color="gold.2"
-                       placeholder="Cari latihan..." onChange={(e) => setExerciseEvaluationSearch(e.target.value)} />
+                       placeholder="Cari latihan..." onChange={(e) => setAthleteSearch(e.target.value)} />
             
             {props.auth.user.role.includes('Pelatih') && (
               <>
@@ -143,10 +118,12 @@ const Index = (props) => {
         <TextInput w="100%" display={{ base: 'block', xs: 'none' }} variant="filled" leftSection={<IconSearch />}
                    styles={{ input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 14 }, section: { marginLeft: 0, width: 48, height: 48 } }}
                    color="gold.2"
-                   placeholder="Cari atlet..." onChange={(e) => evaluationSearch(e.target.value)} />
+                   placeholder="Cari atlet..." onChange={(e) => athleteSearch(e.target.value)} />
       </Stack>
       
-      <Table thList={THList} tdList={TDList} icon={<IconReportAnalytics size={48} />} title="Penilaian" route="evaluations.create" authed={props.auth.user} />
+      <Table thList={THList} tdList={TDList} icon={<IconReportAnalytics size={48} />} title="Penilaian" route="evaluations.create" authed={props.auth.user}
+             data={athleteList}
+             handleSort={handleSort} />
     </AppLayout>
   )
 }

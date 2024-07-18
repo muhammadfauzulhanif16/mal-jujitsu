@@ -11,18 +11,35 @@
     use HasFactory, HasUuids;
     
     protected $fillable = [
-      'exercise_evaluation_id',
-      'sub_sub_criteria_id',
-      'value',
+      'athlete_id',
+      'note',
+      'period',
+      'start_date',
+      'end_date',
     ];
     
-    public function subSubCriteria()
+    public function athlete()
     {
-      return $this->belongsTo(SubSubCriteria::class);
+      return $this->belongsTo(Athlete::class, 'athlete_id', 'user_id');
     }
     
-    public function exerciseEvaluation()
+    public function athletes()
     {
-      return $this->belongsTo(ExerciseEvaluation::class);
+      return $this->hasMany(Athlete::class, 'user_id', 'athlete_id');
+    }
+    
+    public function exercises()
+    {
+      return $this->hasMany(EvaluationExercises::class);
+    }
+    
+    public function tournaments()
+    {
+      return $this->hasMany(EvaluationTournaments::class);
+    }
+    
+    public function evaluationCriterias()
+    {
+      return $this->hasMany(EvaluationCriteria::class);
     }
   }

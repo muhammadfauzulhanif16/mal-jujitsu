@@ -8,7 +8,7 @@ import { Breadcrumbs } from '@/Components/Breadcrumbs.jsx'
 
 const Index = (props) => {
   const [coachSearch, setCoachSearch] = useState('')
-  const THList = ['#', 'Foto', 'Nama Lengkap', 'Peran', 'Aksi']
+  const THList = [{ title: '#' }, { title: 'Foto' }, { title: 'Nama Lengkap', key: 'full_name' }, { title: 'Peran', key: 'role' }, { title: 'Aksi' }]
   const actionList = [{
     label: 'Rincian Pelatih',
     icon: <IconEye />,
@@ -29,7 +29,8 @@ const Index = (props) => {
   }]
   const coachList = props.coaches
     .filter((coach) => coach.full_name.toLowerCase().includes(coachSearch.toLowerCase()))
-  const TDList = coachList.map((coach, id) => (
+  const [sortedData, setSortedData] = useState(coachList)
+  const TDList = sortedData.map((coach, id) => (
     <MantineTable.Tr h={64} key={id}>
       <MantineTable.Td px={16} py={0} style={{ whiteSpace: 'nowrap' }}>{id + 1}</MantineTable.Td>
       <MantineTable.Td px={16} py={0} style={{ whiteSpace: 'nowrap' }}><Avatar src={coach.avatar} alt={coach.full_name} /></MantineTable.Td>
@@ -50,6 +51,10 @@ const Index = (props) => {
       </MantineTable.Td>
     </MantineTable.Tr>
   ))
+  
+  const handleSort = (sortedData) => {
+    setSortedData(sortedData)
+  }
   
   return (
     <AppLayout title="Pelatih" authed={props.auth.user} meta={props.meta} unreadHistories={props.total_unread_histories}>
@@ -90,7 +95,8 @@ const Index = (props) => {
                    placeholder="Cari atlet..." onChange={(e) => setCoachSearch(e.target.value)} />
       </Stack>
       
-      <Table thList={THList} tdList={TDList} icon={<IconUser size={48} />} title="Pelatih" route="coaches.create" authed={props.auth.user} />
+      <Table thList={THList} tdList={TDList} icon={<IconUser size={48} />} title="Pelatih" route="coaches.create" authed={props.auth.user}
+             data={coachList} handleSort={handleSort} />
     </AppLayout>
   )
 }

@@ -49,12 +49,17 @@
     
     public function evaluations()
     {
-      return $this->hasMany(Evaluation::class);
+      return $this->hasMany(Evaluation::class, 'athlete_id', 'id');
     }
     
     public function exercises()
     {
-      return $this->hasMany(Exercise::class);
+      return $this->hasMany(ExerciseAthlete::class, 'athlete_id', 'id');
+    }
+    
+    public function tournaments()
+    {
+      return $this->hasMany(Tournament::class, 'athlete_id', 'id');
     }
     
     /**

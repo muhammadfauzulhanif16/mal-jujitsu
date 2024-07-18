@@ -25,14 +25,14 @@
     {
       return $this->hasMany(Tournament::class, 'athlete_id', 'user_id');
     }
-
-//    public function exercises()
-//    {
-//      return $this->hasMany(Exercise::class, 'athlete_id', 'user_id');
-//    }
+    
+    public function exercises()
+    {
+      return $this->hasMany(ExerciseAthlete::class, 'athlete_id', 'user_id');
+    }
     
     public function evaluations()
     {
-      return $this->hasMany(ExerciseEvaluation::class, 'athlete_id', 'user_id');
+      return $this->hasMany(Evaluation::class, 'athlete_id', 'user_id');
     }
   }

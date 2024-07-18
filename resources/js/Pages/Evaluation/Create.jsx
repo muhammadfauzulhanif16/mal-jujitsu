@@ -1,6 +1,24 @@
 import { AppLayout } from '@/Layouts/AppLayout.jsx'
-import { ActionIcon, Avatar, Button, Center, Divider, Fieldset, Grid, Group, Indicator, NumberInput, Radio, Select, Stack, Text, Tooltip } from '@mantine/core'
-import { IconClipboardText, IconCornerDownLeft, IconUser } from '@tabler/icons-react'
+import {
+  Accordion,
+  ActionIcon,
+  Avatar,
+  Button,
+  Center,
+  Divider,
+  Fieldset,
+  Grid,
+  Group,
+  Indicator,
+  List,
+  NumberInput,
+  Radio,
+  Select,
+  Stack,
+  Text,
+  Tooltip,
+} from '@mantine/core'
+import { IconCalendar, IconClipboardText, IconCornerDownLeft, IconMedal, IconUser } from '@tabler/icons-react'
 import { Breadcrumbs } from '@/Components/Breadcrumbs.jsx'
 import 'dayjs/locale/id'
 import { Link, RichTextEditor } from '@mantine/tiptap'
@@ -9,16 +27,102 @@ import StarterKit from '@tiptap/starter-kit'
 import { Placeholder } from '@tiptap/extension-placeholder'
 import { useForm } from '@inertiajs/react'
 import { useEffect, useState } from 'react'
+import { MonthPickerInput } from '@mantine/dates'
 
 const Create = (props) => {
   console.log(props)
+  const [months, setMonths] = useState([])
   const [role, setRole] = useState('')
+  console.log(role)
   const form = useForm({
-    exercise_id: '',
+    time_period: months,
     athlete_id: '',
+    exercises: [],
+    tournaments: [],
     note: '',
     evaluations: [],
   })
+  
+  useEffect(() => {
+    form.setData('time_period', months.map((month) => new Date(month).toLocaleString()))
+  }, [months])
+  
+  useEffect(() => {
+    const month_periods = months.map((month) => {
+      let date = new Date(month)
+      let monthNumber = date.getMonth() + 1 // getMonth() mengembalikan bulan dari 0-11, jadi tambahkan 1
+      let year = date.getFullYear()
+      return `${monthNumber}-${year}`
+    })
+    const dateRange = []
+    
+    if (form.data.time_period && form.data.time_period.length >= 2) {
+      const startMonthYear = month_periods[0] // Rentang waktu awal
+      const endMonthYear = month_periods[1]
+      
+      const [startMonth, startYear] = startMonthYear?.split('-')
+      const [endMonth, endYear] = endMonthYear?.split('-')
+      
+      // Parse bulan dan tahun menjadi integer
+      const startM = parseInt(startMonth, 10)
+      const endM = parseInt(endMonth, 10)
+      const startY = parseInt(startYear, 10)
+      const endY = parseInt(endYear, 10)
+      
+      // Loop untuk setiap tahun-bulan dalam rentang
+      for (let y = startY; y <= endY; y++) {
+        const currentStartMonth = (y === startY) ? startM : 1
+        const currentEndMonth = (y === endY) ? endM : 12
+        
+        for (let m = currentStartMonth; m <= currentEndMonth; m++) {
+          dateRange.push(`${m}-${y}`) // Format bulan-tahun dan tambahkan ke array
+        }
+      }
+    }
+    
+    const filteredExercises = props.exercises
+      .filter((exercise) =>
+        exercise.athletes.some((athlete) => athlete.id === form.data.athlete_id),
+      )
+      .filter((exercise) => {
+        const exerciseDate = new Date(exercise.date)
+        const exerciseMonth = exerciseDate.getMonth()
+        const exerciseYear = exerciseDate.getFullYear()
+        
+        const formattedExerciseDate = `${exerciseMonth + 1}-${exerciseYear}`
+        
+        return dateRange.includes(formattedExerciseDate)
+      })
+      .map((exercise) => ({
+        ...exercise,
+        date: new Date(exercise.date).toLocaleDateString('id').split('/').join('-'),
+      }))
+    
+    const filteredTournaments = props.tournaments
+      .filter((tournament) =>
+        tournament.athlete_id === form.data.athlete_id,
+      )
+      .filter((tournament) => {
+        const tournamentDate = new Date(tournament.date)
+        const tournamentMonth = tournamentDate.getMonth()
+        const tournamentYear = tournamentDate.getFullYear()
+        
+        const formattedTournamentDate = `${tournamentMonth + 1}-${tournamentYear}`
+        
+        return dateRange.includes(formattedTournamentDate)
+      })
+      .map((tournament) => ({
+        ...tournament,
+        date: new Date(tournament.date).toLocaleDateString('id').split('/').join('-'),
+      }))
+    
+    form.setData((prevData) => ({
+      ...prevData,
+      exercises: filteredExercises,
+      tournaments: filteredTournaments,
+    }))
+  }, [props.exercises, props.tournaments, form.data.athlete_id, months])
+  
   
   const criterias = props.criterias.map((criteria) => {
     return {
@@ -55,6 +159,23 @@ const Create = (props) => {
     },
   })
   
+  const items = [
+    {
+      icon: <IconClipboardText />,
+      value: 'Latihan',
+      evaluations: form.data.exercises,
+      total: form.data.exercises.length,
+    },
+    {
+      icon: <IconMedal />,
+      value: 'Pertandingan',
+      evaluations: form.data.tournaments,
+      total: form.data.tournaments.length,
+    },
+  ]
+  
+  console.log(form.data)
+  
   return (
     <form onSubmit={(e) => {
       e.preventDefault()
@@ -66,7 +187,7 @@ const Create = (props) => {
           
           <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Tambah Penilaian">
             <ActionIcon type="submit" ml="auto" h={48} w={48} color="gold.2" radius={32} display={{ base: 'block', xs: 'none' }}
-                        disabled={form.hasErrors || !form.data.exercise_id}
+              // disabled={form.hasErrors || !form.data.exercise_id}
             >
               <IconCornerDownLeft />
             </ActionIcon>
@@ -74,7 +195,7 @@ const Create = (props) => {
           
           <Button display={{ base: 'none', xs: 'block' }} type="submit" w={240} leftSection={<IconCornerDownLeft />} variant="filled" color="gold.2" h={48}
                   px={16} styles={{ section: { marginRight: 12 } }} radius={32} loading={form.processing}
-                  disabled={form.hasErrors || !form.data.exercise_id}
+            // disabled={form.hasErrors || !form.data.exercise_id}
           >
             Tambah Penilaian
           </Button>
@@ -86,12 +207,12 @@ const Create = (props) => {
           <Grid.Col span={{ base: 12, md: 4 }}>
             <Center>
               <Indicator styles={{ indicator: { padding: 16, border: '4px solid white' } }} inline color="gold.2"
-                         label={form.data.athlete_id ? props.exercises.find((exercise) => exercise.id === form.data.exercise_id)?.athletes.find((athlete) => athlete.id === form.data.athlete_id)?.role : 'Atlet'}
+                         label={form.data.athlete_id ? props.athletes.find((athlete) => athlete.id === form.data.athlete_id)?.role : 'Atlet'}
                          position="bottom-center" size={32} withBorder>
                 <Avatar
                   mx="auto"
-                  src={props.exercises.find((exercise) => exercise.id === form.data.exercise_id)?.athletes.find((athlete) => athlete.id === form.data.athlete_id)?.avatar}
-                  alt={props.exercises.find((exercise) => exercise.id === form.data.exercise_id)?.athletes.find((athlete) => athlete.id === form.data.athlete_id)?.name}
+                  src={props.athletes.find((athlete) => athlete.id === form.data.athlete_id)?.avatar}
+                  alt={props.athletes.find((athlete) => athlete.id === form.data.athlete_id)?.name}
                   size={160}
                 />
               </Indicator>
@@ -112,39 +233,6 @@ const Create = (props) => {
                     section: { marginLeft: 0, width: 48, height: 48 },
                     error: { marginTop: 8 },
                   }}
-                  leftSection={<IconClipboardText />}
-                  label="Latihan"
-                  clearable
-                  searchable
-                  nothingFoundMessage="Tidak ada latihan ditemukan"
-                  placeholder="Pilih latihan..."
-                  checkIconPosition="right"
-                  onChange={(value) => {
-                    form.setData('exercise_id', value)
-                    
-                    if (!value) {
-                      form.setError({ exercise_id: 'Latihan tidak boleh kosong.' })
-                    } else {
-                      form.clearErrors('exercise_id')
-                    }
-                  }}
-                  data={props.exercises.map((exercise) => ({
-                    value: exercise.id,
-                    label: `${exercise.name} (${new Date(exercise.date).toLocaleDateString('id').split('/').join('-')})`,
-                  }))}
-                  error={form.errors.exercise_id}
-                />
-                
-                <Select
-                  disabled={!form.data.exercise_id}
-                  withAsterisk
-                  variant="filled"
-                  styles={{
-                    label: { marginBottom: 8 },
-                    input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 16 },
-                    section: { marginLeft: 0, width: 48, height: 48 },
-                    error: { marginTop: 8 },
-                  }}
                   leftSection={<IconUser />}
                   label="Atlet"
                   clearable
@@ -154,7 +242,9 @@ const Create = (props) => {
                   checkIconPosition="right"
                   onChange={(value) => {
                     form.setData('athlete_id', value)
-                    setRole(props.exercises.find((exercise) => exercise.id === form.data.exercise_id)?.athletes.find((athlete) => athlete.id === value)?.role)
+                    setRole(
+                      props.athletes.find((athlete) => athlete.id === value)?.role,
+                    )
                     
                     if (!value) {
                       form.setError({ athlete_id: 'Atlet tidak boleh kosong.' })
@@ -163,13 +253,70 @@ const Create = (props) => {
                     }
                   }}
                   data={
-                    props.exercises.find((exercise) => exercise.id === form.data.exercise_id)?.athletes.map((athlete) => ({
+                    props.athletes.map((athlete) => ({
                       value: athlete.id,
                       label: `${athlete.full_name} (${athlete.role})`,
                     }))
                   }
                   error={form.errors.athlete_id}
                 />
+                
+                <MonthPickerInput
+                  valueFormat="M-YYYY"
+                  locale="id"
+                  disabled={!form.data.athlete_id}
+                  mb={16}
+                  type="range"
+                  withAsterisk
+                  variant="filled"
+                  styles={{
+                    label: { marginBottom: 8 },
+                    input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 16 },
+                    section: { marginLeft: 0, width: 48, height: 48 },
+                    error: { marginTop: 8 },
+                  }}
+                  leftSection={<IconCalendar />}
+                  label="Jangka Waktu Periode"
+                  clearable
+                  placeholder="Pilih jangka waktu periode..."
+                  onChange={(value) => {
+                    setMonths(value)
+                    
+                    if (!value) {
+                      form.setError({ time_period: 'Jangka waktu periode tidak boleh kosong.' })
+                    } else {
+                      form.clearErrors('time_period')
+                    }
+                  }}
+                  // data={props.exercises.map((exercise) => ({
+                  //   value: exercise.id,
+                  //   label: `${exercise.name} (${new Date(exercise.date).toLocaleDateString('id').split('/').join('-')})`,
+                  // }))}
+                  error={form.errors.time_period}
+                />
+                
+                {form.data.athlete_id && (<>
+                  <Text mb={8} fz={14}>
+                    Daftar latihan dan pertandingan
+                  </Text>
+                  <Accordion variant="contained">
+                    {items.map((item) => (
+                      <Accordion.Item key={item.value} value={item.value}>
+                        <Accordion.Control icon={item.icon}>{item.value} ({item.total})</Accordion.Control>
+                        <Accordion.Panel>
+                          {item.evaluations.length > 0 ? (
+                            <List type="ordered">
+                              {item.evaluations.map((evaluation) => (
+                                <List.Item
+                                  key={evaluation.id}>{evaluation.name} di {evaluation.place} pada {evaluation.date}</List.Item>
+                              ))}
+                            </List>
+                          ) : 'Tidak ada data.'}
+                        </Accordion.Panel>
+                      </Accordion.Item>
+                    ))}
+                  </Accordion>
+                </>)}
               </Fieldset>
               
               {form.data.athlete_id && (
@@ -177,6 +324,20 @@ const Create = (props) => {
                   {criterias.map((criteria) => (
                     <Stack key={criteria.id} gap={0}>
                       <Divider label={criteria?.name.toUpperCase()} styles={{ label: { fontSize: '14px' } }} labelPosition="center" />
+                      
+                      {criteria.type === 'radio' && (
+                        <>
+                          <Text>Skala Penilaian : </Text>
+                          
+                          <List>
+                            <List.Item>1 = Sangat buruk</List.Item>
+                            <List.Item>2 = Buruk</List.Item>
+                            <List.Item>3 = Cukup</List.Item>
+                            <List.Item>4 = Baik</List.Item>
+                            <List.Item>5 = Sangat baik</List.Item>
+                          </List>
+                        </>
+                      )}
                       
                       {criteria.sub_criterias.map((sub_criteria) => (
                         <Fieldset key={sub_criteria.id} radius={20} legend={sub_criteria.name}
