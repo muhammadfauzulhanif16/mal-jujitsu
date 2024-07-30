@@ -4,14 +4,12 @@ import { Blockquote, Box, Grid, Group, Select, Stack, Text, Title } from '@manti
 import { IconCalendar, IconClipboardText, IconMedal, IconReport, IconReportAnalytics, IconUser } from '@tabler/icons-react'
 import { AreaChart, BarChart } from '@mantine/charts'
 import { useState } from 'react'
-import { MonthPickerInput } from '@mantine/dates'
 
 const Dashboard = (props) => {
   console.log(props)
   const [exerciseDate, setExerciseDate] = useState(`Tahunan (${new Date().getFullYear()})`)
   const [tournamentDate, setTournamentDate] = useState(`Tahunan (${new Date().getFullYear()})`)
-  const [rankingDate, setRangkingDate] = useState(new Date())
-  console.log()
+  const [rankingDate, setRangkingDate] = useState(`Tahunan (${new Date().getFullYear()})`)
   
   function format(dataList) {
     return [
@@ -50,24 +48,24 @@ const Dashboard = (props) => {
           }
         }),
       },
-      {
-        time: `Mingguan (${Math.ceil(new Date().getDate() / 7)})`,
-        dataList: [...Array(7)].map((_, index) => {
-          const currentDate = new Date()
-          const filteredExercises = dataList.filter(data => {
-            const date = new Date(data.date)
-            const dayOfWeek = date.getDay()
-            const weekOfMonth = Math.ceil(date.getDate() / 7)
-            const monthOfYear = date.getMonth()
-            const year = date.getFullYear()
-            return dayOfWeek === index && weekOfMonth === Math.ceil(currentDate.getDate() / 7) && monthOfYear === currentDate.getMonth() && year === currentDate.getFullYear()
-          })
-          return {
-            name: ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'][index],
-            'Total': filteredExercises.length,
-          }
-        }),
-      },
+      // {
+      //   time: `Mingguan (${Math.ceil(new Date().getDate() / 7)})`,
+      //   dataList: [...Array(7)].map((_, index) => {
+      //     const currentDate = new Date()
+      //     const filteredExercises = dataList.filter(data => {
+      //       const date = new Date(data.date)
+      //       const dayOfWeek = date.getDay()
+      //       const weekOfMonth = Math.ceil(date.getDate() / 7)
+      //       const monthOfYear = date.getMonth()
+      //       const year = date.getFullYear()
+      //       return dayOfWeek === index && weekOfMonth === Math.ceil(currentDate.getDate() / 7) && monthOfYear === currentDate.getMonth() && year === currentDate.getFullYear()
+      //     })
+      //     return {
+      //       name: ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'][index],
+      //       'Total': filteredExercises.length,
+      //     }
+      //   }),
+      // },
     ]
   }
   
@@ -238,13 +236,8 @@ const Dashboard = (props) => {
               <Group justify="space-between">
                 <Title fz={20} c="neutral.2">Peringkat</Title>
                 
-                <MonthPickerInput
-                  valueFormat="M-YYYY"
-                  w="100%"
-                  value={rankingDate}
-                  locale="id"
-                  // disabled={!form.data.athlete_id}
-                  // type="range"
+                <Select
+                  withAsterisk
                   variant="filled"
                   styles={{
                     label: { marginBottom: 8 },
@@ -253,8 +246,31 @@ const Dashboard = (props) => {
                     error: { marginTop: 8 },
                   }}
                   leftSection={<IconCalendar />}
+                  placeholder="Pilih waktu..."
+                  checkIconPosition="right"
                   onChange={(value) => setRangkingDate(value)}
+                  value={rankingDate}
+                  allowDeselect={false}
+                  data={[`Tahunan (${new Date().getFullYear()})`, `Bulanan (${new Date().getMonth() + 1})`]}
                 />
+                
+                {/*<MonthPickerInput*/}
+                {/*  valueFormat="M-YYYY"*/}
+                {/*  w="100%"*/}
+                {/*  value={rankingDate}*/}
+                {/*  locale="id"*/}
+                {/*  // disabled={!form.data.athlete_id}*/}
+                {/*  // type="range"*/}
+                {/*  variant="filled"*/}
+                {/*  styles={{*/}
+                {/*    label: { marginBottom: 8 },*/}
+                {/*    input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 16 },*/}
+                {/*    section: { marginLeft: 0, width: 48, height: 48 },*/}
+                {/*    error: { marginTop: 8 },*/}
+                {/*  }}*/}
+                {/*  leftSection={<IconCalendar />}*/}
+                {/*  onChange={(value) => setRangkingDate(value)}*/}
+                {/*/>*/}
               </Group>
               
               <BarChart
@@ -265,14 +281,12 @@ const Dashboard = (props) => {
                 withLegend
                 xAxisLabel="Atlet"
                 yAxisLabel="Total Medali"
-                data={props.rangking.filter((item) => item.date === `${rankingDate.getMonth() + 1}-${rankingDate.getFullYear()}`).length > 0
-                  ? props.rangking.filter((item) => item.date === `${rankingDate.getMonth() + 1}-${rankingDate.getFullYear()}`)[0].athletes.map((athlete, index) => ({
-                    name: `${['🥇', '🥈', '🥉'][index]} ${athlete.full_name}`,
-                    'Emas': athlete.gold_medals,
-                    'Perak': athlete.silver_medals,
-                    'Perunggu': athlete.bronze_medals,
-                  }))
-                  : []
+                data={props.ranking[rankingDate].map((athlete, index) => ({
+                  name: `${['🥇', '🥈', '🥉'][index]} ${athlete.full_name}`,
+                  'Emas': athlete.gold_medals,
+                  'Perak': athlete.silver_medals,
+                  'Perunggu': athlete.bronze_medals,
+                }))
                 }
                 // data={props.athletes
                 //   .sort((a, b) => {

@@ -20,22 +20,26 @@
       $authedUser = Auth::user();
       $authedUser->avatar = str_contains($authedUser->avatar, 'https') ? $authedUser->avatar : ($authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null);
       
-      if (in_array($authedUser->role, ['Ne-Waza', 'Fighting'])) {
-        $tournaments = Tournament::with('athlete')
-          ->where('athlete_id', $authedUser->id)
-          ->get()
-          ->map(function ($tournament) {
-            $tournament->athlete->avatar = str_contains($tournament->athlete->avatar, 'https') ? $tournament->athlete->avatar : (str_contains($tournament->athlete->avatar, 'storage/') ? $tournament->athlete->avatar : ($tournament->athlete->avatar ? asset('storage/' . $tournament->athlete->avatar) : null));
-            return $tournament;
-          });
-      } else {
-        $tournaments = Tournament::with('athlete')
-          ->get()
-          ->map(function ($tournament) {
-            $tournament->athlete->avatar = str_contains($tournament->athlete->avatar, 'https') ? $tournament->athlete->avatar : (str_contains($tournament->athlete->avatar, 'storage/') ? $tournament->athlete->avatar : ($tournament->athlete->avatar ? asset('storage/' . $tournament->athlete->avatar) : null));
-            return $tournament;
-          });
-      }
+      $tournaments = Tournament::when(in_array($authedUser->role, ['Ne-Waza', 'Fighting']), function ($query) use ($authedUser) {
+        return $query->where('athlete_id', $authedUser->id);
+      })->with('athlete')->get()->map(function ($tournament) {
+        $athlete = $tournament->athlete->user;
+        $athlete->avatar = str_contains($athlete->avatar, 'https')
+          ? $athlete->avatar
+          : (str_contains($athlete->avatar, 'storage/')
+            ? $athlete->avatar
+            : ($athlete->avatar
+              ? asset('storage/' . $athlete->avatar)
+              : null));
+        
+        return [
+          ...$tournament->toArray(),
+          'athlete' => [
+            'avatar' => $athlete->avatar,
+            'full_name' => $athlete->full_name,
+          ],
+        ];
+      })->values();
       
       return Inertia('Tournament/Index', [
         'tournaments' => $tournaments,

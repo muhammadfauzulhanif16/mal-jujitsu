@@ -15,7 +15,6 @@
   use App\Models\History;
   use App\Models\Tournament;
   use App\Models\User;
-  use Illuminate\Support\Carbon;
   use Illuminate\Support\Facades\Auth;
   use Illuminate\Support\Facades\Route;
   use Inertia\Inertia;
@@ -52,6 +51,9 @@
         $evaluations = Evaluation::all();
       }
       
+      $currentYear = date('Y');
+      $currentMonth = date('n');
+      
       return Inertia::render('Dashboard', [
         'unread_histories' => History::where('is_read', false)->get(),
         'meta' => session('meta'),
@@ -83,10 +85,8 @@
               ->orWhereHas('evaluations')
               ->orWhereHas('tournaments');
           })->get(),
-        'rangking' => Tournament::with(['athlete.user'])->get()->groupBy(function ($tournament) {
-          return Carbon::parse($tournament->date)->format('n-Y'); // 'n' removes leading zero from month
-        })->map(function ($tournaments, $date) {
-          $athletes = $tournaments->groupBy('athlete_id')->map(function ($athleteTournaments, $athleteId) {
+        'ranking' => [
+          "Tahunan ($currentYear)" => Tournament::all()->groupBy('athlete_id')->map(function ($athleteTournaments, $athleteId) {
             $athlete = $athleteTournaments->first()->athlete;
             $gold_medals = $athleteTournaments->where('medal', 'Emas')->count();
             $silver_medals = $athleteTournaments->where('medal', 'Perak')->count();
@@ -100,10 +100,7 @@
               'bronze_medals' => $bronze_medals,
               'total_medal_points' => $total_medal_points,
             ];
-          })->values()->toArray();
-          
-          // Sort athletes by gold medals, then silver medals, then bronze medals
-          usort($athletes, function ($a, $b) {
+          })->values()->sort(function ($a, $b) {
             if ($b['gold_medals'] === $a['gold_medals']) {
               if ($b['silver_medals'] === $a['silver_medals']) {
                 return $b['bronze_medals'] - $a['bronze_medals'];
@@ -111,16 +108,69 @@
               return $b['silver_medals'] - $a['silver_medals'];
             }
             return $b['gold_medals'] - $a['gold_medals'];
-          });
-          
-          // Limit to top 3 athletes
-          $athletes = array_slice($athletes, 0, 3);
-          
-          return [
-            'date' => $date,
-            'athletes' => $athletes,
-          ];
-        })->values()->toArray(),
+          })->take(3)->values()->toArray(),
+          "Bulanan ($currentMonth)" => Tournament::whereMonth('date', $currentMonth)->get()->groupBy('athlete_id')->map(function ($athleteTournaments, $athleteId) {
+            $athlete = $athleteTournaments->first()->athlete;
+            $gold_medals = $athleteTournaments->where('medal', 'Emas')->count();
+            $silver_medals = $athleteTournaments->where('medal', 'Perak')->count();
+            $bronze_medals = $athleteTournaments->where('medal', 'Perunggu')->count();
+            $total_medal_points = ($gold_medals * 3) + ($silver_medals * 2) + $bronze_medals;
+            
+            return [
+              'full_name' => $athlete->user->full_name,
+              'gold_medals' => $gold_medals,
+              'silver_medals' => $silver_medals,
+              'bronze_medals' => $bronze_medals,
+              'total_medal_points' => $total_medal_points,
+            ];
+          })->values()->sort(function ($a, $b) {
+            if ($b['gold_medals'] === $a['gold_medals']) {
+              if ($b['silver_medals'] === $a['silver_medals']) {
+                return $b['bronze_medals'] - $a['bronze_medals'];
+              }
+              return $b['silver_medals'] - $a['silver_medals'];
+            }
+            return $b['gold_medals'] - $a['gold_medals'];
+          })->take(3)->values()->toArray(),
+        ]
+//        'rangking' => Tournament::with(['athlete.user'])->get()->groupBy(function ($tournament) {
+//          return Carbon::parse($tournament->date)->format('n-Y'); // 'n' removes leading zero from month
+//        })->map(function ($tournaments, $date) {
+//          $athletes = $tournaments->groupBy('athlete_id')->map(function ($athleteTournaments, $athleteId) {
+//            $athlete = $athleteTournaments->first()->athlete;
+//            $gold_medals = $athleteTournaments->where('medal', 'Emas')->count();
+//            $silver_medals = $athleteTournaments->where('medal', 'Perak')->count();
+//            $bronze_medals = $athleteTournaments->where('medal', 'Perunggu')->count();
+//            $total_medal_points = ($gold_medals * 3) + ($silver_medals * 2) + $bronze_medals;
+//
+//            return [
+//              'full_name' => $athlete->user->full_name,
+//              'gold_medals' => $gold_medals,
+//              'silver_medals' => $silver_medals,
+//              'bronze_medals' => $bronze_medals,
+//              'total_medal_points' => $total_medal_points,
+//            ];
+//          })->values()->toArray();
+//
+//          // Sort athletes by gold medals, then silver medals, then bronze medals
+//          usort($athletes, function ($a, $b) {
+//            if ($b['gold_medals'] === $a['gold_medals']) {
+//              if ($b['silver_medals'] === $a['silver_medals']) {
+//                return $b['bronze_medals'] - $a['bronze_medals'];
+//              }
+//              return $b['silver_medals'] - $a['silver_medals'];
+//            }
+//            return $b['gold_medals'] - $a['gold_medals'];
+//          });
+//
+//          // Limit to top 3 athletes
+//          $athletes = array_slice($athletes, 0, 3);
+//
+//          return [
+//            'date' => $date,
+//            'athletes' => $athletes,
+//          ];
+//        })->values()->toArray(),
       ]);
     })->name('dashboard');
     

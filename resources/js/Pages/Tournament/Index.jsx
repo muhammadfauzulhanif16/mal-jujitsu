@@ -7,6 +7,7 @@ import { useState } from 'react'
 import { Table } from '@/Components/Table.jsx'
 
 const Index = (props) => {
+  console.log(props)
   const [tournamentSearch, setTournamentSearch] = useState('')
   // const THList = ['#', 'Nama', 'Tempat', 'Atlet', 'Medali', 'Tanggal', 'Aksi']
   const THList = [{ title: '#' }, {

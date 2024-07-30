@@ -186,7 +186,7 @@ const Show = (props) => {
                 
                 <List type="ordered">
                   {evaluation.exercises.map(exercise => (
-                    <List.Item key={exercise.id}>{exercise.name} di {exercise.place} pada
+                    <List.Item fz={10} key={exercise.id}>{exercise.name} di {exercise.place} pada
                       {new Date(exercise.date).toLocaleDateString('id').split('/').join('-')}</List.Item>
                   ))}
                 </List>
