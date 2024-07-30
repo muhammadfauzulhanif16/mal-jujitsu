@@ -22,6 +22,7 @@ import { useState } from 'react'
 import { IconCalendar, IconPrinter } from '@tabler/icons-react'
 
 const Show = (props) => {
+  console.log(props)
   const [isPrint, setIsPrint] = useState(false)
   const [period, setPeriod] = useState(null)
   const evaluationList = period === null ? props.evaluations : props.evaluations.filter((evaluation) => evaluation.period === Number(period))

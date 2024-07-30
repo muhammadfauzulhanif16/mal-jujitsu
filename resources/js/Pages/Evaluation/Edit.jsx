@@ -44,7 +44,7 @@ const Edit = (props) => {
       value: evaluation.value,
     })),
   })
-  
+  console.log(form.data)
   useEffect(() => {
     form.setData('time_period', months.map((month) => new Date(month).toLocaleString()))
   }, [months])
@@ -179,13 +179,13 @@ const Edit = (props) => {
   return (
     <form onSubmit={(e) => {
       e.preventDefault()
-      form.post(route('evaluations.store'))
+      form.put(route('evaluations.update', props.evaluation.id))
     }}>
       <AppLayout title="Penilaian" authed={props.auth.user} meta={props.meta} unreadHistories={props.total_unread_histories}>
         <Group w="100%" justify="space-between">
-          <Breadcrumbs navList={[{ label: 'Penilaian', route: 'evaluations.index' }, { label: 'Tambah' }]} />
+          <Breadcrumbs navList={[{ label: 'Penilaian', route: 'evaluations.index' }, { label: 'Ubah' }]} />
           
-          <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Tambah Penilaian">
+          <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Ubah Penilaian">
             <ActionIcon type="submit" ml="auto" h={48} w={48} color="gold.2" radius={32} display={{ base: 'block', xs: 'none' }}
               // disabled={form.hasErrors || !form.data.exercise_id}
             >
@@ -197,7 +197,7 @@ const Edit = (props) => {
                   px={16} styles={{ section: { marginRight: 12 } }} radius={32} loading={form.processing}
             // disabled={form.hasErrors || !form.data.exercise_id}
           >
-            Tambah Penilaian
+            Ubah Penilaian
           </Button>
         </Group>
         

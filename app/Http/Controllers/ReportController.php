@@ -78,10 +78,19 @@
               return $evaluationArray;
             })->toArray()
           : [],
-        'athletes' => in_array($authedUser->role, ['Ne-Waza', 'Fighting']) ? null : Evaluation::distinct()->get(['athlete_id'])
+        'athletes' => Evaluation::distinct()->get(['athlete_id'])
           ->pluck('athlete_id')
           ->map(function ($athleteId) {
-            return User::where('id', $athleteId)->first(['id', 'avatar', 'full_name', 'role']);
+            $user = User::where('id', $athleteId)->first(['id', 'avatar', 'full_name', 'role']);
+            if ($user) {
+              $user->avatar = str_contains($user->avatar, 'https') ? $user->avatar : ($user->avatar ? asset('storage/' . $user->avatar) : null);
+              // Count the evaluations for the athlete
+              $totalEvaluations = Evaluation::where('athlete_id', $athleteId)->count();
+              // Add the total evaluations to the user object/array
+              $user->total_evaluations = $totalEvaluations;
+              return $user;
+            }
+            return null;
           })->filter()->values()->toArray(),
         'total_unread_histories' => History::where('is_read', false)->count(),
       ]);
@@ -110,6 +119,9 @@
     {
       $authedUser = Auth::user()->load('athlete');
       $authedUser->avatar = str_contains($authedUser->avatar, 'https') ? $authedUser->avatar : ($authedUser->avatar ? asset('storage/' . $authedUser->avatar) : null);
+      
+      $user->avatar = str_contains($user->avatar, 'https') ? $user->avatar : ($user->avatar ? asset('storage/' . $user->avatar) : null);
+      $user['weight'] = $user->athlete->weight;
       
       return Inertia('Report/Show', [
         'evaluations' => in_array($authedUser->role, ['Ne-Waza', 'Fighting'])

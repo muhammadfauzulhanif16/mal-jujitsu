@@ -22,7 +22,7 @@
     
     public function athlete()
     {
-      return $this->belongsTo(User::class);
+      return $this->belongsTo(Athlete::class, 'athlete_id', 'user_id');
     }
     
     protected function casts(): array

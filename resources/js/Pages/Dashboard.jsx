@@ -4,11 +4,14 @@ import { Blockquote, Box, Grid, Group, Select, Stack, Text, Title } from '@manti
 import { IconCalendar, IconClipboardText, IconMedal, IconReport, IconReportAnalytics, IconUser } from '@tabler/icons-react'
 import { AreaChart, BarChart } from '@mantine/charts'
 import { useState } from 'react'
+import { MonthPickerInput } from '@mantine/dates'
 
 const Dashboard = (props) => {
   console.log(props)
-  const [exerciseTime, setExerciseTime] = useState(`Tahunan (${new Date().getFullYear()})`)
-  const [tournamentTime, setTournamentTime] = useState(`Tahunan (${new Date().getFullYear()})`)
+  const [exerciseDate, setExerciseDate] = useState(`Tahunan (${new Date().getFullYear()})`)
+  const [tournamentDate, setTournamentDate] = useState(`Tahunan (${new Date().getFullYear()})`)
+  const [rankingDate, setRangkingDate] = useState(new Date())
+  console.log()
   
   function format(dataList) {
     return [
@@ -163,8 +166,8 @@ const Dashboard = (props) => {
                     leftSection={<IconCalendar />}
                     placeholder="Pilih waktu..."
                     checkIconPosition="right"
-                    onChange={(value) => setExerciseTime(value)}
-                    value={exerciseTime}
+                    onChange={(value) => setExerciseDate(value)}
+                    value={exerciseDate}
                     allowDeselect={false}
                     data={[`Tahunan (${new Date().getFullYear()})`, `Bulanan (${new Date().getMonth() + 1})`]}
                   />
@@ -174,13 +177,13 @@ const Dashboard = (props) => {
                   h={320}
                   tickLine="xy"
                   gridAxis="xy"
-                  data={format(props.exercises).filter(item => item.time === exerciseTime)[0].dataList}
+                  data={format(props.exercises).filter(item => item.time === exerciseDate)[0].dataList}
                   dataKey="name"
                   series={[{ name: 'Total', color: '#746200' }]}
                   curveType="bump"
                   // connectNulls
-                  xAxisLabel={exerciseTime === `Tahunan (${new Date().getFullYear()})` ? 'Bulan' : exerciseTime === `Bulanan (${new Date().getMonth() + 1})` ? 'Minggu' : 'Hari'}
-                  yAxisLabel={`Total : ${format(props.exercises).filter(item => item.time === exerciseTime)[0].dataList.reduce((total, item) => total + item.Total, 0)} Latihan`}
+                  xAxisLabel={exerciseDate === `Tahunan (${new Date().getFullYear()})` ? 'Bulan' : exerciseDate === `Bulanan (${new Date().getMonth() + 1})` ? 'Minggu' : 'Hari'}
+                  yAxisLabel={`Total : ${format(props.exercises).filter(item => item.time === exerciseDate)[0].dataList.reduce((total, item) => total + item.Total, 0)} Latihan`}
                 />
               </Stack>
               
@@ -204,8 +207,8 @@ const Dashboard = (props) => {
                     leftSection={<IconCalendar />}
                     placeholder="Pilih waktu..."
                     checkIconPosition="right"
-                    value={tournamentTime}
-                    onChange={(value) => setTournamentTime(value)}
+                    value={tournamentDate}
+                    onChange={(value) => setTournamentDate(value)}
                     data={[`Tahunan (${new Date().getFullYear()})`, `Bulanan (${new Date().getMonth() + 1})`]}
                   />
                 </Group>
@@ -214,12 +217,12 @@ const Dashboard = (props) => {
                   h={320}
                   tickLine="xy"
                   gridAxis="xy"
-                  data={format(props.tournaments).filter(item => item.time === tournamentTime)[0].dataList}
+                  data={format(props.tournaments).filter(item => item.time === tournamentDate)[0].dataList}
                   dataKey="name"
                   series={[{ name: 'Total', color: '#746200' }]}
                   curveType="bump"
-                  xAxisLabel={tournamentTime === `Tahunan (${new Date().getFullYear()})` ? 'Bulan' : tournamentTime === `Bulanan (${new Date().getMonth() + 1})` ? 'Minggu' : 'Hari'}
-                  yAxisLabel={`Total : ${format(props.tournaments).filter(item => item.time === tournamentTime)[0].dataList.reduce((total, item) => total + item.Total, 0)} Pertandingan`}
+                  xAxisLabel={tournamentDate === `Tahunan (${new Date().getFullYear()})` ? 'Bulan' : tournamentDate === `Bulanan (${new Date().getMonth() + 1})` ? 'Minggu' : 'Hari'}
+                  yAxisLabel={`Total : ${format(props.tournaments).filter(item => item.time === tournamentDate)[0].dataList.reduce((total, item) => total + item.Total, 0)} Pertandingan`}
                 />
               </Stack>
             </Stack>
@@ -232,7 +235,27 @@ const Dashboard = (props) => {
               borderRadius: 20,
               border: '1px solid #dcdcdc',
             }}>
-              <Title fz={20} c="neutral.2">Peringkat</Title>
+              <Group justify="space-between">
+                <Title fz={20} c="neutral.2">Peringkat</Title>
+                
+                <MonthPickerInput
+                  valueFormat="M-YYYY"
+                  w="100%"
+                  value={rankingDate}
+                  locale="id"
+                  // disabled={!form.data.athlete_id}
+                  // type="range"
+                  variant="filled"
+                  styles={{
+                    label: { marginBottom: 8 },
+                    input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 16 },
+                    section: { marginLeft: 0, width: 48, height: 48 },
+                    error: { marginTop: 8 },
+                  }}
+                  leftSection={<IconCalendar />}
+                  onChange={(value) => setRangkingDate(value)}
+                />
+              </Group>
               
               <BarChart
                 h={{
@@ -242,27 +265,33 @@ const Dashboard = (props) => {
                 withLegend
                 xAxisLabel="Atlet"
                 yAxisLabel="Total Medali"
-                data={props.athletes
-                  .sort((a, b) => {
-                    if (b.total_medals === a.total_medals) {
-                      if (b.gold_medals === a.gold_medals) {
-                        if (b.silver_medals === a.silver_medals) {
-                          return b.bronze_medals - a.bronze_medals
-                        }
-                        return b.silver_medals - a.silver_medals
-                      }
-                      return b.gold_medals - a.gold_medals
-                    }
-                    return b.total_medals - a.total_medals
-                  })
-                  .slice(0, 3)
-                  .map((athlete, index) => ({
-                    name: `${['🥇', '🥈', '🥉'][index]} ${athlete.user.full_name}`,
-                    'Emas': athlete.gold_medals,
-                    'Perak': athlete.silver_medals,
-                    'Perunggu': athlete.bronze_medals,
-                  }))
-                }
+                data={props.rangking.filter((item) => item.date === `${rankingDate.getMonth() + 1}-${rankingDate.getFullYear()}`)[0].athletes.map((athlete, index) => ({
+                  name: `${['🥇', '🥈', '🥉'][index]} ${athlete.full_name}`,
+                  'Emas': athlete.gold_medals,
+                  'Perak': athlete.silver_medals,
+                  'Perunggu': athlete.bronze_medals,
+                }))}
+                // data={props.athletes
+                //   .sort((a, b) => {
+                //     if (b.total_medals === a.total_medals) {
+                //       if (b.gold_medals === a.gold_medals) {
+                //         if (b.silver_medals === a.silver_medals) {
+                //           return b.bronze_medals - a.bronze_medals
+                //         }
+                //         return b.silver_medals - a.silver_medals
+                //       }
+                //       return b.gold_medals - a.gold_medals
+                //     }
+                //     return b.total_medals - a.total_medals
+                //   })
+                //   .slice(0, 3)
+                //   .map((athlete, index) => ({
+                //     name: `${['🥇', '🥈', '🥉'][index]} ${athlete.user.full_name}`,
+                //     'Emas': athlete.gold_medals,
+                //     'Perak': athlete.silver_medals,
+                //     'Perunggu': athlete.bronze_medals,
+                //   }))
+                // }
                 tickLine="xy"
                 gridAxis="xy"
                 dataKey="name"

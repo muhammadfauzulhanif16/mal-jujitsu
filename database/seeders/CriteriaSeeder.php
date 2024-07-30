@@ -96,7 +96,7 @@
                   'type' => 'radio',
                 ],
                 [
-                  'name' => 'Tangkasan',
+                  'name' => 'Tangkisan',
                   'type' => 'radio',
                 ],
                 [

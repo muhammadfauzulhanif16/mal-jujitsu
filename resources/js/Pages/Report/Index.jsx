@@ -34,7 +34,7 @@ const Index = (props) => {
   const THList = [{ title: '#' }, { title: 'Foto' }, { title: 'Nama Lengkap', key: 'full_name' }, {
     title: 'Sistem Pertandingan',
     key: 'role',
-  }, { title: 'Aksi' }]
+  }, { title: 'Total Penilaian', key: 'total_evaluations' }, { title: 'Aksi' }]
   // const [time, setTime] = useState(null)
   // const [reportSearch, setReportSearch] = useState('')
   
@@ -89,7 +89,10 @@ const Index = (props) => {
   ]
   const athleteList = props.athletes
     ?.filter(athlete => athlete.full_name.replace(/\s/g, '').toLowerCase().match(new RegExp(athleteSearch.replace(/\s/g, '').toLowerCase(), 'i')))
-  const [sortedData, setSortedData] = useState(athleteList)
+  const [sortedData, setSortedData] = useState(athleteList.map(athlete => ({
+    ...athlete,
+    total_evaluations: athlete.total_evaluations.toString(),
+  })))
   const TDList = sortedData?.map((athlete, id) => (
     <MantineTable.Tr h={64} key={id}>
       <MantineTable.Td
@@ -106,6 +109,9 @@ const Index = (props) => {
       <MantineTable.Td
         px={16} py={0}
         style={{ whiteSpace: 'nowrap' }}>{athlete.role}</MantineTable.Td>
+      <MantineTable.Td
+        px={16} py={0}
+        style={{ whiteSpace: 'nowrap' }}>{athlete.total_evaluations}</MantineTable.Td>
       <MantineTable.Td
         px={16} py={0}
         style={{ whiteSpace: 'nowrap' }}>
@@ -224,7 +230,7 @@ const Index = (props) => {
       </Stack>
       
       {!['Ne-Waza', 'Fighting'].includes(props.auth.user.role) ? (
-          <Table thList={THList} tdList={TDList} icon={<IconReport size={48} />} title="Laporan" data={athleteList}
+          <Table thList={THList} tdList={TDList} icon={<IconReport size={48} />} title="Laporan" data={sortedData}
                  handleSort={handleSort} />) :
         (
           <Stack gap={80}>

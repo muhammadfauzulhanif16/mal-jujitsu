@@ -1,6 +1,6 @@
 import { AppLayout } from '@/Layouts/AppLayout.jsx'
 import { ActionIcon, Avatar, Button, Flex, Group, Stack, Table as MantineTable, TextInput, Tooltip } from '@mantine/core'
-import { IconEye, IconPlus, IconReportAnalytics, IconSearch, IconPencil, IconTrash } from '@tabler/icons-react'
+import { IconEye, IconPlus, IconReportAnalytics, IconSearch } from '@tabler/icons-react'
 import { Breadcrumbs } from '@/Components/Breadcrumbs.jsx'
 import { router } from '@inertiajs/core'
 import { useState } from 'react'
@@ -12,7 +12,7 @@ const Index = (props) => {
   const THList = [{ title: '#' }, { title: 'Foto' }, { title: 'Nama Lengkap', key: 'full_name' }, {
     title: 'Sistem Pertandingan',
     key: 'role',
-  }, { title: 'Aksi' }]
+  }, { title: 'Total Penilaian', key: 'total_evaluations' }, { title: 'Aksi' }]
   const actionList = [
     {
       label: 'Daftar Penilaian',
@@ -38,7 +38,10 @@ const Index = (props) => {
   ]
   const athleteList = props.athletes
     .filter(athlete => athlete.full_name.replace(/\s/g, '').toLowerCase().match(new RegExp(athleteSearch.replace(/\s/g, '').toLowerCase(), 'i')))
-  const [sortedData, setSortedData] = useState(athleteList)
+  const [sortedData, setSortedData] = useState(athleteList.map(athlete => ({
+    ...athlete,
+    total_evaluations: athlete.total_evaluations.toString(),
+  })))
   const TDList = sortedData.map((athlete, id) => (
     <MantineTable.Tr h={64} key={id}>
       <MantineTable.Td
@@ -55,6 +58,9 @@ const Index = (props) => {
       <MantineTable.Td
         px={16} py={0}
         style={{ whiteSpace: 'nowrap' }}>{athlete.role}</MantineTable.Td>
+      <MantineTable.Td
+        px={16} py={0}
+        style={{ whiteSpace: 'nowrap' }}>{athlete.total_evaluations}</MantineTable.Td>
       <MantineTable.Td
         px={16} py={0}
         style={{ whiteSpace: 'nowrap' }}>
@@ -122,7 +128,7 @@ const Index = (props) => {
       </Stack>
       
       <Table thList={THList} tdList={TDList} icon={<IconReportAnalytics size={48} />} title="Penilaian" route="evaluations.create" authed={props.auth.user}
-             data={athleteList}
+             data={sortedData}
              handleSort={handleSort} />
     </AppLayout>
   )
