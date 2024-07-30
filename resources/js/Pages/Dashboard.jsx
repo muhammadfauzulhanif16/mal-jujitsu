@@ -265,12 +265,15 @@ const Dashboard = (props) => {
                 withLegend
                 xAxisLabel="Atlet"
                 yAxisLabel="Total Medali"
-                data={props.rangking.filter((item) => item.date === `${rankingDate.getMonth() + 1}-${rankingDate.getFullYear()}`)[0].athletes.map((athlete, index) => ({
-                  name: `${['🥇', '🥈', '🥉'][index]} ${athlete.full_name}`,
-                  'Emas': athlete.gold_medals,
-                  'Perak': athlete.silver_medals,
-                  'Perunggu': athlete.bronze_medals,
-                }))}
+                data={props.rangking.filter((item) => item.date === `${rankingDate.getMonth() + 1}-${rankingDate.getFullYear()}`).length > 0
+                  ? props.rangking.filter((item) => item.date === `${rankingDate.getMonth() + 1}-${rankingDate.getFullYear()}`)[0].athletes.map((athlete, index) => ({
+                    name: `${['🥇', '🥈', '🥉'][index]} ${athlete.full_name}`,
+                    'Emas': athlete.gold_medals,
+                    'Perak': athlete.silver_medals,
+                    'Perunggu': athlete.bronze_medals,
+                  }))
+                  : []
+                }
                 // data={props.athletes
                 //   .sort((a, b) => {
                 //     if (b.total_medals === a.total_medals) {
