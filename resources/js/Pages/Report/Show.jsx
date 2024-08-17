@@ -8,7 +8,6 @@ import {
   Divider,
   Grid,
   Group,
-  List,
   Select,
   SimpleGrid,
   Stack,
@@ -184,12 +183,23 @@ const Show = (props) => {
               <Box>
                 <Title fz={26} mb={8}>Daftar Latihan</Title>
                 
-                <List type="ordered">
-                  {evaluation.exercises.map(exercise => (
-                    <List.Item fz={10} key={exercise.id}>{exercise.name} di {exercise.place} pada
-                      {new Date(exercise.date).toLocaleDateString('id').split('/').join('-')}</List.Item>
+                <Grid gutter={0}>
+                  <Grid.Col span={12}>
+                    <Group style={{
+                      border: '1px solid #e1e1e1',
+                    }} px={16} h={48} fw={600}>Nama Latihan, Tempat, Tanggal</Group>
+                  </Grid.Col>
+                  
+                  {evaluation.exercises.map((exercise) => (
+                    <Grid.Col span={12} key={exercise.id}>
+                      <Group style={{
+                        border: '1px solid #e1e1e1',
+                      }} px={16} h={48}>
+                        {`${exercise.name} di ${exercise.place} pada ${new Date(exercise.date).toLocaleDateString('id').split('/').join('-')}`}
+                      </Group>
+                    </Grid.Col>
                   ))}
-                </List>
+                </Grid>
               </Box>
             )}
             
@@ -282,16 +292,22 @@ const Show = (props) => {
               <Title fz={26} mb={8}>Daftar Penilaian</Title>
               
               <Grid gutter={0}>
-                <Grid.Col span={11}>
+                <Grid.Col span={8}>
                   <Group style={{
                     border: '1px solid #e1e1e1',
                   }} px={16} h={48} fw={600}>Kriteria</Group>
                 </Grid.Col>
                 
-                <Grid.Col span={1}>
+                <Grid.Col span={2}>
                   <Center style={{
                     border: '1px solid #e1e1e1',
                   }} px={16} h={48} fw={600}>Nilai</Center>
+                </Grid.Col>
+                
+                <Grid.Col span={2}>
+                  <Center style={{
+                    border: '1px solid #e1e1e1',
+                  }} px={16} h={48} fw={600}>Patokan</Center>
                 </Grid.Col>
                 
                 {evaluation.criterias.map((criteria, criteriaId) => (
@@ -314,16 +330,23 @@ const Show = (props) => {
                           
                           {sub_criteria.sub_sub_criterias.map((sub_sub_criteria, subSubCriteriaId) => (
                             <>
-                              <Grid.Col span={11} key={subSubCriteriaId}>
+                              <Grid.Col span={8} key={subSubCriteriaId}>
                                 <Group style={{
                                   border: '1px solid #e1e1e1',
                                 }} px={16} h={48}>{subSubCriteriaId + 1}. {sub_sub_criteria.name}</Group>
                               </Grid.Col>
                               
-                              <Grid.Col span={1}>
+                              <Grid.Col span={2}>
                                 <Group style={{
                                   border: '1px solid #e1e1e1',
-                                }} px={16} h={48}>{sub_sub_criteria.evaluation.value}</Group>
+                                }} px={16} h={48}>{sub_sub_criteria.evaluation.value} {sub_sub_criteria.evaluation.sub_sub_criteria.unit}</Group>
+                              </Grid.Col>
+                              
+                              <Grid.Col span={2}>
+                                <Group style={{
+                                  border: '1px solid #e1e1e1',
+                                }} px={16}
+                                       h={48}>{props.athlete.gender === 'Laki-laki' ? sub_sub_criteria.evaluation.sub_sub_criteria.male_benchmark : sub_sub_criteria.evaluation.sub_sub_criteria.female_benchmark}</Group>
                               </Grid.Col>
                             </>
                           ))}
@@ -333,13 +356,13 @@ const Show = (props) => {
                     
                     {criteria.type === 'radio' && (
                       <>
-                        <Grid.Col span={11}>
+                        <Grid.Col span={8}>
                           <Group style={{
                             border: '1px solid #e1e1e1',
                           }} px={16} h={48}>Rata-rata</Group>
                         </Grid.Col>
                         
-                        <Grid.Col span={1}>
+                        <Grid.Col span={2}>
                           <Group style={{
                             border: '1px solid #e1e1e1',
                           }} px={16} h={48}>
@@ -357,7 +380,17 @@ const Show = (props) => {
                                 return total + subTotalAndCount.sum
                               }, 0)
                               
-                              return Number((sum / count).toFixed(2))
+                              const average = Number((sum / count).toFixed(2))
+                              const descriptions = {
+                                1: 'Sangat buruk',
+                                2: 'Buruk',
+                                3: 'Cukup',
+                                4: 'Baik',
+                                5: 'Sangat baik',
+                              }
+                              const description = descriptions[Math.round(average)] || 'Tidak diketahui'
+                              
+                              return `${average} (${description})`
                             })()}
                           </Group>
                         </Grid.Col>

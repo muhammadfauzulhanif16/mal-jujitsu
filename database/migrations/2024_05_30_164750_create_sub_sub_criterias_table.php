@@ -17,6 +17,9 @@
         $table->string('description')->nullable();
         $table->string('type');
         $table->boolean('required')->default(true);
+        $table->string('unit')->nullable();
+        $table->string('male_benchmark')->nullable()->default('-');
+        $table->string('female_benchmark')->nullable()->default('-');
         $table->timestamps();
       });
     }
