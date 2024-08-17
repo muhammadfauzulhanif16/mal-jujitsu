@@ -1,15 +1,22 @@
 import { AppLayout } from '@/Layouts/AppLayout.jsx'
 import { Breadcrumbs } from '@/Components/Breadcrumbs.jsx'
-import { Blockquote, Box, Grid, Group, Select, Stack, Text, Title } from '@mantine/core'
+import { Blockquote, Box, Center, Grid, Group, Indicator, Select, Stack, Text, Title, Tooltip } from '@mantine/core'
 import { IconCalendar, IconClipboardText, IconMedal, IconReport, IconReportAnalytics, IconUser } from '@tabler/icons-react'
 import { AreaChart, BarChart } from '@mantine/charts'
 import { useState } from 'react'
+import { Calendar } from '@mantine/dates'
 
 const Dashboard = (props) => {
-  console.log(props)
   const [exerciseDate, setExerciseDate] = useState(`Tahunan (${new Date().getFullYear()})`)
   const [tournamentDate, setTournamentDate] = useState(`Tahunan (${new Date().getFullYear()})`)
   const [rankingDate, setRangkingDate] = useState(`Tahunan (${new Date().getFullYear()})`)
+  const [eventMap] = useState(() => {
+    const map = {}
+    props.training_schedule.forEach(event => {
+      map[new Date(event.date).toDateString()] = event.description
+    })
+    return map
+  })
   
   function format(dataList) {
     return [
@@ -114,13 +121,6 @@ const Dashboard = (props) => {
         <Breadcrumbs navList={[{ label: 'Beranda' }]} />
       </Box>
       
-      {/*  cols={{*/}
-      {/*  base: 1,*/}
-      {/*  xs: 2,*/}
-      {/*  sm: 3,*/}
-      {/*  lg: statList.length,*/}
-      {/*}}*/}
-      
       <Stack gap={32}>
         <Grid gutter={24} grow>
           {statList.map((stat, id, index) => (
@@ -144,85 +144,123 @@ const Dashboard = (props) => {
             base: 12,
             lg: 8,
           }}>
-            <Stack gap={32}>
-              <Stack p={32} gap={32} style={{
-                borderRadius: 20,
-                border: '1px solid #dcdcdc',
-              }}>
-                <Group justify="space-between">
-                  <Title fz={20} c="neutral.2">Latihan</Title>
-                  
-                  <Select
-                    withAsterisk
-                    variant="filled"
-                    styles={{
-                      label: { marginBottom: 8 },
-                      input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 16 },
-                      section: { marginLeft: 0, width: 48, height: 48 },
-                      error: { marginTop: 8 },
-                    }}
-                    leftSection={<IconCalendar />}
-                    placeholder="Pilih waktu..."
-                    checkIconPosition="right"
-                    onChange={(value) => setExerciseDate(value)}
-                    value={exerciseDate}
-                    allowDeselect={false}
-                    data={[`Tahunan (${new Date().getFullYear()})`, `Bulanan (${new Date().getMonth() + 1})`]}
-                  />
-                </Group>
+            <Stack p={32} gap={32} style={{
+              borderRadius: 20,
+              border: '1px solid #dcdcdc',
+            }}>
+              <Group justify="space-between">
+                <Title fz={20} c="neutral.2">Latihan</Title>
                 
-                <AreaChart
-                  h={320}
-                  tickLine="xy"
-                  gridAxis="xy"
-                  data={format(props.exercises).filter(item => item.time === exerciseDate)[0].dataList}
-                  dataKey="name"
-                  series={[{ name: 'Total', color: '#746200' }]}
-                  curveType="bump"
-                  // connectNulls
-                  xAxisLabel={exerciseDate === `Tahunan (${new Date().getFullYear()})` ? 'Bulan' : exerciseDate === `Bulanan (${new Date().getMonth() + 1})` ? 'Minggu' : 'Hari'}
-                  yAxisLabel={`Total : ${format(props.exercises).filter(item => item.time === exerciseDate)[0].dataList.reduce((total, item) => total + item.Total, 0)} Latihan`}
+                <Select
+                  withAsterisk
+                  variant="filled"
+                  styles={{
+                    label: { marginBottom: 8 },
+                    input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 16 },
+                    section: { marginLeft: 0, width: 48, height: 48 },
+                    error: { marginTop: 8 },
+                  }}
+                  leftSection={<IconCalendar />}
+                  placeholder="Pilih waktu..."
+                  checkIconPosition="right"
+                  onChange={(value) => setExerciseDate(value)}
+                  value={exerciseDate}
+                  allowDeselect={false}
+                  data={[`Tahunan (${new Date().getFullYear()})`, `Bulanan (${new Date().getMonth() + 1})`]}
                 />
-              </Stack>
+              </Group>
               
-              <Stack p={32} gap={32} style={{
-                borderRadius: 20,
-                border: '1px solid #dcdcdc',
-              }}>
-                <Group justify="space-between">
-                  <Title fz={20} c="neutral.2">Pertandingan</Title>
-                  
-                  <Select
-                    withAsterisk
-                    allowDeselect={false}
-                    variant="filled"
-                    styles={{
-                      label: { marginBottom: 8 },
-                      input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 16 },
-                      section: { marginLeft: 0, width: 48, height: 48 },
-                      error: { marginTop: 8 },
-                    }}
-                    leftSection={<IconCalendar />}
-                    placeholder="Pilih waktu..."
-                    checkIconPosition="right"
-                    value={tournamentDate}
-                    onChange={(value) => setTournamentDate(value)}
-                    data={[`Tahunan (${new Date().getFullYear()})`, `Bulanan (${new Date().getMonth() + 1})`]}
-                  />
-                </Group>
-                
-                <AreaChart
-                  h={320}
-                  tickLine="xy"
-                  gridAxis="xy"
-                  data={format(props.tournaments).filter(item => item.time === tournamentDate)[0].dataList}
-                  dataKey="name"
-                  series={[{ name: 'Total', color: '#746200' }]}
-                  curveType="bump"
-                  xAxisLabel={tournamentDate === `Tahunan (${new Date().getFullYear()})` ? 'Bulan' : tournamentDate === `Bulanan (${new Date().getMonth() + 1})` ? 'Minggu' : 'Hari'}
-                  yAxisLabel={`Total : ${format(props.tournaments).filter(item => item.time === tournamentDate)[0].dataList.reduce((total, item) => total + item.Total, 0)} Pertandingan`}
+              <AreaChart
+                h={240}
+                tickLine="xy"
+                gridAxis="xy"
+                data={format(props.exercises).filter(item => item.time === exerciseDate)[0].dataList}
+                dataKey="name"
+                series={[{ name: 'Total', color: '#746200' }]}
+                curveType="bump"
+                // connectNulls
+                xAxisLabel={exerciseDate === `Tahunan (${new Date().getFullYear()})` ? 'Bulan' : exerciseDate === `Bulanan (${new Date().getMonth() + 1})` ? 'Minggu' : 'Hari'}
+                yAxisLabel={`Total : ${format(props.exercises).filter(item => item.time === exerciseDate)[0].dataList.reduce((total, item) => total + item.Total, 0)} Latihan`}
+              />
+            </Stack>
+          </Grid.Col>
+          
+          <Grid.Col span={{
+            base: 12,
+            lg: 4,
+          }}>
+            <Stack p={32} gap={32} style={{
+              borderRadius: 20,
+              border: '1px solid #dcdcdc',
+            }}>
+              <Title fz={20} c="neutral.2">Jadwal Latihan</Title>
+              
+              <Center>
+                <Calendar
+                  styles={{
+                    levelGroup: {
+                      backgroundColor: 'red',
+                    },
+                  }}
+                  static
+                  renderDay={(date) => {
+                    const day = date.getDate()
+                    const description = eventMap[date.toDateString()]
+                    
+                    return (
+                      <Tooltip label={description} disabled={!description}>
+                        <Indicator size={6} color="red" offset={-2} disabled={!description}>
+                          {day}
+                        </Indicator>
+                      </Tooltip>
+                    )
+                  }}
                 />
-              </Stack>
+              </Center>
+            </Stack>
+          </Grid.Col>
+          
+          <Grid.Col span={{
+            base: 12,
+            lg: 8,
+          }}>
+            <Stack p={32} gap={32} style={{
+              borderRadius: 20,
+              border: '1px solid #dcdcdc',
+            }}>
+              <Group justify="space-between">
+                <Title fz={20} c="neutral.2">Pertandingan</Title>
+                
+                <Select
+                  withAsterisk
+                  allowDeselect={false}
+                  variant="filled"
+                  styles={{
+                    label: { marginBottom: 8 },
+                    input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 16 },
+                    section: { marginLeft: 0, width: 48, height: 48 },
+                    error: { marginTop: 8 },
+                  }}
+                  leftSection={<IconCalendar />}
+                  placeholder="Pilih waktu..."
+                  checkIconPosition="right"
+                  value={tournamentDate}
+                  onChange={(value) => setTournamentDate(value)}
+                  data={[`Tahunan (${new Date().getFullYear()})`, `Bulanan (${new Date().getMonth() + 1})`]}
+                />
+              </Group>
+              
+              <AreaChart
+                h={240}
+                tickLine="xy"
+                gridAxis="xy"
+                data={format(props.tournaments).filter(item => item.time === tournamentDate)[0].dataList}
+                dataKey="name"
+                series={[{ name: 'Total', color: '#746200' }]}
+                curveType="bump"
+                xAxisLabel={tournamentDate === `Tahunan (${new Date().getFullYear()})` ? 'Bulan' : tournamentDate === `Bulanan (${new Date().getMonth() + 1})` ? 'Minggu' : 'Hari'}
+                yAxisLabel={`Total : ${format(props.tournaments).filter(item => item.time === tournamentDate)[0].dataList.reduce((total, item) => total + item.Total, 0)} Pertandingan`}
+              />
             </Stack>
           </Grid.Col>
           
@@ -253,31 +291,10 @@ const Dashboard = (props) => {
                   allowDeselect={false}
                   data={[`Tahunan (${new Date().getFullYear()})`, `Bulanan (${new Date().getMonth() + 1})`]}
                 />
-                
-                {/*<MonthPickerInput*/}
-                {/*  valueFormat="M-YYYY"*/}
-                {/*  w="100%"*/}
-                {/*  value={rankingDate}*/}
-                {/*  locale="id"*/}
-                {/*  // disabled={!form.data.athlete_id}*/}
-                {/*  // type="range"*/}
-                {/*  variant="filled"*/}
-                {/*  styles={{*/}
-                {/*    label: { marginBottom: 8 },*/}
-                {/*    input: { height: 48, borderRadius: 32, paddingLeft: 50, paddingRight: 16 },*/}
-                {/*    section: { marginLeft: 0, width: 48, height: 48 },*/}
-                {/*    error: { marginTop: 8 },*/}
-                {/*  }}*/}
-                {/*  leftSection={<IconCalendar />}*/}
-                {/*  onChange={(value) => setRangkingDate(value)}*/}
-                {/*/>*/}
               </Group>
               
               <BarChart
-                h={{
-                  base: 320,
-                  lg: '100%',
-                }}
+                h="100%"
                 withLegend
                 xAxisLabel="Atlet"
                 yAxisLabel="Total Medali"
@@ -288,27 +305,6 @@ const Dashboard = (props) => {
                   'Perunggu': athlete.bronze_medals,
                 }))
                 }
-                // data={props.athletes
-                //   .sort((a, b) => {
-                //     if (b.total_medals === a.total_medals) {
-                //       if (b.gold_medals === a.gold_medals) {
-                //         if (b.silver_medals === a.silver_medals) {
-                //           return b.bronze_medals - a.bronze_medals
-                //         }
-                //         return b.silver_medals - a.silver_medals
-                //       }
-                //       return b.gold_medals - a.gold_medals
-                //     }
-                //     return b.total_medals - a.total_medals
-                //   })
-                //   .slice(0, 3)
-                //   .map((athlete, index) => ({
-                //     name: `${['🥇', '🥈', '🥉'][index]} ${athlete.user.full_name}`,
-                //     'Emas': athlete.gold_medals,
-                //     'Perak': athlete.silver_medals,
-                //     'Perunggu': athlete.bronze_medals,
-                //   }))
-                // }
                 tickLine="xy"
                 gridAxis="xy"
                 dataKey="name"

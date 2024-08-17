@@ -14,6 +14,7 @@
   use App\Models\Exercise;
   use App\Models\History;
   use App\Models\Tournament;
+  use App\Models\TrainingSchedule;
   use App\Models\User;
   use Illuminate\Support\Facades\Auth;
   use Illuminate\Support\Facades\Route;
@@ -55,6 +56,7 @@
       $currentMonth = date('n');
       
       return Inertia::render('Dashboard', [
+        'training_schedule' => TrainingSchedule::all(),
         'unread_histories' => History::where('is_read', false)->get(),
         'meta' => session('meta'),
         'auth' => ['user' => $authedUser],
@@ -202,6 +204,8 @@
       Route::get('{exercise}/edit', [ExerciseController::class, 'edit'])->name('exercises.edit');
       Route::put('{exercise}', [ExerciseController::class, 'update'])->name('exercises.update');
       Route::delete('{exercise}', [ExerciseController::class, 'destroy'])->name('exercises.destroy');
+      
+      Route::post('schedule', [ExerciseController::class, 'training_schedule_store'])->name('exercises.schedule.store');
     });
     
     Route::group(['prefix' => 'tournaments'], function () {

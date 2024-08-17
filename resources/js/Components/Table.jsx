@@ -101,7 +101,7 @@ export const Table = (props) => {
                 
                 <Text mt={8} mb={16} fw="bold">Tidak ada {props.title}</Text>
                 
-                {props.authed.role.includes('Pelatih') && props.route && (
+                {props.authed?.role.includes('Pelatih') && props.route && (
                   <Button
                     px={16} styles={{ section: { marginRight: 16 } }}
                     leftSection={<IconPlus />}

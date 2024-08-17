@@ -230,7 +230,7 @@ const Index = (props) => {
       </Stack>
       
       {!['Ne-Waza', 'Fighting'].includes(props.auth.user.role) ? (
-          <Table thList={THList} tdList={TDList} icon={<IconReport size={48} />} title="Laporan" data={sortedData}
+          <Table thList={THList} tdList={TDList} icon={<IconReport size={48} />} title="Laporan" data={sortedData} authed={props.auth.user}
                  handleSort={handleSort} />) :
         (
           <Stack gap={80}>

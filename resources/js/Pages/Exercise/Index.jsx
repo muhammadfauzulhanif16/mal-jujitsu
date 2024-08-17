@@ -1,12 +1,20 @@
 import { AppLayout } from '@/Layouts/AppLayout.jsx'
-import { ActionIcon, Avatar, Button, Flex, Group, HoverCard, Stack, Table as MantineTable, Text, TextInput, Tooltip } from '@mantine/core'
-import { IconClipboardText, IconEye, IconPencil, IconPlus, IconSearch, IconTrash } from '@tabler/icons-react'
+import { ActionIcon, Avatar, Button, FileButton, Flex, Group, HoverCard, Stack, Table as MantineTable, Text, TextInput, Tooltip } from '@mantine/core'
+import { IconClipboardText, IconEye, IconFileSpreadsheet, IconPencil, IconPlus, IconSearch, IconTrash, IconUpload } from '@tabler/icons-react'
 import { Breadcrumbs } from '@/Components/Breadcrumbs.jsx'
 import { router } from '@inertiajs/core'
 import { useState } from 'react'
 import { Table } from '@/Components/Table.jsx'
+import { MS_EXCEL_MIME_TYPE } from '@mantine/dropzone'
+import { useForm } from '@inertiajs/react'
 
 const Index = (props) => {
+  const form = useForm({
+    file: null,
+  })
+  
+  console.log(form.data.file, 'file')
+  
   const [exerciseSearch, setExerciseSearch] = useState('')
   // const THList = ['#', 'Nama', 'Tempat', 'Atlet', 'Pelatih', 'Tanggal', 'Waktu Mulai', 'Waktu Selesai', 'Aksi']
   const THList = [{ title: '#' }, { title: 'Nama', key: 'name' }, { title: 'Tempat', key: 'place' }, { title: 'Atlet' }, {
@@ -136,7 +144,40 @@ const Index = (props) => {
             
             {props.auth.user.role.includes('Pelatih') && (
               <>
-                <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Tambah Latihan">
+                <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Tambah Jadwal">
+                  <ActionIcon ml="auto" h={48} w={48} color="gold.2" radius={32} display={{ base: 'block', sm: 'none' }}
+                              onClick={() => router.get(route('exercises.create'))}>
+                    <IconPlus />
+                  </ActionIcon>
+                </Tooltip>
+                
+                <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Unggah Jadwal">
+                  <Button.Group>
+                    <FileButton accept={MS_EXCEL_MIME_TYPE} onChange={
+                      (file) => form.setData('file', file)
+                    } style={{ borderRadius: '32px 0 0 32px' }} display={{ base: 'none', sm: 'block' }}
+                                w={192}
+                                leftSection={<IconFileSpreadsheet />}
+                                variant="filled"
+                                color="gold.2" h={48}
+                                px={16}
+                                styles={{ section: { marginRight: 12 } }}>
+                      {(props) => <Button {...props}>{form.data.file ? form.data.file.name : 'Unggah Jadwal'}</Button>}
+                    </FileButton>
+                    
+                    <form onSubmit={(e) => {
+                      e.preventDefault()
+                      form.post(route('exercises.schedule.store'))
+                    }}>
+                      <ActionIcon type="submit" disabled={!form.data.file} style={{ borderRadius: '0 32px 32px 0' }} h={48} w={48} color="gold.2"
+                                  display={{ base: 'none', sm: 'block' }}>
+                        <IconUpload />
+                      </ActionIcon>
+                    </form>
+                  </Button.Group>
+                </Tooltip>
+                
+                <Tooltip style={{ borderRadius: 32, padding: '.5rem 1rem' }} label="Tambah Hasil">
                   <ActionIcon ml="auto" h={48} w={48} color="gold.2" radius={32} display={{ base: 'block', sm: 'none' }}
                               onClick={() => router.get(route('exercises.create'))}>
                     <IconPlus />
@@ -145,7 +186,7 @@ const Index = (props) => {
                 
                 <Button display={{ base: 'none', sm: 'block' }} w={240} leftSection={<IconPlus />} variant="filled" color="gold.2" h={48} radius={32} px={16}
                         styles={{ section: { marginRight: 12 } }} onClick={() => router.get(route('exercises.create'))}>
-                  Tambah Latihan
+                  Tambah Hasil
                 </Button>
               </>
             )}

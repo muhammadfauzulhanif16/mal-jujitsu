@@ -2,6 +2,7 @@
   
   namespace App\Http\Controllers;
   
+  use App\Imports\TrainingSchedulesImport;
   use App\Models\Athlete;
   use App\Models\Coach;
   use App\Models\Exercise;
@@ -258,6 +259,25 @@
         return to_route('exercises.index')->with('meta', [
           'status' => false,
           'title' => 'Gagal menghapus latihan',
+          'message' => $e->getMessage()
+        ]);
+      }
+    }
+    
+    public function training_schedule_store(Request $request)
+    {
+      try {
+        (new TrainingSchedulesImport)->import($request->file('file'));
+        
+        return to_route('exercises.index')->with('meta', [
+          'status' => true,
+          'title' => 'Berhasil menambahkan jadwal latihan',
+          'message' => 'Jadwal latihan berhasil ditambahkan!'
+        ]);
+      } catch (Exception $e) {
+        return to_route('exercises.index')->with('meta', [
+          'status' => false,
+          'title' => 'Gagal menambahkan jadwal latihan',
           'message' => $e->getMessage()
         ]);
       }
