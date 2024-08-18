@@ -1,6 +1,0 @@
-import{r as n,u as k,z as R,j as s,v as M}from"./app-Pz5Td4aK.js";import{d as x}from"./AppLayout-CgstnK6u.js";const C={multiple:!1},F=n.forwardRef((o,l)=>{const{onChange:r,children:p,multiple:a,accept:c,name:i,form:u,resetRef:h,disabled:f,capture:d,inputProps:g,...m}=k("FileButton",C,o),t=n.useRef(),v=()=>{var e;!f&&((e=t.current)==null||e.click())},y=e=>{r(a?Array.from(e.currentTarget.files):e.currentTarget.files[0]||null)};return R(h,()=>{t.current.value=""}),s.jsxs(s.Fragment,{children:[p({onClick:v,...m}),s.jsx("input",{style:{display:"none"},type:"file",accept:c,multiple:a,onChange:y,ref:M(l,t),name:i,form:u,capture:d,...g})]})});F.displayName="@mantine/core/FileButton";/**
- * @license @tabler/icons-react v3.4.0 - MIT
- *
- * This source code is licensed under the MIT license.
- * See the LICENSE file in the root directory of this source tree.
- */var I=x("outline","photo-up","IconPhotoUp",[["path",{d:"M15 8h.01",key:"svg-0"}],["path",{d:"M12.5 21h-6.5a3 3 0 0 1 -3 -3v-12a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v6.5",key:"svg-1"}],["path",{d:"M3 16l5 -5c.928 -.893 2.072 -.893 3 0l3.5 3.5",key:"svg-2"}],["path",{d:"M14 14l1 -1c.679 -.653 1.473 -.829 2.214 -.526",key:"svg-3"}],["path",{d:"M19 22v-6",key:"svg-4"}],["path",{d:"M22 19l-3 -3l-3 3",key:"svg-5"}]]);export{F,I};
