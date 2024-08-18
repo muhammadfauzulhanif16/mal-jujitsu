@@ -237,7 +237,7 @@
                   'type' => 'number',
                   'unit' => 'x',
                   'male_benchmark' => '105 x',
-                  'female_benchmark' => ' x',
+                  'female_benchmark' => '105 x',
                 ],
                 [
                   'name' => 'Wall sit',
